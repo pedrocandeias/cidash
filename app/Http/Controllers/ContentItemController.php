@@ -37,6 +37,7 @@ class ContentItemController extends Controller
         return Inertia::render('content/index', [
             'items' => $items,
             'showArchived' => $archived,
+            'layout' => in_array($request->query('layout'), ['list', 'calendar'], true) ? $request->query('layout') : 'board',
             'members' => $this->members(),
             'can' => ['approve' => $request->user()->can('approve', ContentItem::class)],
         ]);
@@ -63,7 +64,6 @@ class ContentItemController extends Controller
                 ...$this->summary($content),
                 'brief' => $content->brief,
                 'owner_id' => $content->owner_id,
-                'publish_at' => $content->publish_at?->toIso8601String(),
                 'published_url' => $content->published_url,
             ],
             'members' => $this->members(),
@@ -137,6 +137,7 @@ class ContentItemController extends Controller
             'stage' => $item->stage->value,
             'stage_changed_at' => $item->stage_changed_at->toIso8601String(),
             'due_at' => $item->due_at?->toDateString(),
+            'publish_at' => $item->publish_at?->toIso8601String(),
             'owner' => $item->owner ? ['id' => $item->owner->id, 'name' => $item->owner->name] : null,
         ];
     }

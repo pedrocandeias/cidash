@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Core\RecordPage;
 use App\Core\Tags;
+use App\Enums\CampaignStatus;
 use App\Enums\EventStatus;
+use App\Enums\EventType;
 use App\Enums\Priority;
+use App\Enums\RelationType;
 use App\Http\Requests\CalendarEventRequest;
 use App\Models\CalendarEvent;
+use App\Models\Campaign;
+use App\Models\Link;
 use App\Models\Tag;
 use App\Models\User;
 use App\Support\WorkspaceContext;
@@ -17,6 +22,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -28,6 +34,8 @@ class CalendarEventController extends Controller
     {
         return Inertia::render('events/index', [
             'members' => $this->members(),
+            'campaigns' => Campaign::whereIn('status', [CampaignStatus::Planning, CampaignStatus::Active])
+                ->orderBy('name')->get(['id', 'name']),
         ]);
     }
 
@@ -36,7 +44,14 @@ class CalendarEventController extends Controller
      */
     public function feed(Request $request): JsonResponse
     {
-        $validated = $request->validate(['start' => ['required', 'date'], 'end' => ['required', 'date']]);
+        $validated = $request->validate([
+            'start' => ['required', 'date'],
+            'end' => ['required', 'date'],
+            'types' => ['sometimes', 'array'],
+            'types.*' => [Rule::enum(EventType::class)],
+            'responsible' => ['sometimes', 'nullable', 'integer'],
+            'campaign' => ['sometimes', 'nullable', 'uuid'],
+        ]);
         $start = CarbonImmutable::parse($validated['start'])->setTimezone(config('app.timezone'));
         $end = CarbonImmutable::parse($validated['end'])->setTimezone(config('app.timezone'));
 
@@ -45,6 +60,11 @@ class CalendarEventController extends Controller
             ->where(fn ($query) => $query
                 ->where('end_at', '>=', $start)
                 ->orWhere(fn ($query) => $query->whereNull('end_at')->where('start_at', '>=', $start)))
+            ->when($validated['types'] ?? null, fn ($query, $types) => $query->whereIn('type', $types))
+            ->when($validated['responsible'] ?? null, fn ($query, $user) => $query->where('responsible_user_id', $user))
+            // Events that are part of the campaign (relation part_of).
+            ->when($validated['campaign'] ?? null, fn ($query, $campaign) => $query->whereIn('id', Link::where('target_id', $campaign)
+                ->where('type', RelationType::PartOf)->select('source_id')))
             ->orderBy('start_at')
             ->get()
             ->map(fn (CalendarEvent $event) => [
@@ -139,11 +159,11 @@ class CalendarEventController extends Controller
     {
         $attributes = $request->safe()->except('tags');
 
-        if ($request->boolean('all_day')) {
-            foreach (['start_at', 'end_at'] as $field) {
-                if (! empty($attributes[$field])) {
-                    $attributes[$field] = CarbonImmutable::parse($attributes[$field])->startOfDay();
-                }
+        foreach (['start_at', 'end_at'] as $field) {
+            if (! empty($attributes[$field])) {
+                // Times may carry an offset (e.g. dragged in the calendar); they are stored in the app time zone.
+                $time = CarbonImmutable::parse($attributes[$field])->setTimezone(config('app.timezone'));
+                $attributes[$field] = $request->boolean('all_day') ? $time->startOfDay() : $time;
             }
         }
 

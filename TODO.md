@@ -73,14 +73,14 @@
 - [x] Componentes partilhados: RelationsPanel (com pesquisa por título), RemindersPanel, CreateTaskButton, TagInput
 - [ ] Componentes partilhados: ObjectDrawer (pré-visualização lateral)
 - [x] Calendar: CRUD; vistas mês, semana, dia e agenda; cores por tipo; tags; lembretes; relações; criar tarefa a partir do evento
-- [ ] Calendar: filtros (tipo, responsável, campanha), arrastar eventos para mudar a data
+- [x] Calendar: filtros (tipo, responsável, campanha), arrastar e redimensionar eventos
 - [x] Notice Board: CRUD, fixados (só managers), publicação agendada, expiração, arquivo
 - [x] Tasks: CRUD, minhas/equipa, filtros de estado, conclusão rápida, detalhe com comentários e histórico, apagar (criador ou manager), origem (`source_id` + relação `originated_from`), notificação in-app de atribuição
-- [ ] Tasks: vista Kanban por estado
+- [x] Tasks: vista Kanban por estado
 - [x] Press Requests: CRUD, lista por prazo com semáforo, autocompletar jornalista e meio, data de resposta, lembretes, criar tarefa
 - [x] Press Requests: sugerir especialistas (relacionar o pedido com Pessoas de interesse no painel de relações)
 - [x] Content Pipeline: Kanban com 7 estados, drag & drop, `stage_changed_at`, aprovação só por editors, managers e super admin (sem saltar a revisão); notificação aos editors e managers quando um conteúdo entra em Review
-- [ ] Content Pipeline: vista de lista e calendário editorial (publish_at)
+- [x] Content Pipeline: vista de lista e calendário editorial (publish_at)
 - [x] Campaigns: CRUD, responsáveis, secção "Nesta campanha" (eventos e conteúdos via `part_of`)
 - [x] Termos normalizados (backend): `Terms`, `normalized_name` + índice único, reutilizar em vez de duplicar, sugestões (distância ≤ 2), testes
 - [x] Termos normalizados (UI): TagInput com sugestões e "Queria dizer…?"

@@ -48,11 +48,14 @@ export function formatDateTime(value: string, locale: string) {
 
 /** Today as YYYY-MM-DD in the browser's local time (not UTC). */
 export function localToday() {
-    const now = new Date();
+    return localDate(new Date());
+}
 
+/** A date as YYYY-MM-DD in the browser's local time (not UTC). */
+export function localDate(date: Date) {
     return [
-        now.getFullYear(),
-        String(now.getMonth() + 1).padStart(2, '0'),
-        String(now.getDate()).padStart(2, '0'),
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, '0'),
+        String(date.getDate()).padStart(2, '0'),
     ].join('-');
 }

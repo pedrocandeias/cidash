@@ -1,15 +1,7 @@
-import {
-    DndContext,
-    PointerSensor,
-    useDraggable,
-    useDroppable,
-    useSensor,
-    useSensors,
-} from '@dnd-kit/core';
-import type { DragEndEvent } from '@dnd-kit/core';
 import { Form, Head, Link, router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import Kanban from '@/components/core/kanban';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -20,8 +12,16 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { formatDate, localToday, useTranslation } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
+import ptLocale from '@fullcalendar/core/locales/pt';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import listPlugin from '@fullcalendar/list';
+import FullCalendar from '@fullcalendar/react';
+import {
+    formatDate,
+    formatDateTime,
+    localToday,
+    useTranslation,
+} from '@/lib/i18n';
 import ContentFields, {
     contentFormTransform,
 } from '@/modules/content/content-fields';
@@ -39,42 +39,23 @@ import { index, show, store, update } from '@/routes/content';
 type Props = {
     items: ContentSummary[];
     showArchived: boolean;
+    layout: 'board' | 'list' | 'calendar';
     members: Member[];
     can: { approve: boolean };
 };
 
-function Card({ item }: { item: ContentSummary }) {
+function CardContent({ item }: { item: ContentSummary }) {
     const { t, locale } = useTranslation();
-    const { attributes, listeners, setNodeRef, transform, isDragging } =
-        useDraggable({ id: item.id });
     const stuck = item.stage === 'review' && daysInStage(item) >= 3;
-    const today = localToday();
     const overdue =
         item.due_at !== null &&
-        item.due_at < today &&
+        item.due_at < localToday() &&
         !['published', 'archived'].includes(item.stage);
 
     return (
-        <div
-            ref={setNodeRef}
-            {...attributes}
-            {...listeners}
-            style={
-                transform
-                    ? {
-                          transform: `translate(${transform.x}px, ${transform.y}px)`,
-                      }
-                    : undefined
-            }
-            className={cn(
-                'cursor-grab touch-none space-y-1 rounded-md border bg-background p-3 shadow-xs active:cursor-grabbing',
-                isDragging && 'relative z-10 opacity-80 shadow-md',
-            )}
-        >
-            {/* Native link dragging would cancel the pointer events dnd-kit relies on. */}
+        <>
             <Link
                 href={show(item.id)}
-                draggable={false}
                 className="block text-sm font-medium hover:underline"
             >
                 {item.title}
@@ -101,59 +82,24 @@ function Card({ item }: { item: ContentSummary }) {
                     </span>
                 )}
             </div>
-        </div>
-    );
-}
-
-function Column({ stage, items }: { stage: Stage; items: ContentSummary[] }) {
-    const { t } = useTranslation();
-    const { setNodeRef, isOver } = useDroppable({ id: stage });
-
-    return (
-        <section
-            ref={setNodeRef}
-            aria-label={t(stageLabels[stage])}
-            className={cn(
-                'flex w-64 shrink-0 flex-col gap-2 rounded-lg bg-muted/50 p-2',
-                isOver && 'ring-2 ring-ring',
-            )}
-        >
-            <h2 className="flex items-center justify-between px-1 text-sm font-medium">
-                {t(stageLabels[stage])}
-                <span className="text-xs text-muted-foreground">
-                    {items.length}
-                </span>
-            </h2>
-            {items.map((item) => (
-                <Card key={item.id} item={item} />
-            ))}
-        </section>
+        </>
     );
 }
 
 export default function ContentBoard({
     items: initialItems,
     showArchived,
+    layout,
     members,
     can,
 }: Props) {
-    const { t } = useTranslation();
+    const { t, locale } = useTranslation();
     const [items, setItems] = useState(initialItems);
     const [creating, setCreating] = useState(false);
-    const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    );
 
     useEffect(() => setItems(initialItems), [initialItems]);
 
-    const onDragEnd = ({ active, over }: DragEndEvent) => {
-        const item = items.find((candidate) => candidate.id === active.id);
-        const to = over?.id as Stage | undefined;
-
-        if (!item || !to || item.stage === to) {
-            return;
-        }
-
+    const onMove = (item: ContentSummary, to: Stage) => {
         if (isApproval(item.stage, to) && !can.approve) {
             toast.error(t('Only editors and managers can approve content.'));
 
@@ -243,19 +189,150 @@ export default function ContentBoard({
                     </div>
                 </div>
 
-                <DndContext sensors={sensors} onDragEnd={onDragEnd}>
-                    <div className="flex gap-3 overflow-x-auto pb-4">
-                        {visibleStages.map((stage) => (
-                            <Column
-                                key={stage}
-                                stage={stage}
-                                items={items.filter(
-                                    (item) => item.stage === stage,
-                                )}
-                            />
-                        ))}
+                <nav className="flex gap-1" aria-label={t('Layout')}>
+                    {(['board', 'list', 'calendar'] as const).map((option) => (
+                        <Link
+                            key={option}
+                            href={index({
+                                query: {
+                                    ...(option === 'board'
+                                        ? {}
+                                        : { layout: option }),
+                                    ...(showArchived ? { archived: 1 } : {}),
+                                },
+                            })}
+                            className={
+                                layout === option
+                                    ? 'rounded-md bg-muted px-3 py-1.5 text-sm font-medium'
+                                    : 'rounded-md px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground'
+                            }
+                        >
+                            {t(
+                                {
+                                    board: 'Board',
+                                    list: 'List',
+                                    calendar: 'Editorial calendar',
+                                }[option],
+                            )}
+                        </Link>
+                    ))}
+                </nav>
+
+                {layout === 'board' && (
+                    <Kanban
+                        columns={visibleStages.map((stage) => ({
+                            id: stage,
+                            label: t(stageLabels[stage]),
+                        }))}
+                        items={items}
+                        columnOf={(item) => item.stage}
+                        renderCard={(item) => <CardContent item={item} />}
+                        onMove={(item, stage) => onMove(item, stage as Stage)}
+                    />
+                )}
+
+                {layout === 'list' && (
+                    <table className="w-full text-sm">
+                        <thead className="text-left text-xs text-muted-foreground">
+                            <tr>
+                                <th className="py-2 font-medium">
+                                    {t('Title')}
+                                </th>
+                                <th className="py-2 font-medium">
+                                    {t('Stage')}
+                                </th>
+                                <th className="py-2 font-medium">
+                                    {t('Format')}
+                                </th>
+                                <th className="py-2 font-medium">
+                                    {t('Owner')}
+                                </th>
+                                <th className="py-2 font-medium">
+                                    {t('Deadline')}
+                                </th>
+                                <th className="py-2 font-medium">
+                                    {t('Publication date')}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y">
+                            {items.map((item) => (
+                                <tr key={item.id}>
+                                    <td className="py-2">
+                                        <Link
+                                            href={show(item.id)}
+                                            className="font-medium hover:underline"
+                                        >
+                                            {item.title}
+                                        </Link>
+                                    </td>
+                                    <td className="py-2">
+                                        {t(stageLabels[item.stage])}
+                                    </td>
+                                    <td className="py-2 text-muted-foreground">
+                                        {t(
+                                            formatLabels[item.format] ??
+                                                item.format,
+                                        )}
+                                    </td>
+                                    <td className="py-2 text-muted-foreground">
+                                        {item.owner?.name ?? '—'}
+                                    </td>
+                                    <td className="py-2 text-muted-foreground">
+                                        {item.due_at
+                                            ? formatDate(item.due_at, locale)
+                                            : '—'}
+                                    </td>
+                                    <td className="py-2 text-muted-foreground">
+                                        {item.publish_at
+                                            ? formatDateTime(
+                                                  item.publish_at,
+                                                  locale,
+                                              )
+                                            : '—'}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+
+                {layout === 'calendar' && (
+                    <div className="cidash-calendar text-sm">
+                        <FullCalendar
+                            plugins={[dayGridPlugin, listPlugin]}
+                            locales={[ptLocale]}
+                            locale={locale.startsWith('pt') ? 'pt' : 'en'}
+                            initialView="dayGridMonth"
+                            headerToolbar={{
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'dayGridMonth,listMonth',
+                            }}
+                            height="auto"
+                            events={items
+                                .filter((item) => item.publish_at !== null)
+                                .map((item) => ({
+                                    id: item.id,
+                                    title: item.title,
+                                    start: item.publish_at ?? undefined,
+                                    url: show(item.id).url,
+                                }))}
+                            eventClick={(info) => {
+                                info.jsEvent.preventDefault();
+
+                                if (info.event.url) {
+                                    router.visit(info.event.url);
+                                }
+                            }}
+                        />
+                        <p className="mt-2 text-xs text-muted-foreground">
+                            {t(
+                                'Only content with a publication date appears in the editorial calendar.',
+                            )}
+                        </p>
                     </div>
-                </DndContext>
+                )}
             </div>
         </>
     );

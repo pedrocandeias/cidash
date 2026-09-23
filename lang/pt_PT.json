@@ -442,5 +442,13 @@
     "Users": "Utilizadores",
     "This account has been deactivated.": "Esta conta foi desativada.",
     "You cannot change your own access.": "Não pode alterar o seu próprio acesso.",
-    "Two-factor authentication reset for :name.": "Autenticação de dois fatores reposta para :name."
+    "Two-factor authentication reset for :name.": "Autenticação de dois fatores reposta para :name.",
+    "Any campaign": "Qualquer campanha",
+    "Any responsible": "Qualquer responsável",
+    "Board": "Quadro",
+    "Layout": "Vista",
+    "List": "Lista",
+    "Only content with a publication date appears in the editorial calendar.": "Só os conteúdos com data de publicação aparecem no calendário editorial.",
+    "The event could not be moved.": "Não foi possível mover o evento.",
+    "Editorial calendar": "Calendário editorial"
 }

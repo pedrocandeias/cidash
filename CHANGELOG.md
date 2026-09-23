@@ -2,6 +2,15 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.15.0 (2026-09-23)
+
+- feat: Calendário com filtros por tipo, responsável e campanha
+- feat: arrastar e redimensionar eventos no calendário para mudar a data e a duração
+- feat: Tarefas em vista de quadro (Kanban por estado), além da lista
+- feat: Conteúdos em vista de lista e calendário editorial pela data de publicação, além do quadro
+- refactor: componente Kanban genérico, partilhado por tarefas e conteúdos
+- fix: horas enviadas com fuso horário ao editar eventos são convertidas para o fuso da aplicação
+
 ## 0.14.0 (2026-09-23)
 
 - feat: marca provisória do CIDASH (logótipo, favicon e ícone) em vez do logótipo do Laravel

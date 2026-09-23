@@ -15,13 +15,13 @@ export type ContentSummary = {
     stage: Stage;
     stage_changed_at: string;
     due_at: string | null;
+    publish_at: string | null;
     owner: { id: number; name: string } | null;
 };
 
 export type ContentDetails = ContentSummary & {
     brief: string | null;
     owner_id: number | null;
-    publish_at: string | null;
     published_url: string | null;
 };
 

@@ -2,8 +2,11 @@
 
 namespace Tests\Feature\Calendar;
 
+use App\Core\Links;
+use App\Enums\RelationType;
 use App\Enums\WorkspaceRole;
 use App\Models\CalendarEvent;
+use App\Models\Campaign;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Support\WorkspaceContext;
@@ -96,6 +99,35 @@ class CalendarEventTest extends TestCase
                 ->where('event.tags', ['Imprensa'])
                 ->has('relations')
                 ->has('reminders'));
+    }
+
+    public function test_the_feed_filters_by_type_responsible_and_campaign()
+    {
+        $rui = User::factory()->inWorkspace($this->workspace)->create();
+        $inCampaign = $this->event(['title' => 'Dia Aberto', 'type' => 'campaign', 'start_at' => '2026-10-05 10:00']);
+        $campaign = Campaign::create(['name' => 'Candidaturas', 'status' => 'active']);
+        app(Links::class)->link($inCampaign, $campaign, RelationType::PartOf);
+        $this->event(['title' => 'Do Rui', 'start_at' => '2026-10-06 10:00', 'responsible_user_id' => $rui->id]);
+        $this->event(['title' => 'Efeméride', 'type' => 'ephemeris', 'start_at' => '2026-10-07 00:00']);
+
+        $feed = fn (array $filters) => $this->actingAs($this->ana)->getJson(route('events.feed', ['start' => '2026-10-01', 'end' => '2026-11-01', ...$filters]))->json('*.title');
+
+        $this->assertSame(['Efeméride'], $feed(['types' => ['ephemeris']]));
+        $this->assertSame(['Do Rui'], $feed(['responsible' => $rui->id]));
+        $this->assertSame(['Dia Aberto'], $feed(['campaign' => $campaign->id]));
+    }
+
+    public function test_times_dragged_in_the_calendar_are_stored_in_the_app_time_zone()
+    {
+        $event = $this->event(['start_at' => '2026-10-05 10:00']);
+
+        $this->actingAs($this->ana)->patch(route('events.update', $event), [
+            'start_at' => '2026-10-06T09:00:00.000Z', 'end_at' => '2026-10-06T10:30:00.000Z', 'all_day' => false,
+        ])->assertSessionHasNoErrors();
+
+        $event->refresh();
+        $this->assertSame('2026-10-06 10:00', $event->start_at->format('Y-m-d H:i'));
+        $this->assertSame('2026-10-06 11:30', $event->end_at->format('Y-m-d H:i'));
     }
 
     public function test_an_end_before_the_start_is_rejected()

@@ -1,3 +1,4 @@
+import type { EventApi } from '@fullcalendar/core';
 import type { DateClickArg } from '@fullcalendar/interaction';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
@@ -6,24 +7,98 @@ import ptLocale from '@fullcalendar/core/locales/pt';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { Form, Head, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { useTranslation } from '@/lib/i18n';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { localDate, useTranslation } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
 import EventFields, { eventFormTransform } from '@/modules/events/event-fields';
 import type { EventStatus, EventType } from '@/modules/events/types';
 import { typeColors, typeLabels } from '@/modules/events/types';
 import type { Member } from '@/modules/tasks/types';
-import { feed, index, store } from '@/routes/events';
+import { feed, index, store, update } from '@/routes/events';
 
-type Props = { members: Member[] };
+type Props = { members: Member[]; campaigns: { id: string; name: string }[] };
+
+const ALL = 'all';
 
 type Draft = { start_at: string; all_day: boolean };
 
-export default function Calendar({ members }: Props) {
+export default function Calendar({ members, campaigns }: Props) {
     const { t, locale } = useTranslation();
     const [draft, setDraft] = useState<Draft | null>(null);
+    const [hiddenTypes, setHiddenTypes] = useState<EventType[]>([]);
+    const [responsible, setResponsible] = useState(ALL);
+    const [campaign, setCampaign] = useState(ALL);
+    const calendar = useRef<FullCalendar>(null);
+
+    // Read by the event source on every fetch; refetched when a filter changes.
+    const filters = useRef<Record<string, string>>({});
+    useEffect(() => {
+        const visible = (Object.keys(typeLabels) as EventType[]).filter(
+            (type) => !hiddenTypes.includes(type),
+        );
+        filters.current = {
+            ...Object.fromEntries(
+                visible.map((type, position) => [`types[${position}]`, type]),
+            ),
+            ...(responsible !== ALL ? { responsible } : {}),
+            ...(campaign !== ALL ? { campaign } : {}),
+        };
+        calendar.current?.getApi().refetchEvents();
+    }, [hiddenTypes, responsible, campaign]);
+
+    const toggleType = (type: EventType) =>
+        setHiddenTypes((hidden) =>
+            hidden.includes(type)
+                ? hidden.filter((other) => other !== type)
+                : [...hidden, type],
+        );
+
+    // Dragging or resizing an event saves it; all-day ends are exclusive in FullCalendar and inclusive in CIDASH.
+    const persist = ({
+        event,
+        revert,
+    }: {
+        event: EventApi;
+        revert: () => void;
+    }) => {
+        if (!event.start) {
+            return revert();
+        }
+
+        const dayBefore = (date: Date) =>
+            new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1);
+        const payload = event.allDay
+            ? {
+                  all_day: true,
+                  start_at: localDate(event.start),
+                  end_at: event.end ? localDate(dayBefore(event.end)) : null,
+              }
+            : {
+                  all_day: false,
+                  start_at: event.start.toISOString(),
+                  end_at: event.end ? event.end.toISOString() : null,
+              };
+
+        router.patch(update(event.id).url, payload, {
+            preserveScroll: true,
+            preserveState: true,
+            onError: () => {
+                revert();
+                toast.error(t('The event could not be moved.'));
+            },
+        });
+    };
 
     const openDraft = (arg?: DateClickArg) => {
         if (!arg) {
@@ -51,20 +126,76 @@ export default function Calendar({ members }: Props) {
                     </Button>
                 </div>
 
-                <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-3">
                     {(Object.keys(typeLabels) as EventType[]).map((type) => (
-                        <span key={type} className="flex items-center gap-1.5">
+                        <button
+                            key={type}
+                            type="button"
+                            aria-pressed={!hiddenTypes.includes(type)}
+                            onClick={() => toggleType(type)}
+                            className={cn(
+                                'flex items-center gap-1.5 rounded-md px-2 py-1 text-xs hover:bg-muted',
+                                hiddenTypes.includes(type)
+                                    ? 'text-muted-foreground line-through opacity-60'
+                                    : 'text-foreground',
+                            )}
+                        >
                             <span
                                 className="size-2.5 rounded-full"
                                 style={{ backgroundColor: typeColors[type] }}
                             />
                             {t(typeLabels[type])}
-                        </span>
+                        </button>
                     ))}
+                    <Select value={responsible} onValueChange={setResponsible}>
+                        <SelectTrigger
+                            className="h-8 w-44"
+                            aria-label={t('Responsible')}
+                        >
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value={ALL}>
+                                {t('Any responsible')}
+                            </SelectItem>
+                            {members.map((member) => (
+                                <SelectItem
+                                    key={member.id}
+                                    value={String(member.id)}
+                                >
+                                    {member.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    {campaigns.length > 0 && (
+                        <Select value={campaign} onValueChange={setCampaign}>
+                            <SelectTrigger
+                                className="h-8 w-52"
+                                aria-label={t('Campaign')}
+                            >
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value={ALL}>
+                                    {t('Any campaign')}
+                                </SelectItem>
+                                {campaigns.map((option) => (
+                                    <SelectItem
+                                        key={option.id}
+                                        value={option.id}
+                                    >
+                                        {option.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    )}
                 </div>
 
                 <div className="cidash-calendar text-sm">
                     <FullCalendar
+                        ref={calendar}
                         plugins={[
                             dayGridPlugin,
                             timeGridPlugin,
@@ -82,7 +213,13 @@ export default function Calendar({ members }: Props) {
                         height="auto"
                         nowIndicator
                         dayMaxEvents={4}
-                        events={feed.url()}
+                        events={{
+                            url: feed.url(),
+                            extraParams: () => filters.current,
+                        }}
+                        editable
+                        eventDrop={persist}
+                        eventResize={persist}
                         eventDataTransform={(event) => {
                             const props = event.extendedProps as {
                                 type: EventType;

@@ -28,6 +28,7 @@ class TaskController extends Controller
     {
         $view = $request->query('view') === 'team' ? 'team' : 'mine';
         $status = in_array($request->query('status'), ['done', 'all'], true) ? $request->query('status') : 'open';
+        $layout = $request->query('layout') === 'board' ? 'board' : 'list';
 
         $tasks = Task::query()
             ->with('assignee:id,name')
@@ -43,7 +44,7 @@ class TaskController extends Controller
 
         return Inertia::render('tasks/index', [
             'tasks' => $tasks,
-            'filters' => ['view' => $view, 'status' => $status],
+            'filters' => ['view' => $view, 'status' => $status, 'layout' => $layout],
             'members' => $this->members(),
         ]);
     }

@@ -1,5 +1,6 @@
 import { Form, Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
+import Kanban from '@/components/core/kanban';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -14,10 +15,15 @@ import { cn } from '@/lib/utils';
 import PriorityBadge from '@/modules/tasks/priority-badge';
 import TaskFields, { taskFormTransform } from '@/modules/tasks/task-fields';
 import type { Member, TaskSummary } from '@/modules/tasks/types';
+import type { TaskStatus } from '@/modules/tasks/types';
 import { isOverdue, statusLabels } from '@/modules/tasks/types';
 import { index, show, store, update } from '@/routes/tasks';
 
-type Filters = { view: 'mine' | 'team'; status: 'open' | 'done' | 'all' };
+type Filters = {
+    view: 'mine' | 'team';
+    status: 'open' | 'done' | 'all';
+    layout: 'list' | 'board';
+};
 
 type Props = {
     tasks: TaskSummary[];
@@ -125,7 +131,72 @@ export default function Tasks({ tasks, filters, members }: Props) {
                     </nav>
                 </div>
 
-                {tasks.length === 0 ? (
+                <nav className="flex gap-1" aria-label={t('Layout')}>
+                    <FilterLink
+                        active={filters.layout === 'list'}
+                        filters={{ ...filters, layout: 'list' }}
+                    >
+                        {t('List')}
+                    </FilterLink>
+                    <FilterLink
+                        active={filters.layout === 'board'}
+                        filters={{ ...filters, layout: 'board', status: 'all' }}
+                    >
+                        {t('Board')}
+                    </FilterLink>
+                </nav>
+
+                {filters.layout === 'board' ? (
+                    <Kanban
+                        columns={(
+                            [
+                                'todo',
+                                'in_progress',
+                                'blocked',
+                                'done',
+                            ] as TaskStatus[]
+                        ).map((status) => ({
+                            id: status,
+                            label: t(statusLabels[status]),
+                        }))}
+                        items={tasks.filter(
+                            (task) => task.status !== 'cancelled',
+                        )}
+                        columnOf={(task) => task.status}
+                        onMove={(task, status) =>
+                            router.patch(
+                                update(task.id).url,
+                                { status },
+                                { preserveScroll: true },
+                            )
+                        }
+                        renderCard={(task) => (
+                            <>
+                                <Link
+                                    href={show(task.id)}
+                                    className="block text-sm font-medium hover:underline"
+                                >
+                                    {task.title}
+                                </Link>
+                                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                                    <PriorityBadge priority={task.priority} />
+                                    {task.assignee?.name ?? t('Unassigned')}
+                                    {task.deadline && (
+                                        <span
+                                            className={
+                                                isOverdue(task)
+                                                    ? 'font-medium text-red-600'
+                                                    : ''
+                                            }
+                                        >
+                                            {formatDate(task.deadline, locale)}
+                                        </span>
+                                    )}
+                                </div>
+                            </>
+                        )}
+                    />
+                ) : tasks.length === 0 ? (
                     <p className="text-sm text-muted-foreground">
                         {t('No tasks here.')}
                     </p>
