@@ -47,7 +47,8 @@
 - [x] Passkeys desligadas (config Fortify, UI de login, confirmação e gestão, rota `.well-known`); o pacote e a migração ficam para ser fácil religar
 - [x] Desligar o registo público e a verificação de email do Fortify; `/` redireciona para o dashboard
 - [x] Comandos de arranque: `cidash:create-workspace`, `cidash:create-user` (link para definir a palavra-passe)
-- [ ] Identidade visual: logótipo CIDASH (substituir o do Laravel), cores
+- [x] Marca provisória: logótipo, favicon e ícone neutros (substituem o Laravel)
+- [ ] Identidade visual definitiva: logótipo e cores (decisão da equipa)
 - [x] Auth local (Fortify): convites por email ou link copiado (broker `invites`, 7 dias, `/invitation/{token}`), `activated_at`, recuperar password, rate limiting, `uncompromised`, sem registo público
 - [x] 2FA TOTP opcional para todos (ativar/desativar no perfil, códigos de recuperação), vindo do starter kit
 - [x] Reposição do 2FA de um utilizador pelo super admin (com registo no `activity_log`)
@@ -87,7 +88,7 @@
 - [x] Pessoas de interesse: CRUD de perfis, `expertise_areas`, pesquisa por keyword + dropdown de área, cartões, "Copiar para enviar", aviso de bio por rever, fotografia privada
 - [x] Search global atrás de uma interface (`Core/Search`), implementação FTS5 (unicode61 remove_diacritics, prefixos, bm25), paleta ⌘K, `cidash:search-reindex`
 - [x] Home: widgets de eventos, avisos, reminders, tarefas, imprensa e conteúdos; vista de equipa para managers; aprovações pendentes para editors
-- [ ] Seeds de demonstração realistas
+- [x] Seeds de demonstração realistas (`DemoSeeder`, só em ambiente local)
 
 ## 3. MVP-2 — Monitorização
 

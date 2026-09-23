@@ -2,6 +2,12 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.14.0 (2026-09-23)
+
+- feat: marca provisória do CIDASH (logótipo, favicon e ícone) em vez do logótipo do Laravel
+- chore: dados de demonstração fictícios (`DemoSeeder`) para a CI Reitoria, carregados com `migrate:fresh --seed` em ambiente local
+- fix: o seeder deixa de desligar os eventos dos modelos, de que os registos dependem
+
 ## 0.13.0 (2026-09-23)
 
 - feat: Administração → Utilizadores (super admin): todas as contas com equipas, papéis e estado

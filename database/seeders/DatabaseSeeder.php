@@ -5,12 +5,11 @@ namespace Database\Seeders;
 use App\Enums\WorkspaceRole;
 use App\Models\User;
 use App\Models\Workspace;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
+    // No WithoutModelEvents: records (IsRecord) are created by model events.
 
     /**
      * Seed the application's database.
@@ -23,5 +22,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        if (app()->environment('local')) {
+            $this->call(DemoSeeder::class);
+        }
     }
 }
