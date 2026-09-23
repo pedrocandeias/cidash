@@ -2,6 +2,12 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.24.0 (2026-09-23)
+
+- feat: pontuação de relevância de 0 a 10 em cada história das Notícias, com os motivos: regra de monitorização, pessoa de interesse, fonte prioritária e número de meios
+- feat: Notícias ordenadas por "Mais recentes" ou "Mais relevantes"
+- feat: o briefing escolhe as notícias pela mesma pontuação
+
 ## 0.23.0 (2026-09-23)
 
 - feat: anexos em qualquer registo (tarefas, eventos, avisos, imprensa, conteúdos, campanhas, pessoas, notícias e menções): vários ficheiros de cada vez, até 20 MB cada

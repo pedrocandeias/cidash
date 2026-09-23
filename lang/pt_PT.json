@@ -619,5 +619,12 @@
     "Attach": "Anexar",
     "Uploading…": "A enviar…",
     "No attachments.": "Sem anexos.",
-    "Remove attachment": "Remover anexo"
+    "Remove attachment": "Remover anexo",
+    "Matches a monitoring rule": "Corresponde a uma regra de monitorização",
+    "About a person of interest": "Sobre uma pessoa de interesse",
+    "Covered by several outlets": "Noticiada por vários meios",
+    "Most recent": "Mais recentes",
+    "Most relevant": "Mais relevantes",
+    "No signals": "Sem sinais",
+    "Relevance :score": "Relevância :score"
 }

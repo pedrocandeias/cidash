@@ -7,6 +7,7 @@ use App\Models\Briefing;
 use App\Models\Mention;
 use App\Models\NewsItemState;
 use App\Models\Workspace;
+use App\Monitoring\Relevance;
 use App\Support\WorkspaceContext;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
@@ -77,15 +78,33 @@ abstract class Builder
             ->get();
         $priority = DB::table('workspace_sources')->where('workspace_id', $workspace->id)->where('is_priority', true)->pluck('source_id')->all();
 
-        // One line per story; relevant stories and priority sources first, then the biggest stories.
+        $mentions = Mention::with('rule:id,person_id')
+            ->whereIn('url_hash', $states->map(fn (NewsItemState $state) => $state->newsItem->url_hash))
+            ->get()
+            ->keyBy('url_hash');
+
+        // One line per story; stories marked relevant first, then by relevance score.
         $lines = $states->groupBy(fn (NewsItemState $state) => $state->newsItem->story_id ?? 'item-'.$state->id)
-            ->map(fn ($group) => [
-                'state' => $group->first(),
-                'size' => $group->count(),
-                'relevant' => $group->contains(fn (NewsItemState $state) => $state->status === TriageStatus::Relevant),
-                'priority' => $group->contains(fn (NewsItemState $state) => in_array($state->newsItem->source_id, $priority, true)),
-            ])
-            ->sortByDesc(fn (array $line) => [$line['relevant'], $line['priority'], $line['size']])
+            ->map(function ($group) use ($priority, $mentions) {
+                $matched = $group->map(fn (NewsItemState $state) => $mentions->get($state->newsItem->url_hash))->filter();
+                $isPriority = $group->contains(fn (NewsItemState $state) => in_array($state->newsItem->source_id, $priority, true));
+                $item = $group->first()->newsItem;
+
+                return [
+                    'state' => $group->first(),
+                    'size' => $group->count(),
+                    'relevant' => $group->contains(fn (NewsItemState $state) => $state->status === TriageStatus::Relevant),
+                    'priority' => $isPriority,
+                    'score' => Relevance::score(
+                        $matched->isNotEmpty(),
+                        $matched->contains(fn (Mention $mention) => $mention->rule?->person_id !== null),
+                        $isPriority,
+                        $group->map(fn (NewsItemState $state) => $state->newsItem->outlet)->filter()->unique()->count(),
+                        $item->published_at ?? $item->retrieved_at,
+                    )['score'],
+                ];
+            })
+            ->sortByDesc(fn (array $line) => [$line['relevant'], $line['score'], $line['size']])
             ->values();
 
         return $this->section('news', 'News coverage', $lines->map(fn (array $line) => $this->item(

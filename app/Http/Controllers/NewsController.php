@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Core\RecordPage;
 use App\Enums\TriageStatus;
+use App\Models\Mention;
 use App\Models\NewsItem;
 use App\Models\NewsItemState;
 use App\Models\User;
+use App\Monitoring\Relevance;
 use App\Support\WorkspaceContext;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,6 +27,7 @@ class NewsController extends Controller
     public function index(Request $request): Response
     {
         $status = in_array($request->query('status'), ['relevant', 'irrelevant', 'all'], true) ? $request->query('status') : 'new';
+        $sort = $request->query('sort') === 'relevance' ? 'relevance' : 'recent';
         $workspace = $this->context->get() ?? abort(403);
 
         $states = NewsItemState::query()
@@ -38,11 +41,27 @@ class NewsController extends Controller
 
         $priority = DB::table('workspace_sources')->where('workspace_id', $workspace->id)->where('is_priority', true)->pluck('source_id')->all();
 
+        // Items that matched a rule became mentions; a rule with a person means the story is about them.
+        $mentions = Mention::with('rule:id,person_id')
+            ->whereIn('url_hash', $states->map(fn (NewsItemState $state) => $state->newsItem->url_hash))
+            ->get()
+            ->keyBy('url_hash');
+
         // One line per story (the most recent item), with how many items it groups.
         $lines = $states->groupBy(fn (NewsItemState $state) => $state->newsItem->story_id ?? 'item-'.$state->id)
-            ->map(function ($group) use ($priority) {
+            ->map(function ($group) use ($priority, $mentions) {
                 $state = $group->first();
                 $item = $state->newsItem;
+                $matched = $group->map(fn (NewsItemState $other) => $mentions->get($other->newsItem->url_hash))->filter();
+                $outlets = $group->map(fn (NewsItemState $other) => $other->newsItem->outlet)->filter()->unique()->values();
+                $isPriority = $group->contains(fn (NewsItemState $other) => in_array($other->newsItem->source_id, $priority, true));
+                $relevance = Relevance::score(
+                    $matched->isNotEmpty(),
+                    $matched->contains(fn (Mention $mention) => $mention->rule?->person_id !== null),
+                    $isPriority,
+                    $outlets->count(),
+                    $item->published_at ?? $item->retrieved_at,
+                );
 
                 return [
                     'id' => $state->id,
@@ -52,15 +71,18 @@ class NewsController extends Controller
                     'published_at' => ($item->published_at ?? $item->retrieved_at)->toIso8601String(),
                     'status' => $state->status->value,
                     'story_count' => $group->count(),
-                    'outlets' => $group->map(fn (NewsItemState $other) => $other->newsItem->outlet)->filter()->unique()->values(),
-                    'priority' => $group->contains(fn (NewsItemState $other) => in_array($other->newsItem->source_id, $priority, true)),
+                    'outlets' => $outlets,
+                    'priority' => $isPriority,
+                    ...$relevance,
                 ];
             })
+            ->when($sort === 'relevance', fn ($lines) => $lines->sortByDesc('score'))
             ->values();
 
         return Inertia::render('news/index', [
             'lines' => $lines,
             'status' => $status,
+            'sort' => $sort,
             'counts' => NewsItemState::selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status'),
             'members' => $this->members(),
         ]);

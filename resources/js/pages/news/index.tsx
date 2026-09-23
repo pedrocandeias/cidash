@@ -17,11 +17,14 @@ type Line = {
     story_count: number;
     outlets: string[];
     priority: boolean;
+    score: number;
+    reasons: string[];
 };
 
 type Props = {
     lines: Line[];
     status: 'new' | 'relevant' | 'irrelevant' | 'all';
+    sort: 'recent' | 'relevance';
     counts: Record<string, number>;
 };
 
@@ -32,7 +35,7 @@ const tabs = [
     { value: 'all', label: 'All' },
 ] as const;
 
-export default function News({ lines, status, counts }: Props) {
+export default function News({ lines, status, sort, counts }: Props) {
     const { t, locale } = useTranslation();
 
     const triage = (line: Line, next: 'relevant' | 'irrelevant') =>
@@ -59,10 +62,12 @@ export default function News({ lines, status, counts }: Props) {
                         <Link
                             key={tab.value}
                             href={index({
-                                query:
-                                    tab.value === 'new'
+                                query: {
+                                    ...(tab.value === 'new'
                                         ? {}
-                                        : { status: tab.value },
+                                        : { status: tab.value }),
+                                    ...(sort === 'relevance' ? { sort } : {}),
+                                },
                             })}
                             className={cn(
                                 'rounded-md px-3 py-1.5 text-sm',
@@ -77,6 +82,32 @@ export default function News({ lines, status, counts }: Props) {
                                     {counts[tab.value]}
                                 </span>
                             ) : null}
+                        </Link>
+                    ))}
+                    <span className="mx-2 w-px self-stretch bg-border" />
+                    {(['recent', 'relevance'] as const).map((option) => (
+                        <Link
+                            key={option}
+                            href={index({
+                                query: {
+                                    ...(status === 'new' ? {} : { status }),
+                                    ...(option === 'relevance'
+                                        ? { sort: option }
+                                        : {}),
+                                },
+                            })}
+                            className={cn(
+                                'rounded-md px-3 py-1.5 text-sm',
+                                sort === option
+                                    ? 'bg-muted font-medium'
+                                    : 'text-muted-foreground hover:text-foreground',
+                            )}
+                        >
+                            {t(
+                                option === 'recent'
+                                    ? 'Most recent'
+                                    : 'Most relevant',
+                            )}
                         </Link>
                     ))}
                 </nav>
@@ -98,6 +129,30 @@ export default function News({ lines, status, counts }: Props) {
                             >
                                 <div className="min-w-64 flex-1 space-y-1">
                                     <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                                        <span
+                                            className={cn(
+                                                'inline-flex h-5 min-w-5 items-center justify-center rounded px-1 font-semibold tabular-nums',
+                                                line.score >= 6
+                                                    ? 'bg-emerald-600 text-white'
+                                                    : line.score >= 3
+                                                      ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200'
+                                                      : 'bg-muted',
+                                            )}
+                                            title={
+                                                line.reasons.length > 0
+                                                    ? line.reasons
+                                                          .map((reason) =>
+                                                              t(reason),
+                                                          )
+                                                          .join(' · ')
+                                                    : t('No signals')
+                                            }
+                                            aria-label={t('Relevance :score', {
+                                                score: line.score,
+                                            })}
+                                        >
+                                            {line.score}
+                                        </span>
                                         {line.priority && (
                                             <Badge variant="outline">
                                                 {t('Priority source')}

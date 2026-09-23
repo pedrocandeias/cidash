@@ -118,7 +118,7 @@
 - [x] Assets/anexos
 - [x] ICS export/subscrição
 - [ ] Estados e tipos configuráveis
-- [ ] Scoring de relevância
+- [x] Scoring de relevância (determinístico: regras, pessoas de interesse, fontes prioritárias, cobertura)
 - [ ] Mais fontes (outros meios; APIs se o scraping não chegar)
 
 ## 5. Phase 3 — Expansão às UOs
