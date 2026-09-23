@@ -10,6 +10,7 @@ import { edit as editAppearance } from '@/routes/appearance';
 import { edit } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
 import { index as team } from '@/routes/team';
+import { index as terms } from '@/routes/terms';
 import type { NavItem } from '@/types';
 
 const sidebarNavItems: NavItem[] = [
@@ -30,7 +31,10 @@ const sidebarNavItems: NavItem[] = [
     },
 ];
 
-const teamNavItem: NavItem = { title: 'Team', href: team(), icon: null };
+const managerNavItems: NavItem[] = [
+    { title: 'Team', href: team(), icon: null },
+    { title: 'Terms', href: terms(), icon: null },
+];
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
     const { isCurrentOrParentUrl } = useCurrentUrl();
@@ -39,7 +43,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
     const canManageTeam =
         auth.user?.is_super_admin || workspace?.role === 'manager';
     const navItems = canManageTeam
-        ? [...sidebarNavItems, teamNavItem]
+        ? [...sidebarNavItems, ...managerNavItems]
         : sidebarNavItems;
 
     return (

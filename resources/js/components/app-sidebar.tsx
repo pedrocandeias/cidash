@@ -8,6 +8,7 @@ import {
     Flag,
     Megaphone,
     Newspaper,
+    Users,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
@@ -27,6 +28,7 @@ import { index as campaigns } from '@/routes/campaigns';
 import { index as content } from '@/routes/content';
 import { index as events } from '@/routes/events';
 import { index as notices } from '@/routes/notices';
+import { index as people } from '@/routes/people';
 import { index as press } from '@/routes/press';
 import { index as tasks } from '@/routes/tasks';
 import type { NavItem } from '@/types';
@@ -45,6 +47,7 @@ const navGroups: { label?: string; items: NavItem[] }[] = [
             { title: 'Content', href: content(), icon: Columns3 },
             { title: 'Campaigns', href: campaigns(), icon: Flag },
             { title: 'Press requests', href: press(), icon: Newspaper },
+            { title: 'People', href: people(), icon: Users },
             { title: 'Notices', href: notices(), icon: Megaphone },
         ],
     },

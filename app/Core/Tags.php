@@ -4,39 +4,30 @@ namespace App\Core;
 
 use App\Models\Record;
 use App\Models\Tag;
-use Illuminate\Database\UniqueConstraintViolationException;
-use Illuminate\Support\Collection;
 
 /**
- * Tags of the current workspace, never duplicated (see Terms).
+ * Tags of the current workspace, attached to any record.
  */
-class Tags
+class Tags extends Vocabulary
 {
-    /**
-     * The existing tag with the same normalized name, or a new one keeping the
-     * spelling it was first written with.
-     */
-    public function findOrCreate(string $name): Tag
+    protected function model(): string
     {
-        $normalized = Terms::normalize($name);
-
-        try {
-            return Tag::firstOrCreate(['normalized_name' => $normalized], ['name' => Terms::clean($name)]);
-        } catch (UniqueConstraintViolationException) {
-            return Tag::where('normalized_name', $normalized)->firstOrFail();
-        }
+        return Tag::class;
     }
 
-    /**
-     * Existing tags that look like a typo of $name ("Queria dizer…?").
-     *
-     * @return Collection<int, Tag>
-     */
-    public function similarTo(string $name): Collection
+    protected function pivotTable(): string
     {
-        return Tag::orderBy('name')->get()
-            ->filter(fn (Tag $tag) => Terms::similar($tag->name, $name))
-            ->values();
+        return 'object_tag';
+    }
+
+    protected function termKey(): string
+    {
+        return 'tag_id';
+    }
+
+    protected function ownerKey(): string
+    {
+        return 'object_id';
     }
 
     /**
@@ -44,11 +35,6 @@ class Tags
      */
     public function sync(Record $record, array $names): void
     {
-        $ids = collect($names)
-            ->filter(fn (string $name) => Terms::normalize($name) !== '')
-            ->map(fn (string $name) => $this->findOrCreate($name)->id)
-            ->unique();
-
-        $record->tags()->sync($ids);
+        $record->tags()->sync($this->idsFor($names));
     }
 }

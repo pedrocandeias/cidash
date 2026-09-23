@@ -77,14 +77,14 @@
 - [x] Tasks: CRUD, minhas/equipa, filtros de estado, conclusão rápida, detalhe com comentários e histórico, apagar (criador ou manager), origem (`source_id` + relação `originated_from`), notificação in-app de atribuição
 - [ ] Tasks: vista Kanban por estado
 - [x] Press Requests: CRUD, lista por prazo com semáforo, autocompletar jornalista e meio, data de resposta, lembretes, criar tarefa
-- [ ] Press Requests: sugerir especialistas (com Pessoas de interesse)
+- [x] Press Requests: sugerir especialistas (relacionar o pedido com Pessoas de interesse no painel de relações)
 - [x] Content Pipeline: Kanban com 7 estados, drag & drop, `stage_changed_at`, aprovação só por editors, managers e super admin (sem saltar a revisão); notificação aos editors e managers quando um conteúdo entra em Review
 - [ ] Content Pipeline: vista de lista e calendário editorial (publish_at)
 - [x] Campaigns: CRUD, responsáveis, secção "Nesta campanha" (eventos e conteúdos via `part_of`)
 - [x] Termos normalizados (backend): `Terms`, `normalized_name` + índice único, reutilizar em vez de duplicar, sugestões (distância ≤ 2), testes
 - [x] Termos normalizados (UI): TagInput com sugestões e "Queria dizer…?"
-- [ ] Gestão de tags pelos managers: renomear, fundir, apagar
-- [ ] Pessoas de interesse: CRUD de perfis, `expertise_areas`, pesquisa por keyword + dropdown de área, cartões, "Copiar para enviar", aviso de bio por rever
+- [x] Gestão de tags e áreas pelos managers: renomear, fundir, apagar (Definições → Termos)
+- [x] Pessoas de interesse: CRUD de perfis, `expertise_areas`, pesquisa por keyword + dropdown de área, cartões, "Copiar para enviar", aviso de bio por rever, fotografia privada
 - [ ] Search global atrás de uma interface (`Core/Search`), implementação FTS5 (unicode61 remove_diacritics + trigram), paleta ⌘K
 - [ ] Home: widgets de eventos, avisos, reminders, tarefas, imprensa e conteúdos; vista de equipa para managers; aprovações pendentes para editors
 - [ ] Seeds de demonstração realistas

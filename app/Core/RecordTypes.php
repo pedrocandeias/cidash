@@ -6,6 +6,7 @@ use App\Models\CalendarEvent;
 use App\Models\Campaign;
 use App\Models\ContentItem;
 use App\Models\Notice;
+use App\Models\Person;
 use App\Models\PressRequest;
 use App\Models\Record;
 use App\Models\Task;
@@ -27,6 +28,7 @@ class RecordTypes
         'press_request' => ['model' => PressRequest::class, 'route' => 'press.show', 'label' => 'Press request'],
         'content' => ['model' => ContentItem::class, 'route' => 'content.show', 'label' => 'Content item'],
         'campaign' => ['model' => Campaign::class, 'route' => 'campaigns.show', 'label' => 'Campaign'],
+        'person' => ['model' => Person::class, 'route' => 'people.show', 'label' => 'Person of interest'],
     ];
 
     public static function register(): void

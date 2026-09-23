@@ -8,6 +8,7 @@ use App\Http\Controllers\ContentItemController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PersonController;
 use App\Http\Controllers\PressRequestController;
 use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\TagController;
@@ -31,6 +32,10 @@ Route::middleware(['auth', 'workspace'])->group(function () {
     Route::resource('content', ContentItemController::class)->except(['create', 'edit']);
 
     Route::resource('campaigns', CampaignController::class)->except(['create', 'edit']);
+
+    Route::get('people/areas/suggest', [PersonController::class, 'suggestAreas'])->name('people.areas.suggest');
+    Route::get('people/{person}/photo', [PersonController::class, 'photo'])->name('people.photo');
+    Route::resource('people', PersonController::class)->except(['create', 'edit']);
 
     Route::get('records/search', [LinkController::class, 'search'])->name('records.search');
     Route::post('records/{record}/links', [LinkController::class, 'store'])->name('links.store');

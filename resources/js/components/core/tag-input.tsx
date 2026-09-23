@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useTranslation } from '@/lib/i18n';
@@ -17,6 +17,8 @@ export function normalizeTerm(term: string) {
 
 type Suggestions = { matches: string[]; similar: string[] };
 
+const defaultSuggestUrl = (q: string) => suggest.url({ query: { q } });
+
 /**
  * Tag editor sent as `tags[]`. Existing tags are suggested while typing, and a
  * new tag that looks like a typo of an existing one asks "Did you mean…?"
@@ -24,8 +26,17 @@ type Suggestions = { matches: string[]; similar: string[] };
  */
 export default function TagInput({
     defaultValue = [],
+    name = 'tags[]',
+    id = 'tags',
+    suggestUrl = defaultSuggestUrl,
+    placeholder = 'Add a tag and press Enter',
 }: {
     defaultValue?: string[];
+    /** Form field name; any vocabulary with a suggest endpoint works (tags, expertise areas). */
+    name?: string;
+    id?: string;
+    suggestUrl?: (query: string) => string;
+    placeholder?: string;
 }) {
     const { t } = useTranslation();
     const [tags, setTags] = useState<string[]>(defaultValue);
@@ -39,6 +50,12 @@ export default function TagInput({
         similar: string;
     } | null>(null);
 
+    // Kept in a ref so an inline function from the caller does not re-run the effect on every render.
+    const suggestUrlRef = useRef(suggestUrl);
+    useEffect(() => {
+        suggestUrlRef.current = suggestUrl;
+    });
+
     useEffect(() => {
         if (text.trim().length < 2) {
             setSuggestions({ matches: [], similar: [] });
@@ -48,7 +65,7 @@ export default function TagInput({
 
         const controller = new AbortController();
         const timer = setTimeout(() => {
-            fetch(suggest.url({ query: { q: text } }), {
+            fetch(suggestUrlRef.current(text), {
                 headers: { Accept: 'application/json' },
                 signal: controller.signal,
             })
@@ -100,7 +117,7 @@ export default function TagInput({
     return (
         <div className="space-y-2">
             {tags.map((tag) => (
-                <input key={tag} type="hidden" name="tags[]" value={tag} />
+                <input key={tag} type="hidden" name={name} value={tag} />
             ))}
 
             {tags.length > 0 && (
@@ -125,9 +142,9 @@ export default function TagInput({
             )}
 
             <Input
-                id="tags"
+                id={id}
                 value={text}
-                placeholder={t('Add a tag and press Enter')}
+                placeholder={t(placeholder)}
                 onChange={(event) => {
                     setText(event.target.value);
                     setPending(null);

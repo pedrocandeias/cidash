@@ -2,6 +2,17 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.10.0 (2026-09-23)
+
+- feat: Pessoas de interesse: perfis de especialistas com cargo, afiliação, bio curta e longa, palavras-chave, línguas, contactos, fotografia e notas sobre media
+- feat: áreas de especialidade sem duplicados, com sugestões e "Queria dizer…?"
+- feat: pesquisa por palavra-chave e filtro por área
+- feat: "Copiar para enviar" com o perfil formatado para um email ao jornalista
+- feat: bios não revistas há mais de um ano assinaladas, com "Marcar como revista hoje"
+- feat: fotografias guardadas fora da pasta pública e servidas só à equipa
+- feat: Definições → Termos (managers): renomear, fundir e apagar tags e áreas de especialidade
+- refactor: vocabulários (tags e áreas) partilham a mesma base (`Vocabulary`)
+
 ## 0.9.0 (2026-09-23)
 
 - feat: Campanhas com descrição, objetivos, públicos, datas, canais, estado e vários responsáveis
