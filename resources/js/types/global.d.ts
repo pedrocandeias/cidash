@@ -18,6 +18,7 @@ declare module '@inertiajs/core' {
                 name: string;
                 role: 'member' | 'editor' | 'manager' | null;
             } | null;
+            workspaces: { id: number; name: string }[];
             notifications: {
                 unread: number;
                 items: {

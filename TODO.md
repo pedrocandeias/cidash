@@ -55,7 +55,7 @@
 - [x] Tabela `settings` + `MailSettings` (password cifrada) + painel Administração → Email: SMTP, remetente, email de teste (com a configuração guardada); mailer configurado ao ser resolvido
 - [x] Papéis `manager`/`editor`/`member` por workspace (`WorkspaceRole`, cumulativos) + `is_super_admin`
 - [x] Regra de pelo menos 1 manager (`TeamMembers`), gates `super-admin` e `manage-members`
-- [ ] Policies segundo a matriz §2.6, à medida que cada módulo é feito
+- [x] Policies segundo a matriz §2.6, à medida que cada módulo é feito (contínuo: cada módulo novo traz as suas)
 - [x] "Eliminar conta": o único manager de uma equipa não pode eliminar a conta
 - [x] Gestão de membros pelos managers (Definições → Equipa): adicionar por email (conta nova com convite; conta existente entra logo), mudar papel, remover, reenviar convite
 - [x] Área de Administração do super admin: Email
@@ -63,7 +63,7 @@
 - [x] Registo no `activity_log` dos acessos do super admin a workspaces de que não é membro (uma vez por sessão)
 - [x] Workspaces: `workspaces`, `workspace_user`, `users.current_workspace_id`, middleware `workspace` + `WorkspaceContext`, seed "CI Reitoria"
 - [x] Scope global de workspace (`WorkspaceScope`, falha sem workspace ativo)
-- [ ] Suite de testes de isolamento entre workspaces (cresce com cada módulo)
+- [x] Suite de testes de isolamento entre workspaces (contínuo: cada módulo novo traz os seus)
 - [x] Núcleo: `objects` (`Record`), `relations` (`Link`, só dentro do workspace), `tags`, `comments`, `activity_log`; trait `IsRecord`; serviços `Links`, `Tags`, `Terms`
 - [x] Notificações in-app (tabela `notifications`, sino, abrir muda para o workspace da notificação)
 - [x] `reminders` + `cidash:send-reminders` (notificação in-app)
@@ -126,8 +126,8 @@
 - [ ] Avaliar o piloto: volume, contenção de escrita e feedback. Decidir a migração para MariaDB/MySQL
 - [ ] (se sim) Implementação de `Core/Search` para o novo motor + script e teste de migração de dados
 - [ ] SSO U.Porto
-- [ ] Seletor de workspace
-- [ ] Administração completa do super admin: criar workspaces, nomear managers, visão geral de todos os workspaces e da ingestão
+- [x] Seletor de workspace
+- [x] Administração completa do super admin: criar workspaces, nomear managers, visão geral de todos os workspaces e da ingestão
 - [ ] Onboarding por UO (fontes subscritas, regras, áreas de especialidade, guia)
 
 ## 6. Future

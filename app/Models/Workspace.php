@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\WorkspaceFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $name
  * @property string $slug
+ * @property Carbon|null $archived_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
@@ -24,6 +26,26 @@ class Workspace extends Model
 {
     /** @use HasFactory<WorkspaceFactory> */
     use HasFactory;
+
+    protected function casts(): array
+    {
+        return ['archived_at' => 'datetime'];
+    }
+
+    /**
+     * Teams that are not archived.
+     *
+     * @param  Builder<self>  $query
+     */
+    public function scopeActive(Builder $query): void
+    {
+        $query->whereNull('archived_at');
+    }
+
+    public function isArchived(): bool
+    {
+        return $this->archived_at !== null;
+    }
 
     /**
      * Catalogue sources the workspace follows.

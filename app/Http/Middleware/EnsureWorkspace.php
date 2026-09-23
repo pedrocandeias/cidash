@@ -58,11 +58,12 @@ class EnsureWorkspace
     {
         $current = $user->currentWorkspace;
 
-        if ($current && ($user->is_super_admin || $user->roleIn($current))) {
+        // The super admin can still open an archived team; members cannot.
+        if ($current && ($user->is_super_admin || ($user->roleIn($current) && ! $current->isArchived()))) {
             return $current;
         }
 
-        return $user->workspaces()->oldest('workspace_user.id')->first()
-            ?? ($user->is_super_admin ? Workspace::query()->oldest('id')->first() : null);
+        return $user->workspaces()->whereNull('archived_at')->oldest('workspace_user.id')->first()
+            ?? ($user->is_super_admin ? Workspace::active()->oldest('id')->first() : null);
     }
 }

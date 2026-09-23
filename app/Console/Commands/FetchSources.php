@@ -29,6 +29,7 @@ class FetchSources extends Command
         $rules = MonitoringRule::withoutGlobalScope(WorkspaceScope::class)
             ->where('active', true)
             ->where('google_news', true)
+            ->whereHas('workspace', fn ($query) => $query->whereNull('archived_at'))
             ->get()
             ->filter(fn (MonitoringRule $rule) => $this->option('all') || $rule->last_fetched_at === null || $rule->last_fetched_at->addMinutes(30)->lte(now()));
 

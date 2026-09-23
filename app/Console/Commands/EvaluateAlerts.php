@@ -14,7 +14,7 @@ class EvaluateAlerts extends Command
 {
     public function handle(Evaluator $evaluator): int
     {
-        foreach (Workspace::all() as $workspace) {
+        foreach (Workspace::active()->get() as $workspace) {
             $this->line("{$workspace->name}: {$evaluator->run($workspace)} new alerts");
         }
 

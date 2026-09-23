@@ -2,6 +2,14 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.27.0 (2026-09-23)
+
+- feat: seletor de equipa na barra lateral para quem pertence a várias equipas (e para o super admin)
+- feat: Administração → Equipas: todas as equipas num relance (membros, registos, alertas abertos, conteúdos em revisão, managers e última atividade) e o estado da recolha de notícias
+- feat: criar e renomear equipas, nomear managers (com convite para contas novas) e entrar em qualquer equipa
+- feat: arquivar equipas: guardam os dados, mas deixam de receber notícias, alertas e briefings, e os membros deixam de ter acesso
+- refactor: ligação de convite partilhada entre Definições → Equipa e Administração → Equipas
+
 ## 0.26.0 (2026-09-23)
 
 - feat: pré-visualização lateral de qualquer registo (estado, campos principais, texto, tags, comentários e anexos) sem sair da página

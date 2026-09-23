@@ -13,12 +13,14 @@ import {
     UserCog,
     Users,
     AtSign,
+    Building2,
     TriangleAlert,
     FileText,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
+import { WorkspaceSwitcher } from '@/components/workspace-switcher';
 import {
     Sidebar,
     SidebarContent,
@@ -32,6 +34,7 @@ import { dashboard } from '@/routes';
 import { edit as editEmailSettings } from '@/routes/admin/email';
 import { index as adminSources } from '@/routes/admin/sources';
 import { index as adminUsers } from '@/routes/admin/users';
+import { index as adminWorkspaces } from '@/routes/admin/workspaces';
 import { index as campaigns } from '@/routes/campaigns';
 import { index as content } from '@/routes/content';
 import { index as events } from '@/routes/events';
@@ -79,6 +82,7 @@ const navGroups: { label?: string; items: NavItem[] }[] = [
 const adminGroup = {
     label: 'Administration',
     items: [
+        { title: 'Teams', href: adminWorkspaces(), icon: Building2 },
         { title: 'Users', href: adminUsers(), icon: UserCog },
         { title: 'Sources', href: adminSources(), icon: Rss },
         { title: 'Email', href: editEmailSettings(), icon: Mail },
@@ -103,6 +107,7 @@ export function AppSidebar() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
+                <WorkspaceSwitcher />
             </SidebarHeader>
 
             <SidebarContent>

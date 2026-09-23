@@ -39,7 +39,7 @@ class CalendarSubscriptionController extends Controller
         $user = User::where('calendar_token', $token)->whereNull('deactivated_at')->first() ?? abort(404);
         $mine = $request->boolean('mine');
 
-        $events = $user->workspaces()->get()->flatMap(fn (Workspace $workspace) => $context->within($workspace, fn () => CalendarEvent::query()
+        $events = $user->workspaces()->whereNull('archived_at')->get()->flatMap(fn (Workspace $workspace) => $context->within($workspace, fn () => CalendarEvent::query()
             ->where('start_at', '>=', now()->subMonths(3))
             ->where('start_at', '<', now()->addYear())
             ->where('status', '!=', EventStatus::Cancelled)

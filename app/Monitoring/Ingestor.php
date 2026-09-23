@@ -137,7 +137,7 @@ class Ingestor
     {
         $text = $item->headline.' '.$item->summary;
 
-        foreach ($source->workspaces()->get() as $workspace) {
+        foreach ($source->workspaces()->whereNull('archived_at')->get() as $workspace) {
             $match = $this->matcher->first($workspace->id, $text);
             // A team without rules yet gets everything, so the inbox is never silently empty.
             $onlyMatching = (bool) $workspace->getRelationValue('pivot')?->only_matching && $this->matcher->hasRules($workspace->id);

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\MailSettingsController;
 use App\Http\Controllers\Admin\SourceController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\WorkspaceController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'can:super-admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -17,6 +18,11 @@ Route::middleware(['auth', 'can:super-admin'])->prefix('admin')->name('admin.')-
     Route::patch('sources/{source}', [SourceController::class, 'update'])->name('sources.update');
     Route::delete('sources/{source}', [SourceController::class, 'destroy'])->name('sources.destroy');
     Route::post('sources/{source}/fetch', [SourceController::class, 'fetch'])->name('sources.fetch');
+
+    Route::get('workspaces', [WorkspaceController::class, 'index'])->name('workspaces.index');
+    Route::post('workspaces', [WorkspaceController::class, 'store'])->name('workspaces.store');
+    Route::patch('workspaces/{workspace}', [WorkspaceController::class, 'update'])->name('workspaces.update');
+    Route::post('workspaces/{workspace}/managers', [WorkspaceController::class, 'addManager'])->name('workspaces.managers.store');
 
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::patch('users/{user}', [UserController::class, 'update'])->name('users.update');

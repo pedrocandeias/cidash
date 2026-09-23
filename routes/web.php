@@ -22,6 +22,7 @@ use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\WorkspaceSwitchController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard')->name('home');
@@ -30,6 +31,9 @@ Route::redirect('/', '/dashboard')->name('home');
 Route::get('calendar/{token}.ics', [CalendarSubscriptionController::class, 'feed'])
     ->middleware('throttle:60,1')
     ->name('calendar.feed');
+
+// Outside the workspace middleware: it chooses the workspace.
+Route::post('workspaces/{workspace}/switch', WorkspaceSwitchController::class)->middleware('auth')->name('workspaces.switch');
 
 Route::middleware(['auth', 'workspace'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');

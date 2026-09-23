@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Workspace;
 use App\Support\Options;
 use App\Support\WorkspaceContext;
 use Illuminate\Http\Request;
@@ -54,6 +55,11 @@ class HandleInertiaRequests extends Middleware
                     'role' => $request->user()?->roleIn($workspace)?->value,
                 ] : null;
             },
+            // For the workspace selector: the user's teams, or every team for the super admin.
+            'workspaces' => fn () => $request->user() === null ? [] : ($request->user()->is_super_admin
+                ? Workspace::active()->orderBy('name')->get(['id', 'name'])
+                : $request->user()->workspaces()->whereNull('archived_at')->orderBy('name')->get(['workspaces.id', 'workspaces.name'])
+            )->map(fn (Workspace $workspace) => ['id' => $workspace->id, 'name' => $workspace->name])->values(),
             'notifications' => fn () => $request->user() ? [
                 'unread' => $request->user()->unreadNotifications()->count(),
                 'items' => $request->user()->notifications()->latest()->limit(8)->get()

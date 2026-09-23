@@ -22,7 +22,7 @@ class GenerateBriefings extends Command
     {
         $withWeekly = $this->option('weekly') || now()->isMonday();
 
-        foreach (Workspace::all() as $workspace) {
+        foreach (Workspace::active()->get() as $workspace) {
             $this->send($daily->generate($workspace), $workspace, 'daily_briefing', $preferences);
             if ($withWeekly) {
                 $this->send($weekly->generate($workspace), $workspace, 'weekly_briefing', $preferences);
