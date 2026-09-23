@@ -23,13 +23,10 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { useTranslation } from '@/lib/i18n';
+import { useOptions } from '@/lib/options';
 import EventFields, { eventFormTransform } from '@/modules/events/event-fields';
 import type { EventDetails } from '@/modules/events/types';
-import {
-    eventFieldLabels,
-    typeColors,
-    typeLabels,
-} from '@/modules/events/types';
+import { eventFieldLabels } from '@/modules/events/types';
 import type { Member } from '@/modules/tasks/types';
 import { destroy, ics, index, update } from '@/routes/events';
 
@@ -57,6 +54,7 @@ export default function ShowEvent({
     can,
 }: Props) {
     const { t } = useTranslation();
+    const types = useOptions('event_type');
 
     return (
         <>
@@ -69,10 +67,10 @@ export default function ShowEvent({
                             <span
                                 className="size-2.5 rounded-full"
                                 style={{
-                                    backgroundColor: typeColors[event.type],
+                                    backgroundColor: types.color(event.type),
                                 }}
                             />
-                            {t(typeLabels[event.type])}
+                            {t(types.label(event.type))}
                         </span>
                         <Heading title={event.title} />
                     </div>

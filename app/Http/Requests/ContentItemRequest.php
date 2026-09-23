@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\ContentFormat;
 use App\Enums\ContentStage;
+use App\Support\Options;
 use App\Support\WorkspaceContext;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,7 +27,7 @@ class ContentItemRequest extends FormRequest
         return [
             'title' => [$required, 'string', 'max:255'],
             'brief' => ['sometimes', 'nullable', 'string', 'max:20000'],
-            'format' => [$required, Rule::enum(ContentFormat::class)],
+            'format' => [$required, Rule::in(app(Options::class)->keys('content_format'))],
             'channels' => ['sometimes', 'nullable', 'array'],
             'channels.*' => [Rule::in(self::CHANNELS)],
             'stage' => ['sometimes', Rule::enum(ContentStage::class)],

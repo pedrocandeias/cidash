@@ -11,6 +11,7 @@ import { edit as editNotifications } from '@/routes/notification-preferences';
 import { edit } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
 import { index as alertRules } from '@/routes/alert-rules';
+import { index as options } from '@/routes/options';
 import { index as rules } from '@/routes/rules';
 import { index as subscriptions } from '@/routes/subscriptions';
 import { index as team } from '@/routes/team';
@@ -45,6 +46,7 @@ const managerNavItems: NavItem[] = [
     { title: 'Sources', href: subscriptions(), icon: null },
     { title: 'Monitoring', href: rules(), icon: null },
     { title: 'Alerts', href: alertRules(), icon: null },
+    { title: 'Types', href: options(), icon: null },
     { title: 'Terms', href: terms(), icon: null },
 ];
 

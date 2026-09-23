@@ -3,6 +3,7 @@
 use App\Http\Controllers\Settings\AlertRuleController;
 use App\Http\Controllers\Settings\MonitoringRuleController;
 use App\Http\Controllers\Settings\NotificationPreferencesController;
+use App\Http\Controllers\Settings\OptionController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
 use App\Http\Controllers\Settings\SourceSubscriptionController;
@@ -49,6 +50,10 @@ Route::middleware(['auth', 'workspace'])->group(function () {
 
     Route::get('settings/alerts', [AlertRuleController::class, 'index'])->name('alert-rules.index');
     Route::patch('settings/alerts/{rule}', [AlertRuleController::class, 'update'])->name('alert-rules.update');
+
+    Route::get('settings/types', [OptionController::class, 'index'])->name('options.index');
+    Route::post('settings/types', [OptionController::class, 'store'])->name('options.store');
+    Route::patch('settings/types/{option}', [OptionController::class, 'update'])->name('options.update');
 
     Route::get('settings/monitoring', [MonitoringRuleController::class, 'index'])->name('rules.index');
     Route::post('settings/monitoring', [MonitoringRuleController::class, 'store'])->name('rules.store');

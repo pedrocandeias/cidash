@@ -117,7 +117,7 @@
 - [x] Notificações e briefing por email (preferências por utilizador; envio quando o SMTP estiver configurado)
 - [x] Assets/anexos
 - [x] ICS export/subscrição
-- [ ] Estados e tipos configuráveis
+- [x] Estados e tipos configuráveis: tipos de evento e formatos de conteúdo por equipa (os estados dos fluxos ficam fixos, ver ARCHITECTURE)
 - [x] Scoring de relevância (determinístico: regras, pessoas de interesse, fontes prioritárias, cobertura)
 - [ ] Mais fontes (outros meios; APIs se o scraping não chegar)
 

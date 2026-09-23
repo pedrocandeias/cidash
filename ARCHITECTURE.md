@@ -141,7 +141,7 @@ relations (source_id → objects, target_id → objects, relation_type, note, cr
 ### 2.3 Módulos
 
 **Calendar — `events`**
-title*, description, `event_type` (institutional, campaign, publication, ephemeris, deadline), start_at, end_at, all_day, location (texto), organizer (texto), `responsible_user_id`, priority, status (tentative, confirmed, cancelled, done), notes.
+title*, description, `type` (lista configurável por equipa em `workspace_options`; por omissão institutional, campaign, publication, ephemeris, deadline), start_at, end_at, all_day, location (texto), organizer (texto), `responsible_user_id`, priority, status (tentative, confirmed, cancelled, done), notes.
 *tags, related_entities e reminders vêm do núcleo.*
 
 **Notice Board — `notices`**
@@ -483,7 +483,7 @@ O MVP divide-se em duas entregas, para pôr a aplicação em uso mais cedo.
 - Notificações e briefing por email (usa a configuração de email do MVP-1)
 - Assets/anexos em campanhas e conteúdos
 - Exportação e subscrição ICS do calendário
-- Estados e tipos configuráveis (pipeline, tipos de evento)
+- Estados e tipos configuráveis (pipeline, tipos de evento). Feito para tipos de evento e formatos de conteúdo (`workspace_options`, Definições → Tipos); os estados dos fluxos (fases do pipeline, estados de imprensa e tarefas) ficam fixos porque aprovações, alertas e briefings dependem deles
 - Scoring de relevância mais rico
 - Mais fontes: outros meios, e fontes por API se o scraping não chegar
 

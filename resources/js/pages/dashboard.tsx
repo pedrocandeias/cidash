@@ -11,11 +11,10 @@ import {
     localToday,
     useTranslation,
 } from '@/lib/i18n';
+import { useOptions } from '@/lib/options';
 import { cn } from '@/lib/utils';
 import { stageLabels } from '@/modules/content/types';
 import type { Stage } from '@/modules/content/types';
-import type { EventType } from '@/modules/events/types';
-import { typeColors } from '@/modules/events/types';
 import PriorityBadge from '@/modules/tasks/priority-badge';
 import type { Priority } from '@/modules/tasks/types';
 import { dashboard } from '@/routes';
@@ -52,7 +51,7 @@ type Props = {
         title: string;
         start_at: string;
         all_day: boolean;
-        type: EventType;
+        type: string;
     }[];
     tasks: {
         id: string;
@@ -137,6 +136,7 @@ export default function Dashboard({
     overdue,
 }: Props) {
     const { t, locale } = useTranslation();
+    const types = useOptions('event_type');
     const { auth } = usePage().props;
     const today = localToday();
     const dayLabel = new Intl.DateTimeFormat(locale.replace('_', '-'), {
@@ -261,7 +261,7 @@ export default function Dashboard({
                                                 className="size-2 shrink-0 rounded-full"
                                                 style={{
                                                     backgroundColor:
-                                                        typeColors[event.type],
+                                                        types.color(event.type),
                                                 }}
                                             />
                                             <span className="w-32 shrink-0 text-muted-foreground">

@@ -626,5 +626,15 @@
     "Most recent": "Mais recentes",
     "Most relevant": "Mais relevantes",
     "No signals": "Sem sinais",
-    "Relevance :score": "Relevância :score"
+    "Relevance :score": "Relevância :score",
+    "Types": "Tipos",
+    "Event types": "Tipos de evento",
+    "Shown in the calendar with their colour.": "Aparecem no calendário com a sua cor.",
+    "Content formats": "Formatos de conteúdo",
+    "The formats of the content pipeline.": "Os formatos do pipeline de conteúdos.",
+    "Entries in use by records are switched off, not deleted.": "As entradas usadas por registos desligam-se, não se apagam.",
+    "Colour": "Cor",
+    "In use": "Em uso",
+    "New entry": "Nova entrada",
+    "This name already exists.": "Este nome já existe."
 }

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Core\Concerns\IsRecord;
-use App\Enums\ContentFormat;
 use App\Enums\ContentStage;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -17,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $id
  * @property string $title
  * @property string|null $brief
- * @property ContentFormat $format
+ * @property string $format key of the team's content formats (App\Support\Options)
  * @property array<int, string>|null $channels
  * @property ContentStage $stage
  * @property CarbonImmutable $stage_changed_at
@@ -50,7 +49,6 @@ class ContentItem extends Model
     protected function casts(): array
     {
         return [
-            'format' => ContentFormat::class,
             'channels' => 'array',
             'stage' => ContentStage::class,
             'stage_changed_at' => 'datetime',

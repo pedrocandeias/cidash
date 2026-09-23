@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Core\Concerns\IsRecord;
 use App\Enums\EventStatus;
-use App\Enums\EventType;
 use App\Enums\Priority;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -18,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $id
  * @property string $title
  * @property string|null $description
- * @property EventType $type
+ * @property string $type key of the team's event types (App\Support\Options)
  * @property CarbonImmutable $start_at
  * @property CarbonImmutable|null $end_at
  * @property bool $all_day
@@ -46,7 +45,6 @@ class CalendarEvent extends Model
     protected function casts(): array
     {
         return [
-            'type' => EventType::class,
             'start_at' => 'datetime',
             'end_at' => 'datetime',
             'all_day' => 'boolean',

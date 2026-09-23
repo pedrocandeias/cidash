@@ -6,7 +6,6 @@ use App\Core\RecordPage;
 use App\Core\Tags;
 use App\Enums\CampaignStatus;
 use App\Enums\EventStatus;
-use App\Enums\EventType;
 use App\Enums\Priority;
 use App\Enums\RelationType;
 use App\Http\Requests\CalendarEventRequest;
@@ -22,7 +21,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -51,7 +49,7 @@ class CalendarEventController extends Controller
             'start' => ['required', 'date'],
             'end' => ['required', 'date'],
             'types' => ['sometimes', 'array'],
-            'types.*' => [Rule::enum(EventType::class)],
+            'types.*' => ['string'],
             'responsible' => ['sometimes', 'nullable', 'integer'],
             'campaign' => ['sometimes', 'nullable', 'uuid'],
         ]);
@@ -80,7 +78,7 @@ class CalendarEventController extends Controller
                     ? $event->end_at->addDay()->toDateString()
                     : $event->end_at->toIso8601String()),
                 'url' => route('events.show', $event, absolute: false),
-                'extendedProps' => ['type' => $event->type->value, 'status' => $event->status->value],
+                'extendedProps' => ['type' => $event->type, 'status' => $event->status->value],
             ]);
 
         return response()->json($events);
@@ -111,7 +109,7 @@ class CalendarEventController extends Controller
                 'id' => $event->id,
                 'title' => $event->title,
                 'description' => $event->description,
-                'type' => $event->type->value,
+                'type' => $event->type,
                 'start_at' => $event->start_at->toIso8601String(),
                 'end_at' => $event->end_at?->toIso8601String(),
                 'all_day' => $event->all_day,

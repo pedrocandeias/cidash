@@ -20,11 +20,11 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { localDate, useTranslation } from '@/lib/i18n';
+import { useOptions } from '@/lib/options';
 import { cn } from '@/lib/utils';
 import EventFields, { eventFormTransform } from '@/modules/events/event-fields';
 import SubscribeDialog from '@/modules/events/subscribe-dialog';
-import type { EventStatus, EventType } from '@/modules/events/types';
-import { typeColors, typeLabels } from '@/modules/events/types';
+import type { EventStatus } from '@/modules/events/types';
 import type { Member } from '@/modules/tasks/types';
 import { feed, index, store, update } from '@/routes/events';
 
@@ -45,7 +45,8 @@ export default function Calendar({
 }: Props) {
     const { t, locale } = useTranslation();
     const [draft, setDraft] = useState<Draft | null>(null);
-    const [hiddenTypes, setHiddenTypes] = useState<EventType[]>([]);
+    const types = useOptions('event_type');
+    const [hiddenTypes, setHiddenTypes] = useState<string[]>([]);
     const [responsible, setResponsible] = useState(ALL);
     const [campaign, setCampaign] = useState(ALL);
     const calendar = useRef<FullCalendar>(null);
@@ -53,9 +54,9 @@ export default function Calendar({
     // Read by the event source on every fetch; refetched when a filter changes.
     const filters = useRef<Record<string, string>>({});
     useEffect(() => {
-        const visible = (Object.keys(typeLabels) as EventType[]).filter(
-            (type) => !hiddenTypes.includes(type),
-        );
+        const visible = types.items
+            .map((option) => option.key)
+            .filter((type) => !hiddenTypes.includes(type));
         filters.current = {
             ...Object.fromEntries(
                 visible.map((type, position) => [`types[${position}]`, type]),
@@ -66,7 +67,7 @@ export default function Calendar({
         calendar.current?.getApi().refetchEvents();
     }, [hiddenTypes, responsible, campaign]);
 
-    const toggleType = (type: EventType) =>
+    const toggleType = (type: string) =>
         setHiddenTypes((hidden) =>
             hidden.includes(type)
                 ? hidden.filter((other) => other !== type)
@@ -139,7 +140,7 @@ export default function Calendar({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
-                    {(Object.keys(typeLabels) as EventType[]).map((type) => (
+                    {types.items.map(({ key: type }) => (
                         <button
                             key={type}
                             type="button"
@@ -154,9 +155,9 @@ export default function Calendar({
                         >
                             <span
                                 className="size-2.5 rounded-full"
-                                style={{ backgroundColor: typeColors[type] }}
+                                style={{ backgroundColor: types.color(type) }}
                             />
-                            {t(typeLabels[type])}
+                            {t(types.label(type))}
                         </button>
                     ))}
                     <Select value={responsible} onValueChange={setResponsible}>
@@ -234,13 +235,13 @@ export default function Calendar({
                         eventResize={persist}
                         eventDataTransform={(event) => {
                             const props = event.extendedProps as {
-                                type: EventType;
+                                type: string;
                                 status: EventStatus;
                             };
 
                             return {
                                 ...event,
-                                color: typeColors[props.type],
+                                color: types.color(props.type),
                                 classNames:
                                     props.status === 'cancelled'
                                         ? ['line-through', 'opacity-60']

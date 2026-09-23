@@ -132,7 +132,7 @@ class ContentItemController extends Controller
         return [
             'id' => $item->id,
             'title' => $item->title,
-            'format' => $item->format->value,
+            'format' => $item->format,
             'channels' => $item->channels ?? [],
             'stage' => $item->stage->value,
             'stage_changed_at' => $item->stage_changed_at->toIso8601String(),

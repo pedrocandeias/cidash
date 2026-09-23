@@ -22,13 +22,13 @@ import {
     localToday,
     useTranslation,
 } from '@/lib/i18n';
+import { useOptions } from '@/lib/options';
 import ContentFields, {
     contentFormTransform,
 } from '@/modules/content/content-fields';
 import type { ContentSummary, Stage } from '@/modules/content/types';
 import {
     daysInStage,
-    formatLabels,
     isApproval,
     stageLabels,
     stages,
@@ -46,6 +46,7 @@ type Props = {
 
 function CardContent({ item }: { item: ContentSummary }) {
     const { t, locale } = useTranslation();
+    const formats = useOptions('content_format');
     const stuck = item.stage === 'review' && daysInStage(item) >= 3;
     const overdue =
         item.due_at !== null &&
@@ -61,7 +62,7 @@ function CardContent({ item }: { item: ContentSummary }) {
                 {item.title}
             </Link>
             <p className="text-xs text-muted-foreground">
-                {t(formatLabels[item.format] ?? item.format)}
+                {t(formats.label(item.format))}
                 {item.owner && ` · ${item.owner.name}`}
             </p>
             <div className="flex flex-wrap gap-2 text-xs">
@@ -94,6 +95,7 @@ export default function ContentBoard({
     can,
 }: Props) {
     const { t, locale } = useTranslation();
+    const formats = useOptions('content_format');
     const [items, setItems] = useState(initialItems);
     const [creating, setCreating] = useState(false);
 
@@ -270,10 +272,7 @@ export default function ContentBoard({
                                         {t(stageLabels[item.stage])}
                                     </td>
                                     <td className="py-2 text-muted-foreground">
-                                        {t(
-                                            formatLabels[item.format] ??
-                                                item.format,
-                                        )}
+                                        {t(formats.label(item.format))}
                                     </td>
                                     <td className="py-2 text-muted-foreground">
                                         {item.owner?.name ?? '—'}

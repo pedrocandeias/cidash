@@ -13,10 +13,11 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { useTranslation } from '@/lib/i18n';
+import { useOptions } from '@/lib/options';
 import type { Member } from '@/modules/tasks/types';
 import { priorityLabels } from '@/modules/tasks/types';
 import type { EventDetails } from './types';
-import { statusLabels, typeLabels } from './types';
+import { statusLabels } from './types';
 
 const NONE = 'none';
 
@@ -57,6 +58,11 @@ export default function EventFields({
     withStatus?: boolean;
 }) {
     const { t } = useTranslation();
+    const types = useOptions('event_type');
+    // Switched-off types stay selectable for events that already use them.
+    const typeChoices = types.items.filter(
+        (option) => option.active || option.key === defaults.type,
+    );
     const [allDay, setAllDay] = useState(defaults.all_day ?? false);
 
     return (
@@ -78,19 +84,17 @@ export default function EventFields({
                     <Label htmlFor="type">{t('Type')}</Label>
                     <Select
                         name="type"
-                        defaultValue={defaults.type ?? 'institutional'}
+                        defaultValue={defaults.type ?? types.active[0]?.key}
                     >
                         <SelectTrigger id="type">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                            {Object.entries(typeLabels).map(
-                                ([value, label]) => (
-                                    <SelectItem key={value} value={value}>
-                                        {t(label)}
-                                    </SelectItem>
-                                ),
-                            )}
+                            {typeChoices.map((option) => (
+                                <SelectItem key={option.key} value={option.key}>
+                                    {t(option.label)}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                     <InputError message={errors.type} />

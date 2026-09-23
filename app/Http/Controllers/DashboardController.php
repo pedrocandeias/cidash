@@ -136,7 +136,7 @@ class DashboardController extends Controller
                 'title' => $event->title,
                 'start_at' => $event->start_at->toIso8601String(),
                 'all_day' => $event->all_day,
-                'type' => $event->type->value,
+                'type' => $event->type,
             ]),
             'tasks' => $myTasks->map(fn (Task $task) => [
                 'id' => $task->id,

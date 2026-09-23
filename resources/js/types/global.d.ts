@@ -32,6 +32,15 @@ declare module '@inertiajs/core' {
                     created_at: string;
                 }[];
             } | null;
+            options: Record<
+                'event_type' | 'content_format',
+                {
+                    key: string;
+                    label: string;
+                    color: string | null;
+                    active: boolean;
+                }[]
+            > | null;
             locale: string;
             translations: Record<string, string>;
             [key: string]: unknown;

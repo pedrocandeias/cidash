@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Options;
 use App\Support\WorkspaceContext;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -63,6 +64,8 @@ class HandleInertiaRequests extends Middleware
                         'created_at' => $notification->created_at?->toIso8601String(),
                     ]),
             ] : null,
+            // The team's event types and content formats (labels and colours).
+            'options' => fn () => app(WorkspaceContext::class)->get() !== null ? app(Options::class)->forFrontend() : null,
             'locale' => app()->getLocale(),
             'translations' => fn () => trans()->getLoader()->load(app()->getLocale(), '*', '*'),
         ];

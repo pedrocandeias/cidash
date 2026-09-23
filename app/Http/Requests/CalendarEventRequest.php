@@ -3,8 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Enums\EventStatus;
-use App\Enums\EventType;
 use App\Enums\Priority;
+use App\Support\Options;
 use App\Support\WorkspaceContext;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -23,7 +23,7 @@ class CalendarEventRequest extends FormRequest
         return [
             'title' => [$required, 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string', 'max:10000'],
-            'type' => [$required, Rule::enum(EventType::class)],
+            'type' => [$required, Rule::in(app(Options::class)->keys('event_type'))],
             'start_at' => [$required, 'date'],
             'end_at' => ['sometimes', 'nullable', 'date', 'after_or_equal:start_at'],
             'all_day' => ['sometimes', 'boolean'],

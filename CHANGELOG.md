@@ -2,6 +2,12 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.25.0 (2026-09-23)
+
+- feat: Definições → Tipos (managers): tipos de evento (com cor) e formatos de conteúdo de cada equipa; renomear, mudar a cor, acrescentar e desligar, sem duplicados de maiúsculas ou acentos
+- feat: calendário, formulários, quadro de conteúdos e Início usam os tipos e as cores da equipa
+- refactor: os tipos de evento e formatos deixam de ser enums fixos; os estados dos fluxos continuam fixos, porque aprovações, alertas e briefings dependem deles
+
 ## 0.24.0 (2026-09-23)
 
 - feat: pontuação de relevância de 0 a 10 em cada história das Notícias, com os motivos: regra de monitorização, pessoa de interesse, fonte prioritária e número de meios

@@ -45,18 +45,6 @@ export const stageLabels: Record<Stage, string> = {
     archived: 'Archived',
 };
 
-export const formatLabels: Record<string, string> = {
-    news: 'News',
-    article: 'Article',
-    press_release: 'Press release',
-    social_post: 'Social media post',
-    video: 'Video',
-    photos: 'Photos',
-    newsletter: 'Newsletter',
-    podcast: 'Podcast',
-    other: 'Other',
-};
-
 /** Must match ContentItemRequest::CHANNELS. */
 export const channelLabels: Record<string, string> = {
     website: 'Website',

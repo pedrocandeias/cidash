@@ -11,9 +11,10 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { useTranslation } from '@/lib/i18n';
+import { useOptions } from '@/lib/options';
 import type { Member } from '@/modules/tasks/types';
 import type { ContentDetails } from './types';
-import { channelLabels, formatLabels } from './types';
+import { channelLabels } from './types';
 
 const NONE = 'none';
 
@@ -37,6 +38,11 @@ export default function ContentFields({
     defaults?: ContentDetails;
 }) {
     const { t } = useTranslation();
+    const formats = useOptions('content_format');
+    // Switched-off formats stay selectable for content that already uses them.
+    const formatChoices = formats.items.filter(
+        (option) => option.active || option.key === defaults?.format,
+    );
 
     return (
         <div className="grid gap-4">
@@ -57,19 +63,19 @@ export default function ContentFields({
                     <Label htmlFor="format">{t('Format')}</Label>
                     <Select
                         name="format"
-                        defaultValue={defaults?.format ?? 'news'}
+                        defaultValue={
+                            defaults?.format ?? formats.active[0]?.key
+                        }
                     >
                         <SelectTrigger id="format">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                            {Object.entries(formatLabels).map(
-                                ([value, label]) => (
-                                    <SelectItem key={value} value={value}>
-                                        {t(label)}
-                                    </SelectItem>
-                                ),
-                            )}
+                            {formatChoices.map((option) => (
+                                <SelectItem key={option.key} value={option.key}>
+                                    {t(option.label)}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>
