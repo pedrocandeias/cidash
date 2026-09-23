@@ -2,6 +2,11 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.28.0 (2026-09-23)
+
+- feat: "Primeiros passos da equipa" no Início para os managers de uma equipa nova: convidar a equipa, escolher fontes, criar regras de monitorização e registar pessoas de interesse; desaparece quando está feito ou quando se oculta
+- feat: Guia de utilização do CIDASH, em português (com versão em inglês), acessível na barra lateral
+
 ## 0.27.0 (2026-09-23)
 
 - feat: seletor de equipa na barra lateral para quem pertence a várias equipas (e para o super admin)

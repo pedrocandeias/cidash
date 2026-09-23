@@ -19,6 +19,7 @@ use App\Models\Notice;
 use App\Models\PressRequest;
 use App\Models\Reminder;
 use App\Models\Task;
+use App\Support\Onboarding;
 use App\Support\WorkspaceContext;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -29,7 +30,7 @@ use Inertia\Response;
  */
 class DashboardController extends Controller
 {
-    public function __invoke(Request $request, WorkspaceContext $context, Evaluator $evaluator): Response
+    public function __invoke(Request $request, WorkspaceContext $context, Evaluator $evaluator, Onboarding $onboarding): Response
     {
         $user = $request->user();
         $workspace = $context->get() ?? abort(403);
@@ -109,6 +110,8 @@ class DashboardController extends Controller
         $isManager = $user->hasRole($workspace, WorkspaceRole::Manager);
 
         return Inertia::render('dashboard', [
+            // New teams: what the managers still have to set up.
+            'onboarding' => $isManager ? $onboarding->steps($workspace) : null,
             'alerts' => [
                 'count' => $alerts->count(),
                 'items' => $alerts->take(4)->map(fn (Alert $alert) => AlertController::present($alert))->values(),

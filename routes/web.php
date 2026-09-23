@@ -10,6 +10,7 @@ use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContentItemController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GuideController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\MentionController;
 use App\Http\Controllers\NewsController;
@@ -37,6 +38,8 @@ Route::post('workspaces/{workspace}/switch', WorkspaceSwitchController::class)->
 
 Route::middleware(['auth', 'workspace'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
+    Route::get('guide', [GuideController::class, 'show'])->name('guide');
+    Route::post('onboarding/dismiss', [GuideController::class, 'dismissOnboarding'])->name('onboarding.dismiss');
 
     Route::get('briefings', [BriefingController::class, 'index'])->name('briefings.index');
     Route::get('briefings/today', [BriefingController::class, 'today'])->name('briefings.today');

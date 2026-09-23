@@ -13,6 +13,7 @@ import {
     UserCog,
     Users,
     AtSign,
+    BookOpen,
     Building2,
     TriangleAlert,
     FileText,
@@ -30,7 +31,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { dashboard, guide } from '@/routes';
 import { edit as editEmailSettings } from '@/routes/admin/email';
 import { index as adminSources } from '@/routes/admin/sources';
 import { index as adminUsers } from '@/routes/admin/users';
@@ -76,6 +77,9 @@ const navGroups: { label?: string; items: NavItem[] }[] = [
             { title: 'Media mentions', href: mentions(), icon: AtSign },
             { title: 'Alerts', href: alerts(), icon: TriangleAlert },
         ],
+    },
+    {
+        items: [{ title: 'Guide', href: guide(), icon: BookOpen }],
     },
 ];
 

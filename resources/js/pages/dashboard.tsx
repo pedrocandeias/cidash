@@ -1,5 +1,5 @@
-import { Head, Link, usePage } from '@inertiajs/react';
-import { Pin, TriangleAlert } from 'lucide-react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Circle, CircleCheck, Pin, TriangleAlert } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { RecordSummary } from '@/components/core/relations-panel';
 import AlertLine from '@/modules/alerts/alert-line';
@@ -23,11 +23,21 @@ import { index as eventsIndex, show as showEvent } from '@/routes/events';
 import { index as noticesIndex, show as showNotice } from '@/routes/notices';
 import { index as pressIndex, show as showPress } from '@/routes/press';
 import { today as briefingToday } from '@/routes/briefings';
+import { dismiss as dismissOnboarding } from '@/routes/onboarding';
 import { index as mentionsIndex, show as showMention } from '@/routes/mentions';
 import { index as newsIndex, show as showNews } from '@/routes/news';
 import { index as tasksIndex, show as showTask } from '@/routes/tasks';
 
+type OnboardingStep = {
+    key: string;
+    label: string;
+    description: string;
+    done: boolean;
+    url: string;
+};
+
 type Props = {
+    onboarding: OnboardingStep[] | null;
     alerts: { count: number; items: AlertItem[] };
     counters: {
         events_today: number;
@@ -122,6 +132,7 @@ function greeting(): string {
 }
 
 export default function Dashboard({
+    onboarding,
     alerts,
     counters,
     news,
@@ -195,6 +206,66 @@ export default function Dashboard({
                         {t("See today's briefing")} →
                     </Link>
                 </header>
+
+                {onboarding && (
+                    <section className="space-y-3 rounded-xl border border-sky-300 bg-sky-50 p-4 dark:border-sky-900 dark:bg-sky-950/40">
+                        <div className="flex items-start justify-between gap-4">
+                            <div>
+                                <h2 className="font-semibold">
+                                    {t('First steps for the team')}
+                                </h2>
+                                <p className="text-sm text-muted-foreground">
+                                    {t(
+                                        'What to set up so the team can start working in CIDASH.',
+                                    )}
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                className="text-xs text-muted-foreground hover:text-foreground"
+                                onClick={() =>
+                                    router.post(
+                                        dismissOnboarding().url,
+                                        {},
+                                        { preserveScroll: true },
+                                    )
+                                }
+                            >
+                                {t('Hide')}
+                            </button>
+                        </div>
+                        <ol className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                            {onboarding.map((step) => (
+                                <li key={step.key}>
+                                    <Link
+                                        href={step.url}
+                                        className="flex items-start gap-2 rounded-lg p-2 hover:bg-background/60"
+                                    >
+                                        {step.done ? (
+                                            <CircleCheck className="mt-0.5 size-4 shrink-0 text-emerald-600" />
+                                        ) : (
+                                            <Circle className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                                        )}
+                                        <span className="grid gap-0.5">
+                                            <span
+                                                className={cn(
+                                                    'text-sm font-medium',
+                                                    step.done &&
+                                                        'text-muted-foreground line-through',
+                                                )}
+                                            >
+                                                {t(step.label)}
+                                            </span>
+                                            <span className="text-xs text-muted-foreground">
+                                                {t(step.description)}
+                                            </span>
+                                        </span>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ol>
+                    </section>
+                )}
 
                 {alerts.count > 0 && (
                     <section

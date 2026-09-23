@@ -128,7 +128,7 @@
 - [ ] SSO U.Porto
 - [x] Seletor de workspace
 - [x] Administração completa do super admin: criar workspaces, nomear managers, visão geral de todos os workspaces e da ingestão
-- [ ] Onboarding por UO (fontes subscritas, regras, áreas de especialidade, guia)
+- [x] Onboarding por UO (fontes subscritas, regras, áreas de especialidade, guia)
 
 ## 6. Future
 

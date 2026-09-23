@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property string $slug
  * @property Carbon|null $archived_at
+ * @property Carbon|null $onboarding_dismissed_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
@@ -29,7 +30,7 @@ class Workspace extends Model
 
     protected function casts(): array
     {
-        return ['archived_at' => 'datetime'];
+        return ['archived_at' => 'datetime', 'onboarding_dismissed_at' => 'datetime'];
     }
 
     /**
