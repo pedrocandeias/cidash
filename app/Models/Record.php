@@ -65,6 +65,14 @@ class Record extends Model
     }
 
     /**
+     * @return HasMany<Attachment, $this>
+     */
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(Attachment::class, 'object_id');
+    }
+
+    /**
      * @return HasMany<Comment, $this>
      */
     public function comments(): HasMany

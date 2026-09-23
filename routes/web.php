@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AlertController;
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\BriefingController;
 use App\Http\Controllers\CalendarEventController;
@@ -75,6 +76,10 @@ Route::middleware(['auth', 'workspace'])->group(function () {
 
     Route::post('records/{record}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+    Route::post('records/{record}/attachments', [AttachmentController::class, 'store'])->name('attachments.store');
+    Route::get('attachments/{attachment}', [AttachmentController::class, 'show'])->name('attachments.show');
+    Route::delete('attachments/{attachment}', [AttachmentController::class, 'destroy'])->name('attachments.destroy');
 });
 
 Route::middleware('auth')->group(function () {

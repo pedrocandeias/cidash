@@ -34,7 +34,7 @@
 - [x] Projeto Laravel 13 + starter kit React, DDEV (SQLite, sem contentor de BD, filas no driver `database`)
 - [x] Configuração SQLite (WAL, busy_timeout, foreign_keys, transações IMMEDIATE)
 - [x] Backup diário `cidash:backup` (`VACUUM INTO`, retenção de 14)
-- [ ] Cópia dos backups para fora do servidor (depende do servidor)
+- [ ] Cópia dos backups para fora do servidor (depende do servidor), incluindo os ficheiros em `storage/app/private` (anexos e fotografias), que o `cidash:backup` não copia
 - [x] i18n: `lang/pt_PT.json` (chave = texto em inglês) partilhado via Inertia, hook `useTranslation`, mensagens do Laravel em pt europeu
 - [x] Lint/format, testes, CI (Pint, PHPStan, vp check, tsc, `composer audit`)
 - [x] Deploy em LAMP: `dist/`, cron `schedule:run`, fila via scheduler (por testar num servidor real)
@@ -115,7 +115,7 @@
 - [ ] Pesquisa semântica (embeddings; `sqlite-vec` ou similaridade em PHP) e melhor agrupamento em stories
 - [x] Alerta `mention_spike`
 - [x] Notificações e briefing por email (preferências por utilizador; envio quando o SMTP estiver configurado)
-- [ ] Assets/anexos
+- [x] Assets/anexos
 - [x] ICS export/subscrição
 - [ ] Estados e tipos configuráveis
 - [ ] Scoring de relevância

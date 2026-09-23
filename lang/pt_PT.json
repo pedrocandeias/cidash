@@ -614,5 +614,10 @@
     "Revoke link": "Revogar ligação",
     "A new link stops the old one from working.": "Uma nova ligação faz a anterior deixar de funcionar.",
     "Copy": "Copiar",
-    "Link copied.": "Ligação copiada."
+    "Link copied.": "Ligação copiada.",
+    "Attachments": "Anexos",
+    "Attach": "Anexar",
+    "Uploading…": "A enviar…",
+    "No attachments.": "Sem anexos.",
+    "Remove attachment": "Remover anexo"
 }

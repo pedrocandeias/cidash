@@ -3,14 +3,15 @@
 namespace App\Core;
 
 use App\Models\Activity;
+use App\Models\Attachment;
 use App\Models\Comment;
 use App\Models\Record;
 use App\Models\Reminder;
 use App\Models\User;
 
 /**
- * Data shared by every record detail page: comments, history, relations and
- * the current user's reminders.
+ * Data shared by every record detail page: comments, attachments, history,
+ * relations and the current user's reminders.
  */
 class RecordPage
 {
@@ -30,6 +31,16 @@ class RecordPage
                     'author' => $comment->user?->name,
                     'created_at' => $comment->created_at->toIso8601String(),
                     'can_delete' => $comment->user_id === $user->id,
+                ]),
+            'attachments' => $record->attachments()->with('user:id,name')->latest('id')->get()
+                ->map(fn (Attachment $attachment) => [
+                    'id' => $attachment->id,
+                    'name' => $attachment->original_name,
+                    'size' => $attachment->size,
+                    'author' => $attachment->user?->name,
+                    'created_at' => $attachment->created_at->toIso8601String(),
+                    'url' => route('attachments.show', $attachment, absolute: false),
+                    'can_delete' => $attachment->user_id === $user->id,
                 ]),
             'activity' => $record->activity()->with('user:id,name')->latest('id')->get()
                 ->map(fn (Activity $activity) => [

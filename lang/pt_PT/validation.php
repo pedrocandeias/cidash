@@ -159,6 +159,8 @@ return [
     'url' => 'O formato do URL indicado para o campo :attribute é inválido.',
     'uuid' => ':Attribute tem de ser um UUID válido.',
     'attributes' => [
+        'files' => 'ficheiros',
+        'files.*' => 'ficheiro',
         'address' => 'morada',
         'affiliate_url' => 'URL de afiliado',
         'age' => 'idade',

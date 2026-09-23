@@ -5,6 +5,7 @@ namespace App\Core\Concerns;
 use App\Core\Scopes\WorkspaceScope;
 use App\Core\Search\Search;
 use App\Models\Activity;
+use App\Models\Attachment;
 use App\Models\Record;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -61,6 +62,8 @@ trait IsRecord
         static::deleted(function (self $model) {
             Activity::log('deleted', $model->record, ['title' => $model->recordTitle()]);
 
+            // One by one, so each file is removed from the disk; the rows would cascade anyway.
+            Attachment::where('object_id', $model->getKey())->get()->each->delete();
             Record::whereKey($model->getKey())->delete();
             app(Search::class)->remove($model->getKey());
         });

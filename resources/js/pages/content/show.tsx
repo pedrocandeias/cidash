@@ -1,5 +1,7 @@
 import { Form, Head, router } from '@inertiajs/react';
 import ActivityFeed from '@/components/core/activity-feed';
+import AttachmentsPanel from '@/components/core/attachments-panel';
+import type { AttachmentItem } from '@/components/core/attachments-panel';
 import type { ActivityItem } from '@/components/core/activity-feed';
 import CommentsThread from '@/components/core/comments-thread';
 import type { CommentItem } from '@/components/core/comments-thread';
@@ -47,6 +49,7 @@ type Props = {
     comments: CommentItem[];
     activity: ActivityItem[];
     relations: RelationItem[];
+    attachments: AttachmentItem[];
     errors?: Record<string, string>;
     can: { delete: boolean; approve: boolean };
 };
@@ -58,6 +61,7 @@ export default function ShowContent({
     comments,
     activity,
     relations,
+    attachments,
     errors,
     can,
 }: Props) {
@@ -150,6 +154,10 @@ export default function ShowContent({
                         sourceId={recordId}
                         sourceTitle={item.title}
                         members={members}
+                    />
+                    <AttachmentsPanel
+                        recordId={recordId}
+                        attachments={attachments}
                     />
                     <RelationsPanel recordId={recordId} relations={relations} />
                     <ActivityFeed

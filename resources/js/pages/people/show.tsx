@@ -1,5 +1,7 @@
 import { Form, Head, router } from '@inertiajs/react';
 import ActivityFeed from '@/components/core/activity-feed';
+import AttachmentsPanel from '@/components/core/attachments-panel';
+import type { AttachmentItem } from '@/components/core/attachments-panel';
 import type { ActivityItem } from '@/components/core/activity-feed';
 import CommentsThread from '@/components/core/comments-thread';
 import type { CommentItem } from '@/components/core/comments-thread';
@@ -33,6 +35,7 @@ type Props = {
     comments: CommentItem[];
     activity: ActivityItem[];
     relations: RelationItem[];
+    attachments: AttachmentItem[];
     can: { delete: boolean };
 };
 
@@ -42,6 +45,7 @@ export default function ShowPerson({
     comments,
     activity,
     relations,
+    attachments,
     can,
 }: Props) {
     const { t } = useTranslation();
@@ -123,6 +127,10 @@ export default function ShowPerson({
                 </div>
 
                 <aside className="space-y-10">
+                    <AttachmentsPanel
+                        recordId={recordId}
+                        attachments={attachments}
+                    />
                     <RelationsPanel recordId={recordId} relations={relations} />
                     <ActivityFeed
                         activity={activity}

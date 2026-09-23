@@ -2,6 +2,13 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.23.0 (2026-09-23)
+
+- feat: anexos em qualquer registo (tarefas, eventos, avisos, imprensa, conteúdos, campanhas, pessoas, notícias e menções): vários ficheiros de cada vez, até 20 MB cada
+- feat: ficheiros guardados fora da pasta pública e servidos só à equipa; imagens e PDF abrem no browser, o resto descarrega
+- feat: só quem anexou ou um manager remove um anexo; apagar um registo apaga os seus ficheiros
+- fix: tipos de ficheiro perigosos (HTML, PHP) recusados e SVG sempre descarregado, nunca mostrado
+
 ## 0.22.0 (2026-09-23)
 
 - feat: subscrever o calendário no Outlook, Google Calendar ou telemóvel com uma ligação pessoal secreta: eventos de todas as equipas da pessoa, ou só aqueles de que é responsável

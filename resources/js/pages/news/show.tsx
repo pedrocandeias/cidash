@@ -1,6 +1,8 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { ExternalLink } from 'lucide-react';
 import ActivityFeed from '@/components/core/activity-feed';
+import AttachmentsPanel from '@/components/core/attachments-panel';
+import type { AttachmentItem } from '@/components/core/attachments-panel';
 import type { ActivityItem } from '@/components/core/activity-feed';
 import CommentsThread from '@/components/core/comments-thread';
 import type { CommentItem } from '@/components/core/comments-thread';
@@ -39,6 +41,7 @@ type Props = {
     comments: CommentItem[];
     activity: ActivityItem[];
     relations: RelationItem[];
+    attachments: AttachmentItem[];
 };
 
 const statusLabels: Record<string, string> = {
@@ -62,6 +65,7 @@ export default function ShowNews({
     comments,
     activity,
     relations,
+    attachments,
 }: Props) {
     const { t, locale } = useTranslation();
     const patch = (data: Record<string, string | null>) =>
@@ -184,6 +188,10 @@ export default function ShowNews({
                         sourceId={recordId}
                         sourceTitle={news.headline}
                         members={members}
+                    />
+                    <AttachmentsPanel
+                        recordId={recordId}
+                        attachments={attachments}
                     />
                     <RelationsPanel recordId={recordId} relations={relations} />
                     <ActivityFeed
