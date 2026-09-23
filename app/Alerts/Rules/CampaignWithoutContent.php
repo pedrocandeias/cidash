@@ -45,7 +45,7 @@ class CampaignWithoutContent implements RuleType
             ->with('responsibles:id')
             ->whereIn('status', [CampaignStatus::Planning, CampaignStatus::Active])
             ->whereNotNull('start_date')
-            ->where('start_date', '<=', now()->addDays((int) $rule->param('days_before'))->toDateString())
+            ->where('start_date', '<=', now()->addDays((int) $rule->param('days_before'))->endOfDay())
             ->get();
 
         $withContent = Link::whereIn('target_id', $campaigns->modelKeys())

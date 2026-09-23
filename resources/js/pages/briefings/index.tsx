@@ -2,7 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { formatDate, useTranslation } from '@/lib/i18n';
-import { index, show, today } from '@/routes/briefings';
+import { index, show, today, week } from '@/routes/briefings';
 
 type Props = {
     briefings: {
@@ -25,12 +25,19 @@ export default function Briefings({ briefings }: Props) {
                     <Heading
                         title={t('Briefing')}
                         description={t(
-                            'A daily summary generated at 07:00 on working days. Past briefings keep what was known on the day.',
+                            'A daily summary generated at 07:00 on working days, and a weekly one on Mondays. Past briefings keep what was known on the day.',
                         )}
                     />
-                    <Button asChild>
-                        <Link href={today()}>{t("Today's briefing")}</Link>
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button asChild variant="outline">
+                            <Link href={week()}>
+                                {t("This week's briefing")}
+                            </Link>
+                        </Button>
+                        <Button asChild>
+                            <Link href={today()}>{t("Today's briefing")}</Link>
+                        </Button>
+                    </div>
                 </div>
 
                 {briefings.length === 0 ? (
@@ -50,6 +57,13 @@ export default function Briefings({ briefings }: Props) {
                                 >
                                     {formatDate(briefing.date, locale)}
                                 </Link>
+                                <span className="w-16 text-xs text-muted-foreground">
+                                    {t(
+                                        briefing.kind === 'weekly'
+                                            ? 'Weekly'
+                                            : 'Daily',
+                                    )}
+                                </span>
                                 <span className="text-muted-foreground">
                                     {t(
                                         ':alerts alerts · :events events · :news news · :mentions mentions',

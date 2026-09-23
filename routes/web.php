@@ -28,6 +28,7 @@ Route::middleware(['auth', 'workspace'])->group(function () {
 
     Route::get('briefings', [BriefingController::class, 'index'])->name('briefings.index');
     Route::get('briefings/today', [BriefingController::class, 'today'])->name('briefings.today');
+    Route::get('briefings/week', [BriefingController::class, 'week'])->name('briefings.week');
     Route::get('briefings/{briefing}', [BriefingController::class, 'show'])->name('briefings.show');
     Route::post('briefings/{briefing}/refresh', [BriefingController::class, 'refresh'])->name('briefings.refresh');
 

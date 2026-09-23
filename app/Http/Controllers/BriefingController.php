@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Alerts\Evaluator;
 use App\Briefing\DailyBriefing;
+use App\Briefing\WeeklyBriefing;
 use App\Models\Briefing;
 use App\Support\WorkspaceContext;
 use Illuminate\Http\RedirectResponse;
@@ -38,6 +39,17 @@ class BriefingController extends Controller
         return to_route('briefings.show', $briefing);
     }
 
+    /**
+     * This week's briefing, generated on first view like today's.
+     */
+    public function week(WorkspaceContext $context, WeeklyBriefing $weekly): RedirectResponse
+    {
+        $briefing = Briefing::where('kind', 'weekly')->where('period_start', now()->startOfWeek())->first()
+            ?? $weekly->generate($context->get() ?? abort(403));
+
+        return to_route('briefings.show', $briefing);
+    }
+
     public function show(Briefing $briefing): Response
     {
         return Inertia::render('briefings/show', [
@@ -47,7 +59,7 @@ class BriefingController extends Controller
                 'date' => $briefing->period_start->toDateString(),
                 'generated_at' => $briefing->generated_at->toIso8601String(),
                 'sections' => $briefing->content,
-                'is_today' => $briefing->period_start->isToday(),
+                'is_current' => $this->isCurrent($briefing),
             ],
             'previous' => Briefing::where('kind', $briefing->kind)->where('period_start', '<', $briefing->period_start)->orderByDesc('period_start')->value('id'),
             'next' => Briefing::where('kind', $briefing->kind)->where('period_start', '>', $briefing->period_start)->orderBy('period_start')->value('id'),
@@ -55,15 +67,25 @@ class BriefingController extends Controller
     }
 
     /**
-     * Brings today's briefing up to date; past briefings stay as they were.
+     * Brings the current briefing up to date; past briefings stay as they were.
      */
-    public function refresh(Briefing $briefing, WorkspaceContext $context, DailyBriefing $daily, Evaluator $evaluator): RedirectResponse
+    public function refresh(Briefing $briefing, WorkspaceContext $context, DailyBriefing $daily, WeeklyBriefing $weekly, Evaluator $evaluator): RedirectResponse
     {
-        abort_unless($briefing->period_start->isToday(), 403);
+        abort_unless($this->isCurrent($briefing), 403);
         $workspace = $context->get() ?? abort(403);
         $evaluator->run($workspace);
-        $daily->generate($workspace);
+        ($briefing->kind === 'weekly' ? $weekly : $daily)->generate($workspace);
 
         return back();
+    }
+
+    /**
+     * Today's daily or this week's weekly briefing: the only ones that can still change.
+     */
+    private function isCurrent(Briefing $briefing): bool
+    {
+        return $briefing->kind === 'weekly'
+            ? $briefing->period_start->isSameDay(now()->startOfWeek())
+            : $briefing->period_start->isToday();
     }
 }

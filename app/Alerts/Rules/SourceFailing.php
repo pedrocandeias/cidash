@@ -49,7 +49,7 @@ class SourceFailing implements RuleType
 
         foreach ($sources as $source) {
             /** @var Source $source */
-            yield new Finding("source_failing:{$source->id}", $source->name);
+            yield new Finding("source_failing:{$source->id}", $source->name, url: route('subscriptions.index', absolute: false));
         }
     }
 }

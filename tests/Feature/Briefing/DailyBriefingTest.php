@@ -3,11 +3,14 @@
 namespace Tests\Feature\Briefing;
 
 use App\Briefing\DailyBriefing;
+use App\Briefing\WeeklyBriefing;
 use App\Enums\SourceKind;
 use App\Enums\TriageStatus;
 use App\Enums\WorkspaceRole;
 use App\Models\Briefing;
 use App\Models\CalendarEvent;
+use App\Models\Campaign;
+use App\Models\ContentItem;
 use App\Models\Mention;
 use App\Models\NewsItem;
 use App\Models\NewsItemState;
@@ -116,5 +119,32 @@ class DailyBriefingTest extends TestCase
         $this->artisan('cidash:generate-briefings')->assertSuccessful();
 
         $this->assertSame(2, Briefing::withoutGlobalScopes()->count());
+    }
+
+    public function test_the_weekly_briefing_looks_ahead_and_back()
+    {
+        $this->travelTo(now()->startOfWeek()->setTime(7, 0));
+        CalendarEvent::create(['title' => 'Quinta', 'type' => 'institutional', 'start_at' => now()->addDays(3), 'priority' => 'normal', 'status' => 'confirmed']);
+        CalendarEvent::create(['title' => 'Próxima semana', 'type' => 'institutional', 'start_at' => now()->addDays(8), 'priority' => 'normal', 'status' => 'confirmed']);
+        Campaign::create(['name' => 'Candidaturas', 'status' => 'planning', 'start_date' => now()->addDays(6)->toDateString()]);
+        PressRequest::create(['subject' => 'Respondido', 'received_at' => now()->subDays(5), 'status' => 'answered'])
+            ->forceFill(['answered_at' => now()->subDays(3)])->save();
+        $published = ContentItem::create(['title' => 'Publicado', 'format' => 'news', 'stage' => 'published']);
+        $published->forceFill(['stage_changed_at' => now()->subDays(2)])->save();
+        $this->news('Da semana')->forceFill(['created_at' => now()->subDays(4)])->save();
+
+        $briefing = app(WeeklyBriefing::class)->generate($this->workspace);
+        $sections = $this->sections($briefing);
+
+        $this->assertSame('weekly', $briefing->kind);
+        $this->assertTrue($briefing->period_start->isMonday());
+        $this->assertSame(['Quinta'], array_column($sections['events']['items'], 'title'));
+        $this->assertSame(['Candidaturas'], array_column($sections['campaigns']['items'], 'title'));
+        $this->assertSame(['Respondido'], array_column($sections['answered']['items'], 'title'));
+        $this->assertSame(['Publicado'], array_column($sections['published']['items'], 'title'));
+        $this->assertSame(['Da semana'], array_column($sections['news']['items'], 'title'));
+
+        $this->artisan('cidash:generate-briefings')->expectsOutputToContain('(with weekly)');
+        $this->actingAs($this->user)->get(route('briefings.week'))->assertRedirect(route('briefings.show', $briefing->id));
     }
 }

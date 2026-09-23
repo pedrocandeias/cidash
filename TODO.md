@@ -110,9 +110,10 @@
 ## 4. Phase 2
 
 - [ ] AI Assistant: tools estruturadas (incl. `find_people`) + FTS5, citações validadas, painel contextual (confirmar antes o envio de dados para a API)
-- [ ] Resumo por IA no briefing diário; briefing semanal
+- [x] Briefing semanal (segundas-feiras: semana que começa e revisão da anterior)
+- [ ] Resumo por IA no briefing diário e semanal (depende do assistente de IA)
 - [ ] Pesquisa semântica (embeddings; `sqlite-vec` ou similaridade em PHP) e melhor agrupamento em stories
-- [ ] Alerta `mention_spike`
+- [x] Alerta `mention_spike`
 - [ ] Notificações e briefing por email
 - [ ] Assets/anexos
 - [ ] ICS export/subscrição

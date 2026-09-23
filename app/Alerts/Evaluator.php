@@ -91,7 +91,7 @@ class Evaluator
             $new = 0;
             foreach ($findings as $key => $finding) {
                 $alert = $existing->get($key);
-                $attributes = ['title' => $finding->title, 'due_at' => $finding->dueAt, 'severity' => $rule->severity];
+                $attributes = ['title' => $finding->title, 'due_at' => $finding->dueAt, 'url' => $finding->url, 'severity' => $rule->severity];
 
                 if ($alert === null) {
                     $alert = Alert::create([

@@ -2,6 +2,14 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.20.0 (2026-09-23)
+
+- feat: briefing semanal às segundas-feiras: eventos, prazos de imprensa, conteúdos e campanhas da semana, e a semana anterior (notícias, menções, pedidos respondidos e conteúdos publicados)
+- feat: alerta `mention_spike`: uma regra de monitorização com muito mais menções do que o habitual (horas, fator e mínimo configuráveis)
+- feat: alertas que não são sobre um registo levam a uma página útil (Menções, Definições → Fontes)
+- refactor: briefings diário e semanal partilham a mesma base (`Builder`)
+- fix: comparações de datas (campanhas, prazos de tarefas) passam a incluir o último dia
+
 ## 0.19.0 (2026-09-23)
 
 - feat: briefing diário gerado às 07:00 nos dias úteis (`cidash:generate-briefings`): alertas abertos, eventos do dia, prazos de imprensa até amanhã, tarefas para hoje ou em atraso, conteúdos a publicar ou em revisão, notícias e menções desde o briefing anterior e avisos fixados

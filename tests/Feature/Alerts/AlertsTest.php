@@ -13,6 +13,8 @@ use App\Models\AlertRule;
 use App\Models\CalendarEvent;
 use App\Models\Campaign;
 use App\Models\ContentItem;
+use App\Models\Mention;
+use App\Models\MonitoringRule;
 use App\Models\NewsItem;
 use App\Models\NewsItemState;
 use App\Models\PressRequest;
@@ -125,7 +127,7 @@ class AlertsTest extends TestCase
         $this->assertSame([], $this->open());
 
         $this->actingAs($this->manager)->get(route('alert-rules.index'))
-            ->assertInertia(fn (Assert $page) => $page->component('settings/alerts')->has('rules', 6)->where('rules.0.params.hours', 96));
+            ->assertInertia(fn (Assert $page) => $page->component('settings/alerts')->has('rules', 7)->where('rules.0.params.hours', 96));
     }
 
     public function test_the_alerts_page_and_home_strip_show_open_alerts_of_the_team_only()
@@ -171,5 +173,29 @@ class AlertsTest extends TestCase
         CalendarEvent::create(['title' => 'Dia Aberto', 'type' => 'institutional', 'start_at' => now()->addDay(), 'priority' => 'normal', 'status' => 'confirmed']);
 
         $this->artisan('cidash:evaluate-alerts')->expectsOutputToContain("{$this->workspace->name}: 1 new alerts")->assertSuccessful();
+    }
+
+    public function test_a_spike_of_mentions_against_the_usual_week_opens_an_alert()
+    {
+        $rule = MonitoringRule::create(['name' => 'Reitor', 'include_terms' => ['Reitor'], 'google_news' => false]);
+        $mention = fn (int $n, $at) => Mention::create(['workspace_id' => $this->workspace->id, 'rule_id' => $rule->id, 'url' => "https://a.pt/{$n}", 'url_hash' => sha1((string) $n), 'headline' => "Notícia {$n}", 'matched_keyword' => 'Reitor', 'review_status' => 'new'])
+            ->forceFill(['created_at' => $at])->save();
+
+        // About two a day during the week before: 6 today is 3 times the usual.
+        foreach (range(1, 14) as $n) {
+            $mention($n, now()->subDays(2 + $n % 6));
+        }
+        foreach (range(15, 19) as $n) {
+            $mention($n, now()->subHours(2));
+        }
+        $this->evaluate();
+        $this->assertSame([], $this->open(), '5 is not yet 3 times 2 a day');
+
+        $mention(20, now()->subHour());
+        $this->evaluate();
+        $alert = Alert::sole();
+        $this->assertSame('Reitor (6)', $alert->title);
+        $this->actingAs($this->member)->get(route('alerts.index'))
+            ->assertInertia(fn (Assert $page) => $page->where('alerts.0.url', route('mentions.index', absolute: false)));
     }
 }

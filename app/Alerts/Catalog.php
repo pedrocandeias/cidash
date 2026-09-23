@@ -17,6 +17,7 @@ final class Catalog
         Rules\CampaignWithoutContent::class,
         Rules\PrioritySourceItem::class,
         Rules\SourceFailing::class,
+        Rules\MentionSpike::class,
     ];
 
     /**

@@ -29,7 +29,7 @@ type Props = {
         date: string;
         generated_at: string;
         sections: Section[];
-        is_today: boolean;
+        is_current: boolean;
     };
     previous: number | null;
     next: number | null;
@@ -44,6 +44,9 @@ const emptyLabels: Record<string, string> = {
     news: 'No news.',
     mentions: 'No new mentions.',
     notices: 'No pinned notices.',
+    campaigns: 'No campaigns starting.',
+    answered: 'No press requests answered.',
+    published: 'No content published.',
 };
 
 function When({ at }: { at: string }) {
@@ -69,15 +72,18 @@ export default function ShowBriefing({ briefing, previous, next }: Props) {
             <div className="mx-auto max-w-4xl space-y-8 px-4 py-6">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                     <Heading
-                        title={t('Briefing of :date', {
-                            date: formatDate(briefing.date, locale),
-                        })}
+                        title={t(
+                            briefing.kind === 'weekly'
+                                ? 'Weekly briefing of :date'
+                                : 'Briefing of :date',
+                            { date: formatDate(briefing.date, locale) },
+                        )}
                         description={t('Generated :date', {
                             date: formatDateTime(briefing.generated_at, locale),
                         })}
                     />
                     <div className="flex items-center gap-1">
-                        {briefing.is_today && (
+                        {briefing.is_current && (
                             <Button
                                 variant="outline"
                                 size="sm"

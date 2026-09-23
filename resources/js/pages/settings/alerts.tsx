@@ -28,6 +28,8 @@ const paramLabels: Record<string, string> = {
     days: 'Days',
     days_before: 'Days before',
     failures: 'Failures',
+    factor: 'Times the usual',
+    minimum: 'Minimum',
 };
 
 export default function AlertRules({ rules }: { rules: Rule[] }) {

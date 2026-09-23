@@ -13,6 +13,7 @@ final readonly class Finding
     /**
      * @param  string|null  $recordId  the record the alert is about
      * @param  array<int, int>  $owners  users responsible for it, notified with the managers
+     * @param  string|null  $url  where to look when there is no record
      */
     public function __construct(
         public string $key,
@@ -20,5 +21,6 @@ final readonly class Finding
         public ?string $recordId = null,
         public ?CarbonInterface $dueAt = null,
         public array $owners = [],
+        public ?string $url = null,
     ) {}
 }

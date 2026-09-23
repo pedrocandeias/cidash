@@ -22,13 +22,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $message
  * @property string $title
  * @property CarbonImmutable|null $due_at
+ * @property string|null $url
  * @property string $dedupe_key
  * @property AlertStatus $status
  * @property int|null $acknowledged_by
  * @property CarbonImmutable|null $resolved_at
  * @property CarbonImmutable $created_at
  */
-#[Fillable(['workspace_id', 'rule_id', 'object_id', 'severity', 'message', 'title', 'due_at', 'dedupe_key', 'status', 'acknowledged_by', 'resolved_at'])]
+#[Fillable(['workspace_id', 'rule_id', 'object_id', 'severity', 'message', 'title', 'due_at', 'url', 'dedupe_key', 'status', 'acknowledged_by', 'resolved_at'])]
 class Alert extends Model
 {
     use BelongsToWorkspace;

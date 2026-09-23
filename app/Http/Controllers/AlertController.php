@@ -59,7 +59,7 @@ class AlertController extends Controller
             'severity' => $alert->severity->value,
             'status' => $alert->status->value,
             'due_at' => $alert->due_at?->toIso8601String(),
-            'url' => $alert->record !== null ? RecordTypes::url($alert->record) : null,
+            'url' => $alert->record !== null ? RecordTypes::url($alert->record) : $alert->url,
             'acknowledged_by' => $alert->acknowledgedBy?->name,
             'created_at' => $alert->created_at->toIso8601String(),
             'resolved_at' => $alert->resolved_at?->toIso8601String(),
