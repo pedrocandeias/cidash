@@ -1,4 +1,4 @@
-import { Form, Head, Link, router } from '@inertiajs/react';
+import { Form, Head, router } from '@inertiajs/react';
 import { X } from 'lucide-react';
 import ActivityFeed from '@/components/core/activity-feed';
 import AttachmentsPanel from '@/components/core/attachments-panel';
@@ -6,6 +6,7 @@ import type { AttachmentItem } from '@/components/core/attachments-panel';
 import type { ActivityItem } from '@/components/core/activity-feed';
 import CommentsThread from '@/components/core/comments-thread';
 import type { CommentItem } from '@/components/core/comments-thread';
+import { RecordLink } from '@/components/core/object-drawer';
 import CreateTaskButton from '@/components/core/create-task-button';
 import RecordSearch from '@/components/core/record-search';
 import RelationsPanel from '@/components/core/relations-panel';
@@ -85,18 +86,10 @@ export default function ShowCampaign({
                                         <span className="w-24 shrink-0 text-xs text-muted-foreground">
                                             {t(part.record.label)}
                                         </span>
-                                        {part.record.url ? (
-                                            <Link
-                                                href={part.record.url}
-                                                className="flex-1 truncate hover:underline"
-                                            >
-                                                {part.record.title}
-                                            </Link>
-                                        ) : (
-                                            <span className="flex-1 truncate">
-                                                {part.record.title}
-                                            </span>
-                                        )}
+                                        <RecordLink
+                                            record={part.record}
+                                            className="flex-1 truncate"
+                                        />
                                         <button
                                             type="button"
                                             className="text-muted-foreground hover:text-foreground"

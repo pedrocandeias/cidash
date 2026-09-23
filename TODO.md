@@ -71,7 +71,7 @@
 - [x] Metadados por tipo para a pesquisa (`$searchable` em cada modelo)
 - [x] Componentes partilhados: CommentsThread (comentários em qualquer registo), ActivityFeed, NotificationsMenu (sino)
 - [x] Componentes partilhados: RelationsPanel (com pesquisa por título), RemindersPanel, CreateTaskButton, TagInput
-- [ ] Componentes partilhados: ObjectDrawer (pré-visualização lateral)
+- [x] Componentes partilhados: ObjectDrawer (pré-visualização lateral): relações, campanhas e calendário
 - [x] Calendar: CRUD; vistas mês, semana, dia e agenda; cores por tipo; tags; lembretes; relações; criar tarefa a partir do evento
 - [x] Calendar: filtros (tipo, responsável, campanha), arrastar e redimensionar eventos
 - [x] Notice Board: CRUD, fixados (só managers), publicação agendada, expiração, arquivo

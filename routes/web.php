@@ -17,6 +17,7 @@ use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\PressRequestController;
+use App\Http\Controllers\RecordPreviewController;
 use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TagController;
@@ -66,6 +67,7 @@ Route::middleware(['auth', 'workspace'])->group(function () {
     Route::resource('mentions', MentionController::class)->only(['index', 'show', 'update']);
 
     Route::get('records/search', SearchController::class)->name('records.search');
+    Route::get('records/{record}/preview', RecordPreviewController::class)->name('records.preview');
     Route::post('records/{record}/links', [LinkController::class, 'store'])->name('links.store');
     Route::delete('links/{link}', [LinkController::class, 'destroy'])->name('links.destroy');
 

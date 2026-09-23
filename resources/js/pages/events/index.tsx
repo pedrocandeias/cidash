@@ -23,6 +23,7 @@ import { localDate, useTranslation } from '@/lib/i18n';
 import { useOptions } from '@/lib/options';
 import { cn } from '@/lib/utils';
 import EventFields, { eventFormTransform } from '@/modules/events/event-fields';
+import { previewRecord } from '@/components/core/object-drawer';
 import SubscribeDialog from '@/modules/events/subscribe-dialog';
 import type { EventStatus } from '@/modules/events/types';
 import type { Member } from '@/modules/tasks/types';
@@ -253,8 +254,11 @@ export default function Calendar({
                         eventClick={(info) => {
                             info.jsEvent.preventDefault();
 
-                            if (info.event.url) {
+                            // Ctrl/Cmd-click opens the event page; a plain click previews it.
+                            if (info.jsEvent.metaKey || info.jsEvent.ctrlKey) {
                                 router.visit(info.event.url);
+                            } else {
+                                previewRecord(info.event.id);
                             }
                         }}
                         dateClick={openDraft}

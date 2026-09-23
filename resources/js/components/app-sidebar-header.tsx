@@ -1,6 +1,7 @@
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { CommandPalette } from '@/components/core/command-palette';
 import { NotificationsMenu } from '@/components/core/notifications-menu';
+import { ObjectDrawer } from '@/components/core/object-drawer';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 
@@ -18,6 +19,7 @@ export function AppSidebarHeader({
             <div className="ml-auto flex items-center gap-2">
                 <CommandPalette />
                 <NotificationsMenu />
+                <ObjectDrawer />
             </div>
         </header>
     );

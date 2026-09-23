@@ -1,7 +1,8 @@
-import { Link, router } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { X } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
 import { destroy, store } from '@/routes/links';
+import { RecordLink } from './object-drawer';
 import RecordSearch from './record-search';
 
 export type RecordSummary = {
@@ -72,18 +73,10 @@ export default function RelationsPanel({
                                     {t(relation.record.label)}
                                     {label && ` · ${t(label)}`}
                                 </span>
-                                {relation.record.url ? (
-                                    <Link
-                                        href={relation.record.url}
-                                        className="block truncate hover:underline"
-                                    >
-                                        {relation.record.title}
-                                    </Link>
-                                ) : (
-                                    <span className="block truncate">
-                                        {relation.record.title}
-                                    </span>
-                                )}
+                                <RecordLink
+                                    record={relation.record}
+                                    className="block max-w-full truncate"
+                                />
                             </div>
                             <button
                                 type="button"

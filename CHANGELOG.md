@@ -2,6 +2,11 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.26.0 (2026-09-23)
+
+- feat: pré-visualização lateral de qualquer registo (estado, campos principais, texto, tags, comentários e anexos) sem sair da página
+- feat: abre a partir das relações, da secção "Nesta campanha" e dos eventos do calendário; Ctrl/Cmd-clique continua a abrir a página
+
 ## 0.25.0 (2026-09-23)
 
 - feat: Definições → Tipos (managers): tipos de evento (com cor) e formatos de conteúdo de cada equipa; renomear, mudar a cor, acrescentar e desligar, sem duplicados de maiúsculas ou acentos

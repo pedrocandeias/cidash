@@ -636,5 +636,10 @@
     "Colour": "Cor",
     "In use": "Em uso",
     "New entry": "Nova entrada",
-    "This name already exists.": "Este nome já existe."
+    "This name already exists.": "Este nome já existe.",
+    ":count comments": ":count comentários",
+    ":count attachments": ":count anexos",
+    "Open page": "Abrir página",
+    "Loading": "A carregar",
+    "Matched term": "Termo encontrado"
 }
