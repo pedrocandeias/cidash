@@ -114,7 +114,7 @@
 - [ ] Resumo por IA no briefing diário e semanal (depende do assistente de IA)
 - [ ] Pesquisa semântica (embeddings; `sqlite-vec` ou similaridade em PHP) e melhor agrupamento em stories
 - [x] Alerta `mention_spike`
-- [ ] Notificações e briefing por email
+- [x] Notificações e briefing por email (preferências por utilizador; envio quando o SMTP estiver configurado)
 - [ ] Assets/anexos
 - [ ] ICS export/subscrição
 - [ ] Estados e tipos configuráveis

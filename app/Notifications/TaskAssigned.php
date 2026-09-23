@@ -4,37 +4,22 @@ namespace App\Notifications;
 
 use App\Models\Task;
 use App\Models\User;
-use Illuminate\Notifications\Notification;
 
-/**
- * In-app notification (database channel) shown in the header bell.
- */
-class TaskAssigned extends Notification
+class TaskAssigned extends CidashNotification
 {
-    public function __construct(
-        private Task $task,
-        private ?User $assignedBy,
-    ) {}
-
-    /**
-     * @return array<int, string>
-     */
-    public function via(object $notifiable): array
+    public function __construct(Task $task, ?User $assignedBy)
     {
-        return ['database'];
+        parent::__construct([
+            'message' => 'You were assigned a task',
+            'title' => $task->title,
+            'by' => $assignedBy?->name,
+            'workspace_id' => $task->record->workspace_id,
+            'url' => route('tasks.show', $task, absolute: false),
+        ]);
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
+    public function kind(): string
     {
-        return [
-            'message' => 'You were assigned a task',
-            'title' => $this->task->title,
-            'by' => $this->assignedBy?->name,
-            'workspace_id' => $this->task->record->workspace_id,
-            'url' => route('tasks.show', $this->task, absolute: false),
-        ];
+        return 'assignments';
     }
 }

@@ -21,6 +21,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string $name
  * @property string $email
  * @property bool $is_super_admin
+ * @property array<string, bool>|null $email_preferences
  * @property int|null $current_workspace_id
  * @property Carbon|null $email_verified_at
  * @property Carbon|null $activated_at
@@ -54,6 +55,7 @@ class User extends Authenticatable implements PasskeyUser
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
             'is_super_admin' => 'boolean',
+            'email_preferences' => 'array',
         ];
     }
 

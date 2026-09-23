@@ -2,6 +2,13 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.21.0 (2026-09-23)
+
+- feat: notificações também por email: tarefas atribuídas, conteúdos para revisão, lembretes e alertas, com o email em fila e o sino imediato
+- feat: briefing diário e semanal por email, para quem o pedir
+- feat: Definições → Notificações: cada pessoa escolhe o que recebe por email; nada é enviado enquanto o SMTP não estiver configurado
+- refactor: as notificações partilham a mesma base (`CidashNotification`) e guardam só dados simples
+
 ## 0.20.0 (2026-09-23)
 
 - feat: briefing semanal às segundas-feiras: eventos, prazos de imprensa, conteúdos e campanhas da semana, e a semana anterior (notícias, menções, pedidos respondidos e conteúdos publicados)

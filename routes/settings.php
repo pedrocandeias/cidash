@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Settings\AlertRuleController;
 use App\Http\Controllers\Settings\MonitoringRuleController;
+use App\Http\Controllers\Settings\NotificationPreferencesController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
 use App\Http\Controllers\Settings\SourceSubscriptionController;
@@ -29,6 +30,9 @@ Route::middleware('auth')->group(function () {
         ->name('user-password.update');
 
     Route::inertia('settings/appearance', 'settings/appearance')->name('appearance.edit');
+
+    Route::get('settings/notifications', [NotificationPreferencesController::class, 'edit'])->name('notification-preferences.edit');
+    Route::patch('settings/notifications', [NotificationPreferencesController::class, 'update'])->name('notification-preferences.update');
 });
 
 Route::middleware(['auth', 'workspace'])->group(function () {

@@ -19,6 +19,8 @@ Communication & Image Dashboard. An internal operational workspace for the Servi
 - i18n from day one: no hardcoded user-facing text. The key is the English text: `t('Log out')` in React (`useTranslation` from `@/lib/i18n`) and `__('Log out')` in PHP, translated in `lang/pt_PT.json`. Laravel's own messages live in `lang/pt_PT/*.php`. A key is shared by the whole app: before reusing an English key, check that its Portuguese translation fits the new place (gender and number: tarefa/pedido/campanha); if not, use a distinct English key (e.g. event status "Held", campaign status "Ended").
 - Auth: local accounts by invitation only (no public registration), with optional TOTP 2FA that any user can turn on or off. SSO U.Porto comes later, keyed by institutional email.
 - Email is configured in the app (Admin → Email, stored encrypted in `settings`), not in `.env`. The app must still work when email is not configured.
+- In-app notifications extend `App\Notifications\CidashNotification`: they carry plain data (never models, since the queue worker has no workspace context to restore scoped models), the bell is sent synchronously and only the email is queued, following the user's `EmailPreferences`.
+- Date columns cast as `date` are stored as `Y-m-d 00:00:00`: compare them with Carbon values (`startOfDay`/`endOfDay`), not with `toDateString()` strings.
 - User-created vocabularies (expertise areas, tags) must be protected against human-error duplicates: normalize, add a unique index on `normalized_name`, reuse instead of duplicating, and suggest near-matches.
 - News scrapers store metadata only (headline, lead, date, URL), respect robots.txt and rate limits, and never bypass paywalls.
 - Commands (run inside DDEV):

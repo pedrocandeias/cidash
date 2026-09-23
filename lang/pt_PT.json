@@ -586,5 +586,20 @@
     "Spike in mentions": "Pico de menções",
     "A monitoring rule has at least :minimum mentions in :hours hours, :factor times its usual number.": "Uma regra de monitorização tem pelo menos :minimum menções em :hours horas, :factor vezes o habitual.",
     "Times the usual": "Vezes o habitual",
-    "Minimum": "Mínimo"
+    "Minimum": "Mínimo",
+    "Open in CIDASH": "Abrir no CIDASH",
+    "By :name": "Por :name",
+    "You can choose what you receive by email in Settings → Notifications.": "Pode escolher o que recebe por email em Definições → Notificações.",
+    "Email notifications": "Notificações por email",
+    "Everything is always in the app (the bell). Choose what you also receive by email.": "Tudo aparece sempre na aplicação (no sino). Escolha o que quer receber também por email.",
+    "Email is not configured yet, so nothing is sent for now. Your choices are kept.": "O email ainda não está configurado, por isso para já nada é enviado. As suas escolhas ficam guardadas.",
+    "Tasks assigned to me": "Tarefas que me atribuem",
+    "When someone assigns you a task.": "Quando alguém lhe atribui uma tarefa.",
+    "For editors and managers, when content enters review.": "Para editores e managers, quando um conteúdo entra em revisão.",
+    "The reminders you set on any record.": "Os lembretes que define em qualquer registo.",
+    "For managers and the people responsible, when an alert opens.": "Para managers e responsáveis, quando um alerta abre.",
+    "Daily briefing": "Briefing diário",
+    "At 07:00 on working days.": "Às 07:00 nos dias úteis.",
+    "Weekly briefing": "Briefing semanal",
+    "On Mondays at 07:00.": "Às segundas-feiras às 07:00."
 }

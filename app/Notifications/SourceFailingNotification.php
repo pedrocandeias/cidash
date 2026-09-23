@@ -3,34 +3,25 @@
 namespace App\Notifications;
 
 use App\Models\Source;
-use Illuminate\Notifications\Notification;
 
 /**
  * For super admins, who maintain the sources catalogue.
  */
-class SourceFailingNotification extends Notification
+class SourceFailingNotification extends CidashNotification
 {
-    public function __construct(private Source $source) {}
-
-    /**
-     * @return array<int, string>
-     */
-    public function via(object $notifiable): array
+    public function __construct(Source $source)
     {
-        return ['database'];
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
-        return [
+        parent::__construct([
             'message' => 'Source failing',
-            'title' => $this->source->name,
+            'title' => $source->name,
             'by' => null,
             'workspace_id' => null,
             'url' => route('admin.sources.index', absolute: false),
-        ];
+        ]);
+    }
+
+    public function kind(): string
+    {
+        return 'alerts';
     }
 }

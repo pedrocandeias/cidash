@@ -4,34 +4,22 @@ namespace App\Notifications;
 
 use App\Models\ContentItem;
 use App\Models\User;
-use Illuminate\Notifications\Notification;
 
-class ContentAwaitingReview extends Notification
+class ContentAwaitingReview extends CidashNotification
 {
-    public function __construct(
-        private ContentItem $item,
-        private ?User $by,
-    ) {}
-
-    /**
-     * @return array<int, string>
-     */
-    public function via(object $notifiable): array
+    public function __construct(ContentItem $item, ?User $by)
     {
-        return ['database'];
+        parent::__construct([
+            'message' => 'Content awaiting review',
+            'title' => $item->title,
+            'by' => $by?->name,
+            'workspace_id' => $item->record->workspace_id,
+            'url' => route('content.show', $item, absolute: false),
+        ]);
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
+    public function kind(): string
     {
-        return [
-            'message' => 'Content awaiting review',
-            'title' => $this->item->title,
-            'by' => $this->by?->name,
-            'workspace_id' => $this->item->record->workspace_id,
-            'url' => route('content.show', $this->item, absolute: false),
-        ];
+        return 'reviews';
     }
 }

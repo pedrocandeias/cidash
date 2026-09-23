@@ -3,31 +3,22 @@
 namespace App\Notifications;
 
 use App\Models\Alert;
-use Illuminate\Notifications\Notification;
 
-class AlertRaised extends Notification
+class AlertRaised extends CidashNotification
 {
-    public function __construct(private Alert $alert) {}
-
-    /**
-     * @return array<int, string>
-     */
-    public function via(object $notifiable): array
+    public function __construct(Alert $alert)
     {
-        return ['database'];
+        parent::__construct([
+            'message' => $alert->message,
+            'title' => $alert->title,
+            'by' => null,
+            'workspace_id' => $alert->workspace_id,
+            'url' => route('alerts.index', absolute: false),
+        ]);
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
+    public function kind(): string
     {
-        return [
-            'message' => $this->alert->message,
-            'title' => $this->alert->title,
-            'by' => null,
-            'workspace_id' => $this->alert->workspace_id,
-            'url' => route('alerts.index', absolute: false),
-        ];
+        return 'alerts';
     }
 }
