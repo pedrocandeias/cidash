@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
+use App\Http\Controllers\Settings\SourceSubscriptionController;
 use App\Http\Controllers\Settings\TeamController;
 use App\Http\Controllers\Settings\TermsController;
 use Illuminate\Auth\Middleware\RequirePassword;
@@ -36,6 +37,9 @@ Route::middleware(['auth', 'workspace'])->group(function () {
     Route::post('settings/team/{member}/invitation', [TeamController::class, 'resendInvitation'])
         ->middleware('throttle:6,1')
         ->name('team.invitation');
+
+    Route::get('settings/sources', [SourceSubscriptionController::class, 'index'])->name('subscriptions.index');
+    Route::patch('settings/sources/{source}', [SourceSubscriptionController::class, 'update'])->name('subscriptions.update');
 
     Route::get('settings/terms', [TermsController::class, 'index'])->name('terms.index');
     Route::patch('settings/terms/{kind}/{id}', [TermsController::class, 'update'])->name('terms.update');

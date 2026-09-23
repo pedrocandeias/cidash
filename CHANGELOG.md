@@ -2,6 +2,18 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.16.0 (2026-09-23)
+
+- feat: catálogo global de fontes (Administração → Fontes): RSS/Atom, pesquisas do Google News e recolhedor HTML genérico, com estado, erros e "Recolher agora"
+- feat: subscrição de fontes por equipa, com fontes prioritárias (Definições → Fontes)
+- feat: recolha agendada a cada 5 minutos (`cidash:fetch-sources`); cada notícia é guardada uma só vez, só com metadados
+- feat: endereços canónicos (sem parâmetros de tracking) para não repetir notícias
+- feat: agrupamento em histórias por semelhança de títulos, incluindo o mesmo artigo vindo de meios diferentes
+- feat: caixa de Notícias por triar, agrupada por história; marcar uma história como relevante aplica-se a todas as notícias dela
+- feat: página da notícia com ligação ao original, a mesma história noutros meios, comentários, relações e "Criar tarefa"
+- feat: catálogo inicial (`cidash:install-default-sources`): JN, DN, Observador, Público, SAPO Notícias e Google News; o Expresso bloqueia pedidos automáticos e chega via Google News
+- feat: o recolhedor HTML respeita o `robots.txt`, espera entre pedidos ao mesmo domínio e identifica-se
+
 ## 0.15.0 (2026-09-23)
 
 - feat: Calendário com filtros por tipo, responsável e campanha

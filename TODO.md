@@ -92,14 +92,15 @@
 
 ## 3. MVP-2 — Monitorização
 
-- [ ] `sources` (catálogo global, super admin) + `workspace_sources` (subscrição, prioridade); estado, último erro, `consecutive_failures`
-- [ ] Verificar RSS de JN, DN, Observador, Público e Expresso; configurar o scraper genérico onde não houver
-- [ ] Scraper genérico configurável (páginas de secção → artigos → OpenGraph/JSON-LD), com robots.txt, User-Agent identificado e rate limit por domínio
-- [ ] SAPO Notícias (agregador): deduplicar pelo URL do meio original
-- [ ] Google News RSS por regra de monitorização; resolver os redirecionamentos para o URL original (fallback: título + meio)
-- [ ] Processamento de notícias: normalizar, URL canónico, dedup por hash, `news_items` só com metadados (sem texto integral)
-- [ ] Agrupamento em stories (trigramas no título)
-- [ ] `news_item_states`: triagem e relevância por workspace
+- [x] `sources` (catálogo global, super admin) + `workspace_sources` (subscrição, prioridade); estado, último erro, `consecutive_failures`
+- [x] Verificar RSS de JN, DN, Observador, Público e Expresso (JN, DN, Observador, Público e SAPO com RSS; Expresso bloqueia pedidos automáticos → via Google News)
+- [x] Scraper genérico configurável (páginas de secção → artigos → OpenGraph), com robots.txt, User-Agent identificado e rate limit por domínio
+- [x] SAPO Notícias (agregador): deduplicação por URL canónico e agrupamento em histórias
+- [x] Google News RSS (pesquisa); título sem o meio, agrupado na mesma história que o artigo original
+- [ ] Google News RSS por regra de monitorização (com as regras)
+- [x] Processamento de notícias: normalizar, URL canónico, dedup por hash, `news_items` só com metadados (sem texto integral)
+- [x] Agrupamento em stories (trigramas no título, 72 h)
+- [x] `news_item_states`: triagem e relevância por workspace (tipo de registo `news`)
 - [ ] `monitoring_rules`: include/exclude terms, pessoa de interesse opcional → `mentions` por workspace
 - [ ] Inboxes de triagem News e Mentions (relevante / irrelevante / criar tarefa / relacionar)
 - [ ] Alerts: motor + regras do catálogo (incluindo `source_failing`), parâmetros editáveis, faixa no Home e 🔔

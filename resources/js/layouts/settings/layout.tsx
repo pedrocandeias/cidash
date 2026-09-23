@@ -9,6 +9,7 @@ import { cn, toUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
+import { index as subscriptions } from '@/routes/subscriptions';
 import { index as team } from '@/routes/team';
 import { index as terms } from '@/routes/terms';
 import type { NavItem } from '@/types';
@@ -33,6 +34,7 @@ const sidebarNavItems: NavItem[] = [
 
 const managerNavItems: NavItem[] = [
     { title: 'Team', href: team(), icon: null },
+    { title: 'Sources', href: subscriptions(), icon: null },
     { title: 'Terms', href: terms(), icon: null },
 ];
 

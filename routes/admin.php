@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\MailSettingsController;
+use App\Http\Controllers\Admin\SourceController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,6 +11,12 @@ Route::middleware(['auth', 'can:super-admin'])->prefix('admin')->name('admin.')-
     Route::post('email/test', [MailSettingsController::class, 'test'])
         ->middleware('throttle:6,1')
         ->name('email.test');
+
+    Route::get('sources', [SourceController::class, 'index'])->name('sources.index');
+    Route::post('sources', [SourceController::class, 'store'])->name('sources.store');
+    Route::patch('sources/{source}', [SourceController::class, 'update'])->name('sources.update');
+    Route::delete('sources/{source}', [SourceController::class, 'destroy'])->name('sources.destroy');
+    Route::post('sources/{source}/fetch', [SourceController::class, 'fetch'])->name('sources.fetch');
 
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::patch('users/{user}', [UserController::class, 'update'])->name('users.update');

@@ -26,6 +26,16 @@ class Workspace extends Model
     use HasFactory;
 
     /**
+     * Catalogue sources the workspace follows.
+     *
+     * @return BelongsToMany<Source, $this>
+     */
+    public function sources(): BelongsToMany
+    {
+        return $this->belongsToMany(Source::class, 'workspace_sources')->withPivot('is_priority')->withTimestamps();
+    }
+
+    /**
      * @return BelongsToMany<User, $this, Membership, 'membership'>
      */
     public function members(): BelongsToMany

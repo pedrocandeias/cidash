@@ -16,4 +16,6 @@ Schedule::command('queue:work --stop-when-empty --max-time=50')
 
 Schedule::command('cidash:send-reminders')->everyMinute()->withoutOverlapping();
 
+Schedule::command('cidash:fetch-sources')->everyFiveMinutes()->withoutOverlapping();
+
 Schedule::command('cidash:backup')->dailyAt('03:00');

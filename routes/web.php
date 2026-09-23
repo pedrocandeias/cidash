@@ -7,6 +7,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContentItemController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LinkController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PersonController;
@@ -38,6 +39,8 @@ Route::middleware(['auth', 'workspace'])->group(function () {
     Route::get('people/areas/suggest', [PersonController::class, 'suggestAreas'])->name('people.areas.suggest');
     Route::get('people/{person}/photo', [PersonController::class, 'photo'])->name('people.photo');
     Route::resource('people', PersonController::class)->except(['create', 'edit']);
+
+    Route::resource('news', NewsController::class)->only(['index', 'show', 'update']);
 
     Route::get('records/search', SearchController::class)->name('records.search');
     Route::post('records/{record}/links', [LinkController::class, 'store'])->name('links.store');

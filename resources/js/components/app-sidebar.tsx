@@ -8,6 +8,8 @@ import {
     Flag,
     Megaphone,
     Newspaper,
+    Radio,
+    Rss,
     UserCog,
     Users,
 } from 'lucide-react';
@@ -25,10 +27,12 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { edit as editEmailSettings } from '@/routes/admin/email';
+import { index as adminSources } from '@/routes/admin/sources';
 import { index as adminUsers } from '@/routes/admin/users';
 import { index as campaigns } from '@/routes/campaigns';
 import { index as content } from '@/routes/content';
 import { index as events } from '@/routes/events';
+import { index as news } from '@/routes/news';
 import { index as notices } from '@/routes/notices';
 import { index as people } from '@/routes/people';
 import { index as press } from '@/routes/press';
@@ -53,13 +57,17 @@ const navGroups: { label?: string; items: NavItem[] }[] = [
             { title: 'Notices', href: notices(), icon: Megaphone },
         ],
     },
-    { label: 'Monitoring', items: [] },
+    {
+        label: 'Monitoring',
+        items: [{ title: 'News coverage', href: news(), icon: Radio }],
+    },
 ];
 
 const adminGroup = {
     label: 'Administration',
     items: [
         { title: 'Users', href: adminUsers(), icon: UserCog },
+        { title: 'Sources', href: adminSources(), icon: Rss },
         { title: 'Email', href: editEmailSettings(), icon: Mail },
     ],
 };
