@@ -22,13 +22,16 @@ class LinkController extends Controller
         $validated = $request->validate([
             'target_id' => ['required', 'uuid'],
             'type' => ['sometimes', Rule::enum(RelationType::class)],
+            // Link the other record to this one instead (e.g. content part_of this campaign).
+            'reverse' => ['sometimes', 'boolean'],
         ]);
 
-        $links->link(
-            $record,
-            Record::findOrFail((string) $validated['target_id']),
-            RelationType::tryFrom($validated['type'] ?? '') ?? RelationType::RelatedTo,
-        );
+        $other = Record::findOrFail((string) $validated['target_id']);
+        $type = RelationType::tryFrom($validated['type'] ?? '') ?? RelationType::RelatedTo;
+
+        $request->boolean('reverse')
+            ? $links->link($other, $record, $type)
+            : $links->link($record, $other, $type);
 
         return back();
     }

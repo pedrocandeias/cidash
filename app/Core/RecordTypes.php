@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use App\Models\CalendarEvent;
+use App\Models\Campaign;
 use App\Models\ContentItem;
 use App\Models\Notice;
 use App\Models\PressRequest;
@@ -25,6 +26,7 @@ class RecordTypes
         'notice' => ['model' => Notice::class, 'route' => 'notices.show', 'label' => 'Notice'],
         'press_request' => ['model' => PressRequest::class, 'route' => 'press.show', 'label' => 'Press request'],
         'content' => ['model' => ContentItem::class, 'route' => 'content.show', 'label' => 'Content item'],
+        'campaign' => ['model' => Campaign::class, 'route' => 'campaigns.show', 'label' => 'Campaign'],
     ];
 
     public static function register(): void

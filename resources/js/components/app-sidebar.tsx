@@ -5,6 +5,7 @@ import {
     House,
     ListTodo,
     Mail,
+    Flag,
     Megaphone,
     Newspaper,
 } from 'lucide-react';
@@ -22,6 +23,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { edit as editEmailSettings } from '@/routes/admin/email';
+import { index as campaigns } from '@/routes/campaigns';
 import { index as content } from '@/routes/content';
 import { index as events } from '@/routes/events';
 import { index as notices } from '@/routes/notices';
@@ -41,6 +43,7 @@ const navGroups: { label?: string; items: NavItem[] }[] = [
             { title: 'Calendar', href: events(), icon: CalendarDays },
             { title: 'Tasks', href: tasks(), icon: ListTodo },
             { title: 'Content', href: content(), icon: Columns3 },
+            { title: 'Campaigns', href: campaigns(), icon: Flag },
             { title: 'Press requests', href: press(), icon: Newspaper },
             { title: 'Notices', href: notices(), icon: Megaphone },
         ],

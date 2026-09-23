@@ -80,7 +80,7 @@
 - [ ] Press Requests: sugerir especialistas (com Pessoas de interesse)
 - [x] Content Pipeline: Kanban com 7 estados, drag & drop, `stage_changed_at`, aprovação só por editors, managers e super admin (sem saltar a revisão); notificação aos editors e managers quando um conteúdo entra em Review
 - [ ] Content Pipeline: vista de lista e calendário editorial (publish_at)
-- [ ] Campaigns: CRUD, responsáveis, relações com eventos e conteúdos
+- [x] Campaigns: CRUD, responsáveis, secção "Nesta campanha" (eventos e conteúdos via `part_of`)
 - [x] Termos normalizados (backend): `Terms`, `normalized_name` + índice único, reutilizar em vez de duplicar, sugestões (distância ≤ 2), testes
 - [x] Termos normalizados (UI): TagInput com sugestões e "Queria dizer…?"
 - [ ] Gestão de tags pelos managers: renomear, fundir, apagar

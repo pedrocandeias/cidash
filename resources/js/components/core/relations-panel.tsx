@@ -1,10 +1,8 @@
 import { Link, router } from '@inertiajs/react';
 import { X } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { Input } from '@/components/ui/input';
 import { useTranslation } from '@/lib/i18n';
 import { destroy, store } from '@/routes/links';
-import { search } from '@/routes/records';
+import RecordSearch from './record-search';
 
 export type RecordSummary = {
     id: string;
@@ -45,33 +43,6 @@ export default function RelationsPanel({
     relations: RelationItem[];
 }) {
     const { t } = useTranslation();
-    const [query, setQuery] = useState('');
-    const [results, setResults] = useState<RecordSummary[]>([]);
-
-    useEffect(() => {
-        if (query.trim().length < 2) {
-            setResults([]);
-
-            return;
-        }
-
-        const controller = new AbortController();
-        const timer = setTimeout(() => {
-            fetch(search.url({ query: { q: query, exclude: recordId } }), {
-                headers: { Accept: 'application/json' },
-                signal: controller.signal,
-            })
-                .then((response) => response.json())
-                .then(setResults)
-                .catch(() => {});
-        }, 250);
-
-        return () => {
-            clearTimeout(timer);
-            controller.abort();
-        };
-    }, [query, recordId]);
-
     const linked = new Set(relations.map((relation) => relation.record.id));
 
     return (
@@ -131,36 +102,18 @@ export default function RelationsPanel({
                 })}
             </ul>
 
-            <div className="space-y-1">
-                <Input
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                    placeholder={t('Link to… (search by title)')}
-                    aria-label={t('Link to… (search by title)')}
-                />
-                {results
-                    .filter((result) => !linked.has(result.id))
-                    .map((result) => (
-                        <button
-                            key={result.id}
-                            type="button"
-                            className="block w-full truncate rounded-md px-2 py-1 text-left text-sm hover:bg-muted"
-                            onClick={() => {
-                                router.post(
-                                    store(recordId).url,
-                                    { target_id: result.id },
-                                    { preserveScroll: true },
-                                );
-                                setQuery('');
-                            }}
-                        >
-                            <span className="text-xs text-muted-foreground">
-                                {t(result.label)} ·{' '}
-                            </span>
-                            {result.title}
-                        </button>
-                    ))}
-            </div>
+            <RecordSearch
+                excludeId={recordId}
+                excludeIds={[...linked]}
+                placeholder={t('Link to… (search by title)')}
+                onPick={(record) =>
+                    router.post(
+                        store(recordId).url,
+                        { target_id: record.id },
+                        { preserveScroll: true },
+                    )
+                }
+            />
         </div>
     );
 }

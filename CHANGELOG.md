@@ -2,6 +2,13 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.9.0 (2026-09-23)
+
+- feat: Campanhas com descrição, objetivos, públicos, datas, canais, estado e vários responsáveis
+- feat: secção "Nesta campanha" para acrescentar eventos e conteúdos (relação `part_of`) com pesquisa por título
+- feat: lista de campanhas planeadas e em curso, com o número de itens de cada uma
+- refactor: pesquisa de registos extraída para um componente reutilizável (`RecordSearch`)
+
 ## 0.8.0 (2026-09-23)
 
 - feat: Pipeline de conteúdos em Kanban com as fases Ideia, Em preparação, Revisão, Aprovado, Agendado, Publicado e Arquivado
