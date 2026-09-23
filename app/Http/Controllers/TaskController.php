@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Core\Links;
+use App\Core\RecordPage;
 use App\Enums\Priority;
 use App\Enums\RelationType;
 use App\Enums\TaskStatus;
 use App\Http\Requests\TaskRequest;
-use App\Models\Activity;
-use App\Models\Comment;
 use App\Models\Record;
 use App\Models\Task;
 use App\Models\User;
@@ -75,7 +74,7 @@ class TaskController extends Controller
         return back();
     }
 
-    public function show(Request $request, Task $task): Response
+    public function show(Request $request, Task $task, RecordPage $page): Response
     {
         $task->load(['assignee:id,name', 'source', 'record']);
 
@@ -87,23 +86,7 @@ class TaskController extends Controller
                 'source' => $task->source ? ['type' => $task->source->type, 'title' => $task->source->title] : null,
             ],
             'members' => $this->members(),
-            'comments' => $task->record->comments()->with('user:id,name')->oldest()->get()
-                ->map(fn (Comment $comment) => [
-                    'id' => $comment->id,
-                    'body' => $comment->body,
-                    'author' => $comment->user?->name,
-                    'created_at' => $comment->created_at->toIso8601String(),
-                    'can_delete' => $comment->user_id === $request->user()->id,
-                ]),
-            'activity' => $task->record->activity()->with('user:id,name')->latest('id')->get()
-                ->map(fn (Activity $activity) => [
-                    'id' => $activity->id,
-                    'action' => $activity->action,
-                    'fields' => array_keys($activity->changes ?? []),
-                    'user' => $activity->user?->name,
-                    'created_at' => $activity->created_at->toIso8601String(),
-                ]),
-            'recordId' => $task->id,
+            ...$page->for($task->record, $request->user()),
             'can' => ['delete' => $request->user()->can('delete', $task)],
         ]);
     }

@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { House, ListTodo, Mail } from 'lucide-react';
+import { CalendarDays, House, ListTodo, Mail } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { edit as editEmailSettings } from '@/routes/admin/email';
+import { index as events } from '@/routes/events';
 import { index as tasks } from '@/routes/tasks';
 import type { NavItem } from '@/types';
 
@@ -25,7 +26,10 @@ const navGroups: { label?: string; items: NavItem[] }[] = [
     },
     {
         label: 'Operations',
-        items: [{ title: 'Tasks', href: tasks(), icon: ListTodo }],
+        items: [
+            { title: 'Calendar', href: events(), icon: CalendarDays },
+            { title: 'Tasks', href: tasks(), icon: ListTodo },
+        ],
     },
     { label: 'Monitoring', items: [] },
 ];

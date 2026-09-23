@@ -3,8 +3,11 @@ import ActivityFeed from '@/components/core/activity-feed';
 import type { ActivityItem } from '@/components/core/activity-feed';
 import CommentsThread from '@/components/core/comments-thread';
 import type { CommentItem } from '@/components/core/comments-thread';
+import CreateTaskButton from '@/components/core/create-task-button';
 import RelationsPanel from '@/components/core/relations-panel';
 import type { RelationItem } from '@/components/core/relations-panel';
+import RemindersPanel from '@/components/core/reminders-panel';
+import type { ReminderItem } from '@/components/core/reminders-panel';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,110 +19,72 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
+import { useTranslation } from '@/lib/i18n';
+import EventFields, { eventFormTransform } from '@/modules/events/event-fields';
+import type { EventDetails } from '@/modules/events/types';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { formatDateTime, useTranslation } from '@/lib/i18n';
-import TaskFields, { taskFormTransform } from '@/modules/tasks/task-fields';
-import type { Member, TaskSummary } from '@/modules/tasks/types';
-import { statusLabels, taskFieldLabels } from '@/modules/tasks/types';
-import { destroy, index, update } from '@/routes/tasks';
+    eventFieldLabels,
+    typeColors,
+    typeLabels,
+} from '@/modules/events/types';
+import type { Member } from '@/modules/tasks/types';
+import { destroy, index, update } from '@/routes/events';
 
 type Props = {
-    task: TaskSummary & {
-        description: string | null;
-        created_at: string;
-        source: { type: string; title: string } | null;
-    };
+    event: EventDetails;
     members: Member[];
+    recordId: string;
     comments: CommentItem[];
     activity: ActivityItem[];
     relations: RelationItem[];
-    recordId: string;
+    reminders: ReminderItem[];
     can: { delete: boolean };
 };
 
-export default function ShowTask({
-    task,
+export default function ShowEvent({
+    event,
     members,
+    recordId,
     comments,
     activity,
     relations,
-    recordId,
+    reminders,
     can,
 }: Props) {
-    const { t, locale } = useTranslation();
+    const { t } = useTranslation();
 
     return (
         <>
-            <Head title={task.title} />
+            <Head title={event.title} />
 
             <div className="grid gap-10 px-4 py-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
                 <div className="space-y-10">
-                    <Heading title={task.title} />
-
-                    <div className="-mt-10 flex flex-wrap items-end gap-4">
-                        <div className="grid gap-2">
-                            <Label htmlFor="status">{t('Status')}</Label>
-                            <Select
-                                value={task.status}
-                                onValueChange={(status) =>
-                                    router.patch(
-                                        update(task.id).url,
-                                        { status },
-                                        { preserveScroll: true },
-                                    )
-                                }
-                            >
-                                <SelectTrigger id="status" className="w-44">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {Object.entries(statusLabels).map(
-                                        ([value, label]) => (
-                                            <SelectItem
-                                                key={value}
-                                                value={value}
-                                            >
-                                                {t(label)}
-                                            </SelectItem>
-                                        ),
-                                    )}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                            {t('Created :date', {
-                                date: formatDateTime(task.created_at, locale),
-                            })}
-                            {task.source &&
-                                ` · ${t('From: :title', { title: task.source.title })}`}
-                        </p>
+                    <div className="space-y-2">
+                        <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <span
+                                className="size-2.5 rounded-full"
+                                style={{
+                                    backgroundColor: typeColors[event.type],
+                                }}
+                            />
+                            {t(typeLabels[event.type])}
+                        </span>
+                        <Heading title={event.title} />
                     </div>
 
                     <Form
-                        {...update.form(task.id)}
-                        transform={taskFormTransform}
+                        {...update.form(event.id)}
+                        transform={eventFormTransform}
                         options={{ preserveScroll: true }}
-                        className="space-y-6"
+                        className="-mt-8 space-y-6"
                     >
                         {({ processing, errors, recentlySuccessful }) => (
                             <>
-                                <TaskFields
+                                <EventFields
                                     members={members}
                                     errors={errors}
-                                    defaults={{
-                                        title: task.title,
-                                        description: task.description,
-                                        assigned_to: task.assignee?.id,
-                                        deadline: task.deadline,
-                                        priority: task.priority,
-                                    }}
+                                    defaults={event}
+                                    withStatus
                                 />
                                 <div className="flex items-center gap-4">
                                     <Button disabled={processing}>
@@ -139,26 +104,36 @@ export default function ShowTask({
                 </div>
 
                 <aside className="space-y-10">
+                    <CreateTaskButton
+                        sourceId={recordId}
+                        sourceTitle={event.title}
+                        members={members}
+                    />
+                    <RemindersPanel
+                        recordId={recordId}
+                        anchor={event.start_at}
+                        reminders={reminders}
+                    />
                     <RelationsPanel recordId={recordId} relations={relations} />
                     <ActivityFeed
                         activity={activity}
-                        fieldLabels={taskFieldLabels}
+                        fieldLabels={eventFieldLabels}
                     />
 
                     {can.delete && (
                         <Dialog>
                             <DialogTrigger asChild>
                                 <Button variant="outline" size="sm">
-                                    {t('Delete task')}
+                                    {t('Delete event')}
                                 </Button>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogTitle>
-                                    {t('Delete this task?')}
+                                    {t('Delete this event?')}
                                 </DialogTitle>
                                 <DialogDescription>
                                     {t(
-                                        'The task and its comments will be deleted. This cannot be undone.',
+                                        'The event, its comments and reminders will be deleted. This cannot be undone.',
                                     )}
                                 </DialogDescription>
                                 <DialogFooter className="gap-2">
@@ -170,7 +145,7 @@ export default function ShowTask({
                                     <Button
                                         variant="destructive"
                                         onClick={() =>
-                                            router.delete(destroy(task.id).url)
+                                            router.delete(destroy(event.id).url)
                                         }
                                     >
                                         {t('Delete')}
@@ -185,6 +160,6 @@ export default function ShowTask({
     );
 }
 
-ShowTask.layout = {
-    breadcrumbs: [{ title: 'Tasks', href: index() }],
+ShowEvent.layout = {
+    breadcrumbs: [{ title: 'Calendar', href: index() }],
 };

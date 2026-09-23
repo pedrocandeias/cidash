@@ -1,0 +1,164 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Core\RecordPage;
+use App\Core\Tags;
+use App\Enums\EventStatus;
+use App\Enums\Priority;
+use App\Http\Requests\CalendarEventRequest;
+use App\Models\CalendarEvent;
+use App\Models\Tag;
+use App\Models\User;
+use App\Support\WorkspaceContext;
+use Carbon\CarbonImmutable;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class CalendarEventController extends Controller
+{
+    public function __construct(private WorkspaceContext $context, private Tags $tags) {}
+
+    public function index(): Response
+    {
+        return Inertia::render('events/index', [
+            'members' => $this->members(),
+        ]);
+    }
+
+    /**
+     * Events overlapping [start, end), in FullCalendar's format.
+     */
+    public function feed(Request $request): JsonResponse
+    {
+        $validated = $request->validate(['start' => ['required', 'date'], 'end' => ['required', 'date']]);
+        $start = CarbonImmutable::parse($validated['start'])->setTimezone(config('app.timezone'));
+        $end = CarbonImmutable::parse($validated['end'])->setTimezone(config('app.timezone'));
+
+        $events = CalendarEvent::query()
+            ->where('start_at', '<', $end)
+            ->where(fn ($query) => $query
+                ->where('end_at', '>=', $start)
+                ->orWhere(fn ($query) => $query->whereNull('end_at')->where('start_at', '>=', $start)))
+            ->orderBy('start_at')
+            ->get()
+            ->map(fn (CalendarEvent $event) => [
+                'id' => $event->id,
+                'title' => $event->title,
+                'allDay' => $event->all_day,
+                'start' => $event->all_day ? $event->start_at->toDateString() : $event->start_at->toIso8601String(),
+                // FullCalendar ends are exclusive; all-day ends are stored inclusive.
+                'end' => $event->end_at === null ? null : ($event->all_day
+                    ? $event->end_at->addDay()->toDateString()
+                    : $event->end_at->toIso8601String()),
+                'url' => route('events.show', $event, absolute: false),
+                'extendedProps' => ['type' => $event->type->value, 'status' => $event->status->value],
+            ]);
+
+        return response()->json($events);
+    }
+
+    public function store(CalendarEventRequest $request): RedirectResponse
+    {
+        $event = DB::transaction(function () use ($request) {
+            $event = CalendarEvent::create([
+                ...$this->attributes($request),
+                'priority' => $request->input('priority', Priority::Normal->value),
+                'status' => $request->input('status', EventStatus::Confirmed->value),
+            ]);
+            $this->tags->sync($event->record, $request->input('tags', []));
+
+            return $event;
+        });
+
+        return to_route('events.show', $event);
+    }
+
+    public function show(Request $request, CalendarEvent $event, RecordPage $page): Response
+    {
+        $event->load(['record.tags', 'responsible:id,name']);
+
+        return Inertia::render('events/show', [
+            'event' => [
+                'id' => $event->id,
+                'title' => $event->title,
+                'description' => $event->description,
+                'type' => $event->type->value,
+                'start_at' => $event->start_at->toIso8601String(),
+                'end_at' => $event->end_at?->toIso8601String(),
+                'all_day' => $event->all_day,
+                'location' => $event->location,
+                'organizer' => $event->organizer,
+                'responsible_user_id' => $event->responsible_user_id,
+                'priority' => $event->priority->value,
+                'status' => $event->status->value,
+                'notes' => $event->notes,
+                'tags' => $event->record->tags->sortBy('name')->map(fn (Tag $tag) => $tag->name)->values(),
+            ],
+            'members' => $this->members(),
+            ...$page->for($event->record, $request->user()),
+            'can' => ['delete' => $request->user()->can('delete', $event)],
+        ]);
+    }
+
+    public function update(CalendarEventRequest $request, CalendarEvent $event): RedirectResponse
+    {
+        DB::transaction(function () use ($request, $event) {
+            $event->update($this->attributes($request));
+
+            if ($request->has('tags')) {
+                $this->tags->sync($event->record, $request->input('tags', []));
+            }
+        });
+
+        return back();
+    }
+
+    public function destroy(CalendarEvent $event): RedirectResponse
+    {
+        Gate::authorize('delete', $event);
+
+        $event->delete();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Event deleted.')]);
+
+        return to_route('events.index');
+    }
+
+    /**
+     * Validated attributes, with all-day events stored as whole days.
+     *
+     * @return array<string, mixed>
+     */
+    private function attributes(CalendarEventRequest $request): array
+    {
+        $attributes = $request->safe()->except('tags');
+
+        if ($request->boolean('all_day')) {
+            foreach (['start_at', 'end_at'] as $field) {
+                if (! empty($attributes[$field])) {
+                    $attributes[$field] = CarbonImmutable::parse($attributes[$field])->startOfDay();
+                }
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @return array<int, array{id: int, name: string}>
+     */
+    private function members(): array
+    {
+        $workspace = $this->context->get() ?? abort(403);
+
+        return $workspace->members()->orderBy('name')->get(['users.id', 'users.name'])
+            ->map(fn (User $user) => ['id' => $user->id, 'name' => $user->name])
+            ->all();
+    }
+}

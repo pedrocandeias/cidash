@@ -65,12 +65,14 @@
 - [ ] Suite de testes de isolamento entre workspaces (cresce com cada módulo)
 - [x] Núcleo: `objects` (`Record`), `relations` (`Link`, só dentro do workspace), `tags`, `comments`, `activity_log`; trait `IsRecord`; serviços `Links`, `Tags`, `Terms`
 - [x] Notificações in-app (tabela `notifications`, sino, abrir muda para o workspace da notificação)
-- [ ] `reminders` (com o Calendário)
-- [x] Registo de tipos: *morph map* (alias = `objects.type`)
-- [ ] Metadados por tipo (label, ícone, rota, campos pesquisáveis), com a pesquisa e o painel de relações
+- [x] `reminders` + `cidash:send-reminders` (notificação in-app)
+- [x] Registo de tipos: `App\Core\RecordTypes` (alias, modelo, rota, rótulo) → *morph map*
+- [ ] Metadados por tipo para a pesquisa (campos pesquisáveis, ícone)
 - [x] Componentes partilhados: CommentsThread (comentários em qualquer registo), ActivityFeed, NotificationsMenu (sino)
-- [ ] Componentes partilhados: ObjectDrawer, RelationsPanel, CreateTaskAction (com o segundo módulo)
-- [ ] Calendar: CRUD; vistas mês, semana, dia e lista; filtros; reminders
+- [x] Componentes partilhados: RelationsPanel (com pesquisa por título), RemindersPanel, CreateTaskButton, TagInput
+- [ ] Componentes partilhados: ObjectDrawer (pré-visualização lateral)
+- [x] Calendar: CRUD; vistas mês, semana, dia e agenda; cores por tipo; tags; lembretes; relações; criar tarefa a partir do evento
+- [ ] Calendar: filtros (tipo, responsável, campanha), arrastar eventos para mudar a data
 - [ ] Notice Board: CRUD, pinned, expiração
 - [x] Tasks: CRUD, minhas/equipa, filtros de estado, conclusão rápida, detalhe com comentários e histórico, apagar (criador ou manager), origem (`source_id` + relação `originated_from`), notificação in-app de atribuição
 - [ ] Tasks: vista Kanban por estado
@@ -78,7 +80,8 @@
 - [ ] Content Pipeline: Kanban com 7 estados, drag & drop, `stage_changed_at`, Review → Approved só por editors, managers e super admin; notificação aos editors e managers quando um conteúdo entra em Review
 - [ ] Campaigns: CRUD, responsáveis, relações com eventos e conteúdos
 - [x] Termos normalizados (backend): `Terms`, `normalized_name` + índice único, reutilizar em vez de duplicar, sugestões (distância ≤ 2), testes
-- [ ] Termos normalizados (UI): combobox com sugestões, aviso "Queria dizer…?", renomear/fundir/apagar pelos managers
+- [x] Termos normalizados (UI): TagInput com sugestões e "Queria dizer…?"
+- [ ] Gestão de tags pelos managers: renomear, fundir, apagar
 - [ ] Pessoas de interesse: CRUD de perfis, `expertise_areas`, pesquisa por keyword + dropdown de área, cartões, "Copiar para enviar", aviso de bio por rever
 - [ ] Search global atrás de uma interface (`Core/Search`), implementação FTS5 (unicode61 remove_diacritics + trigram), paleta ⌘K
 - [ ] Home: widgets de eventos, avisos, reminders, tarefas, imprensa e conteúdos; vista de equipa para managers; aprovações pendentes para editors

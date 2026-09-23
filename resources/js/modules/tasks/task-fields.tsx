@@ -29,9 +29,12 @@ export default function TaskFields({
     members,
     errors,
     defaults = {},
+    idPrefix = '',
 }: {
     members: Member[];
     errors: Partial<Record<string, string>>;
+    /** Needed when shown next to another form with the same field names. */
+    idPrefix?: string;
     defaults?: {
         title?: string;
         description?: string | null;
@@ -45,9 +48,9 @@ export default function TaskFields({
     return (
         <div className="grid gap-4">
             <div className="grid gap-2">
-                <Label htmlFor="title">{t('Title')}</Label>
+                <Label htmlFor={`${idPrefix}title`}>{t('Title')}</Label>
                 <Input
-                    id="title"
+                    id={`${idPrefix}title`}
                     name="title"
                     defaultValue={defaults.title}
                     required
@@ -57,9 +60,11 @@ export default function TaskFields({
             </div>
 
             <div className="grid gap-2">
-                <Label htmlFor="description">{t('Description')}</Label>
+                <Label htmlFor={`${idPrefix}description`}>
+                    {t('Description')}
+                </Label>
                 <textarea
-                    id="description"
+                    id={`${idPrefix}description`}
                     name="description"
                     rows={4}
                     defaultValue={defaults.description ?? ''}
@@ -70,14 +75,16 @@ export default function TaskFields({
 
             <div className="grid gap-4 sm:grid-cols-3">
                 <div className="grid gap-2">
-                    <Label htmlFor="assigned_to">{t('Assignee')}</Label>
+                    <Label htmlFor={`${idPrefix}assigned_to`}>
+                        {t('Assignee')}
+                    </Label>
                     <Select
                         name="assigned_to"
                         defaultValue={String(
                             defaults.assigned_to ?? UNASSIGNED,
                         )}
                     >
-                        <SelectTrigger id="assigned_to">
+                        <SelectTrigger id={`${idPrefix}assigned_to`}>
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -98,9 +105,11 @@ export default function TaskFields({
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="deadline">{t('Deadline')}</Label>
+                    <Label htmlFor={`${idPrefix}deadline`}>
+                        {t('Deadline')}
+                    </Label>
                     <Input
-                        id="deadline"
+                        id={`${idPrefix}deadline`}
                         name="deadline"
                         type="date"
                         defaultValue={defaults.deadline ?? ''}
@@ -109,12 +118,14 @@ export default function TaskFields({
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="priority">{t('Priority')}</Label>
+                    <Label htmlFor={`${idPrefix}priority`}>
+                        {t('Priority')}
+                    </Label>
                     <Select
                         name="priority"
                         defaultValue={defaults.priority ?? 'normal'}
                     >
-                        <SelectTrigger id="priority">
+                        <SelectTrigger id={`${idPrefix}priority`}>
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>

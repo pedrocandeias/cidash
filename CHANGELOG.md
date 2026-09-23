@@ -2,6 +2,17 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.5.0 (2026-09-23)
+
+- feat: Calendário com vistas mês, semana, dia e agenda (FullCalendar), cores por tipo de evento
+- feat: eventos com tipo, início e fim (ou dia inteiro), local, organizador, responsável, prioridade, estado, notas e tags
+- feat: lembretes pessoais em qualquer registo, entregues como notificação in-app (`cidash:send-reminders`, a cada minuto)
+- feat: tags com sugestões e aviso "Queria dizer…?" para termos parecidos
+- feat: painel de relações para ligar registos, com pesquisa por título
+- feat: "Criar tarefa" a partir de um evento; a tarefa fica ligada à origem
+- feat: a página de uma tarefa mostra as suas relações
+- chore: fuso horário da aplicação passa a Europe/Lisbon
+
 ## 0.4.0 (2026-09-23)
 
 - feat: módulo de Tarefas com vistas "Minhas" e "Equipa", filtros (abertas, concluídas, todas) e conclusão rápida

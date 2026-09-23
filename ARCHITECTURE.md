@@ -518,7 +518,7 @@ Stack **PHP**, alojado num **servidor LAMP normal** (com SSH e cron) e **acessí
 | Backend | **Laravel 13 (PHP 8.3+)**, a partir do starter kit oficial React (Inertia, TypeScript, Tailwind, shadcn/ui, Fortify com 2FA) | Traz de base o que o CIDASH precisa: filas, scheduler, autenticação, policies, migrações, i18n, email, rate limiting, scopes globais e testes. Ver *Porquê Laravel*. |
 | Frontend | **Inertia + React + TypeScript** | SPA sem API separada; os componentes ricos (Kanban, calendário, ⌘K) são mais fáceis em React. |
 | UI | Tailwind + shadcn/ui (Radix) | Sóbria, acessível, fácil de manter coerente |
-| Calendário / Kanban | FullCalendar · dnd-kit | Soluções maduras, sem reinventar |
+| Calendário / Kanban | FullCalendar 6.1 · dnd-kit | Soluções maduras, sem reinventar. A 7.x ainda é recente e os plugins não acompanham |
 | Filas / cache | Driver `database` do Laravel (na própria SQLite) | Sem Redis. Ingestão, alertas, briefings e reminders correm em jobs |
 | Scraping | Guzzle + Symfony DomCrawler; SimplePie para RSS | Só HTML, sem browser headless |
 | i18n | Ficheiros `lang/` do Laravel, partilhados com o React | Ver *Internacionalização* |
@@ -607,6 +607,7 @@ Enviar por cima não remove ficheiros apagados entre versões. Se uma versão re
 
 **Motivo da escolha: mobilidade.** Uma instância completa do CIDASH é a pasta da aplicação mais uma pasta de dados (`database.sqlite` e `storage/` com os anexos). Mudar de servidor ou montar uma cópia local é transferir essa pasta, sem servidor de base de dados nem Redis para instalar. Para manter isto verdadeiro, todo o estado persistente (dados, filas, cache, sessões, uploads) tem de viver nessa pasta de dados.
 
+- **Fuso horário:** a aplicação usa `Europe/Lisbon`, e as datas ficam guardadas em hora local. Horas vindas do browser em UTC são convertidas antes de gravar.
 - **Configuração obrigatória** em cada ligação (`config/database.php`): `journal_mode=WAL`, `busy_timeout=5000`, `foreign_keys=ON`, `synchronous=NORMAL`.
 - **Transações `IMMEDIATE`:** o write lock é pedido logo no `BEGIN`, e assim o `busy_timeout` aplica-se. Com o valor por omissão (`DEFERRED`), uma transação que começa a ler e depois escreve falha de imediato com `database is locked`.
 - **Concorrência:** um processo escreve de cada vez (as leituras não bloqueiam). Chega para os ~20 utilizadores do piloto e os workers. Transações curtas; nada de trabalho HTTP dentro de uma transação.
