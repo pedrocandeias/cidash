@@ -28,7 +28,9 @@
 ## 1. Setup
 
 - [x] `git init`
-- [ ] Repositório remoto no GitHub
+- [x] Repositório remoto no GitHub (github.com/pedrocandeias/cidash, público)
+- [x] Deploy contínuo: job `deploy` no GitHub Actions após o CI, inativo até configurar `DEPLOY_TARGET` e os secrets
+- [ ] Primeira instalação no servidor e configuração do deploy (chave SSH, secrets)
 - [x] Projeto Laravel 13 + starter kit React, DDEV (SQLite, sem contentor de BD, filas no driver `database`)
 - [x] Configuração SQLite (WAL, busy_timeout, foreign_keys, transações IMMEDIATE)
 - [x] Backup diário `cidash:backup` (`VACUUM INTO`, retenção de 14)

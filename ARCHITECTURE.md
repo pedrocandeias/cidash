@@ -539,6 +539,11 @@ Laravel não é excessivo para o CIDASH. A aplicação tem cerca de 15 módulos,
   4. no servidor: `composer install --no-dev`, `cidash:backup`, `migrate --force`, `optimize` e `up`.
 
   Os passos da primeira instalação estão no cabeçalho do script.
+- **Deploy contínuo (GitHub Actions):** o job `deploy` de `.github/workflows/tests.yml` corre o mesmo script depois de o CI passar num push para `main`. Fica inativo até existirem, no environment `production` do GitHub:
+  - a variável `DEPLOY_TARGET`;
+  - os secrets `DEPLOY_SSH_KEY` (chave privada de deploy) e `DEPLOY_KNOWN_HOSTS` (fingerprint do servidor).
+
+  Aprovações manuais podem ser exigidas nas definições desse environment.
 - **Email:** configurado na aplicação, e não no `.env` (ver *Email*).
 
 ### Email
