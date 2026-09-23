@@ -104,6 +104,18 @@ relations (source_id → objects, target_id → objects, relation_type, note, cr
 
 **Custo:** um join extra e a obrigação de criar/atualizar `objects` na mesma transação. Aceitável; fica encapsulado numa camada de serviço.
 
+**Implementação** (`app/Core`, `app/Models`)
+- **Modelos:**
+  - `Record` corresponde a `objects`, porque o PHP reserva `Object`;
+  - `Link` corresponde a `relations`, para não colidir com a classe `Relation` do Eloquent;
+  - `Tag`, `Comment` e `Activity` (`activity_log`).
+- **Trait `IsRecord`:** um modelo de domínio que o use cria o seu `Record` no workspace ativo, mantém o título sincronizado, regista criado/alterado/apagado no `activity_log` e fica filtrado pelo workspace. O tipo é o alias do *morph map*, e `Record::subject` devolve o modelo de domínio.
+- **`WorkspaceScope`:** sem workspace ativo, as consultas **dão erro** em vez de devolverem dados de todas as equipas. Para as contornar é preciso `withoutGlobalScope(WorkspaceScope::class)`, que fica visível em revisão.
+- **Serviços:**
+  - `Links`: ligar, desligar e listar nos dois sentidos, só dentro do mesmo workspace;
+  - `Tags`: nunca duplica e sugere termos parecidos;
+  - `Terms`: normalização reutilizável.
+
 **Alternativa rejeitada:** um grafo genérico (EAV ou base de dados de grafos). É demasiado flexível, perde tipagem e validação e complica os relatórios.
 
 ### 2.2 Núcleo

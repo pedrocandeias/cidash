@@ -59,12 +59,14 @@
 - [x] Gestão de membros pelos managers (Definições → Equipa): adicionar por email (conta nova com convite; conta existente entra logo), mudar papel, remover, reenviar convite
 - [x] Área de Administração do super admin: Email
 - [ ] Administração: lista global de utilizadores (desativar conta, super admin)
-- [ ] Registo no `activity_log` dos acessos do super admin a workspaces de que não é membro
+- [x] Registo no `activity_log` dos acessos do super admin a workspaces de que não é membro (uma vez por sessão)
 - [x] Workspaces: `workspaces`, `workspace_user`, `users.current_workspace_id`, middleware `workspace` + `WorkspaceContext`, seed "CI Reitoria"
-- [ ] Scope global de workspace sobre `objects` (com o núcleo)
+- [x] Scope global de workspace (`WorkspaceScope`, falha sem workspace ativo)
 - [ ] Suite de testes de isolamento entre workspaces (cresce com cada módulo)
-- [ ] Núcleo: `objects`, `relations` (só dentro do workspace), `tags`, `comments`, `activity_log`, `reminders`, `notifications`
-- [ ] Registo de tipos (label, ícone, rota, campos pesquisáveis, renderer de resumo)
+- [x] Núcleo: `objects` (`Record`), `relations` (`Link`, só dentro do workspace), `tags`, `comments`, `activity_log`; trait `IsRecord`; serviços `Links`, `Tags`, `Terms`
+- [ ] `reminders` e notificações in-app (com o primeiro módulo que os use)
+- [x] Registo de tipos: *morph map* (alias = `objects.type`)
+- [ ] Metadados por tipo (label, ícone, rota, campos pesquisáveis), com a pesquisa e o painel de relações
 - [ ] Componentes partilhados: ObjectDrawer, RelationsPanel, CreateTaskAction, CommentsThread, ActivityFeed
 - [ ] Calendar: CRUD; vistas mês, semana, dia e lista; filtros; reminders
 - [ ] Notice Board: CRUD, pinned, expiração
@@ -72,7 +74,8 @@
 - [ ] Press Requests: CRUD, lista por deadline com semáforo, autocompletar jornalista e meio, relacionar especialistas
 - [ ] Content Pipeline: Kanban com 7 estados, drag & drop, `stage_changed_at`, Review → Approved só por editors, managers e super admin; notificação aos editors e managers quando um conteúdo entra em Review
 - [ ] Campaigns: CRUD, responsáveis, relações com eventos e conteúdos
-- [ ] Termos normalizados (áreas de especialidade e tags): `normalized_name` + índice único, reutilizar em vez de duplicar, combobox com sugestões, aviso "Queria dizer…?" (distância ≤ 2), renomear/fundir/apagar pelos managers; testes para variações de maiúsculas, acentos e espaços
+- [x] Termos normalizados (backend): `Terms`, `normalized_name` + índice único, reutilizar em vez de duplicar, sugestões (distância ≤ 2), testes
+- [ ] Termos normalizados (UI): combobox com sugestões, aviso "Queria dizer…?", renomear/fundir/apagar pelos managers
 - [ ] Pessoas de interesse: CRUD de perfis, `expertise_areas`, pesquisa por keyword + dropdown de área, cartões, "Copiar para enviar", aviso de bio por rever
 - [ ] Search global atrás de uma interface (`Core/Search`), implementação FTS5 (unicode61 remove_diacritics + trigram), paleta ⌘K
 - [ ] Home: widgets de eventos, avisos, reminders, tarefas, imprensa e conteúdos; vista de equipa para managers; aprovações pendentes para editors

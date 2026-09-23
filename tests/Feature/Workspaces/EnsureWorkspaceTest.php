@@ -72,4 +72,22 @@ class EnsureWorkspaceTest extends TestCase
 
         $this->assertTrue($admin->hasRole($workspace, WorkspaceRole::Manager));
     }
+
+    public function test_super_admin_visits_to_other_teams_are_audited_once_per_session()
+    {
+        $workspace = Workspace::factory()->create();
+        $admin = User::factory()->superAdmin()->create();
+        $member = User::factory()->inWorkspace($workspace)->create();
+
+        $this->actingAs($admin)->get(route('dashboard'));
+        $this->actingAs($admin)->get(route('dashboard'));
+        $this->actingAs($member)->get(route('dashboard'));
+
+        $this->assertDatabaseCount('activity_log', 1);
+        $this->assertDatabaseHas('activity_log', [
+            'workspace_id' => $workspace->id,
+            'user_id' => $admin->id,
+            'action' => 'workspace.accessed_by_super_admin',
+        ]);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Activity;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Support\WorkspaceContext;
@@ -33,7 +34,24 @@ class EnsureWorkspace
 
         $this->context->set($workspace);
 
+        $this->logSuperAdminAccess($request, $user, $workspace);
+
         return $next($request);
+    }
+
+    /**
+     * Super admin visits to a workspace they do not belong to are audited, once per session.
+     */
+    private function logSuperAdminAccess(Request $request, User $user, Workspace $workspace): void
+    {
+        $key = "workspace_access_logged.{$workspace->id}";
+
+        if (! $user->is_super_admin || $user->roleIn($workspace) !== null || $request->session()->has($key)) {
+            return;
+        }
+
+        Activity::log('workspace.accessed_by_super_admin');
+        $request->session()->put($key, true);
     }
 
     private function resolve(User $user): ?Workspace

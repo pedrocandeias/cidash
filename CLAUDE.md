@@ -6,7 +6,8 @@ Communication & Image Dashboard. An internal operational workspace for the Servi
 
 - `ARCHITECTURE.md` is the source of truth for the data model, navigation and scope (MVP / Phase 2 / Future). Read it before any structural change and keep it updated.
 - `TODO.md` is the backlog. Tick items off when they are done. Anything outside the current phase needs explicit approval.
-- Core rule: every domain record is an `objects` row plus relations. New modules register a type and must not change the core.
+- Core rule: every domain record is an `objects` row plus relations. A domain model uses the `IsRecord` trait (its table's uuid `id` references `objects.id`, cascading on delete) and registers a morph map alias as its type. New modules must not change the core (`app/Core`: `WorkspaceScope`, `IsRecord`, `BelongsToWorkspace`, `Links`, `Tags`, `Terms`).
+- Tests that need a domain model without a module use `Tests\Fixtures\TestNote` (`TestNote::setUpTable()`).
 - There is no institutional Directory (deferred to Future). "Pessoas de interesse" (`people`) is a manually curated per-workspace list of expert profiles for the media.
 - Multi-workspace from day one. The pilot is the Reitoria only, but the app will expand to the faculties' communication teams. Workspaces are strictly isolated: nothing is visible across teams except to the super admin. Every object has a `workspace_id`, all reads go through the core workspace scope, and relations only link objects in the same workspace. The only global data is user accounts, the source catalogue and collected `news_items`, which are public content. Any code that bypasses the scope must do so explicitly and be covered by the isolation tests.
 - Roles: a global super admin (`users.is_super_admin`), plus `manager`, `editor` or `member` per workspace (member < editor < manager). Editors approve content. Managers manage users only within their own workspace. The matrix is in `ARCHITECTURE.md` §2.6.
