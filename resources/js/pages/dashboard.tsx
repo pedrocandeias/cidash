@@ -1,7 +1,10 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import { Pin } from 'lucide-react';
+import { Pin, TriangleAlert } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { RecordSummary } from '@/components/core/relations-panel';
+import AlertLine from '@/modules/alerts/alert-line';
+import type { AlertItem } from '@/modules/alerts/types';
+import { index as alertsIndex } from '@/routes/alerts';
 import {
     formatDate,
     formatDateTime,
@@ -23,6 +26,7 @@ import { index as pressIndex, show as showPress } from '@/routes/press';
 import { index as tasksIndex, show as showTask } from '@/routes/tasks';
 
 type Props = {
+    alerts: { count: number; items: AlertItem[] };
     counters: {
         events_today: number;
         my_tasks: number;
@@ -105,6 +109,7 @@ function greeting(): string {
 }
 
 export default function Dashboard({
+    alerts,
     counters,
     events,
     tasks,
@@ -161,6 +166,28 @@ export default function Dashboard({
                         {dayLabel}
                     </p>
                 </header>
+
+                {alerts.count > 0 && (
+                    <section
+                        aria-label={t('Alerts')}
+                        className="flex flex-wrap items-start gap-x-4 gap-y-2 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 dark:border-amber-900 dark:bg-amber-950/40"
+                    >
+                        <Link
+                            href={alertsIndex()}
+                            className="flex items-center gap-2 text-sm font-semibold hover:underline"
+                        >
+                            <TriangleAlert className="size-4 text-amber-600" />
+                            {t('Alerts (:count)', { count: alerts.count })}
+                        </Link>
+                        <ul className="min-w-0 flex-1 space-y-1">
+                            {alerts.items.map((alert) => (
+                                <li key={alert.id}>
+                                    <AlertLine alert={alert} />
+                                </li>
+                            ))}
+                        </ul>
+                    </section>
+                )}
 
                 <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
                     {counterItems.map((item) => (

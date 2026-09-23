@@ -9,6 +9,7 @@ import { cn, toUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
+import { index as alertRules } from '@/routes/alert-rules';
 import { index as rules } from '@/routes/rules';
 import { index as subscriptions } from '@/routes/subscriptions';
 import { index as team } from '@/routes/team';
@@ -37,6 +38,7 @@ const managerNavItems: NavItem[] = [
     { title: 'Team', href: team(), icon: null },
     { title: 'Sources', href: subscriptions(), icon: null },
     { title: 'Monitoring', href: rules(), icon: null },
+    { title: 'Alerts', href: alertRules(), icon: null },
     { title: 'Terms', href: terms(), icon: null },
 ];
 

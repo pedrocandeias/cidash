@@ -2,6 +2,7 @@
 
 namespace App\Monitoring;
 
+use App\Alerts\Rules\SourceFailing;
 use App\Core\Links;
 use App\Enums\RelationType;
 use App\Enums\SourceKind;
@@ -12,10 +13,12 @@ use App\Models\NewsItem;
 use App\Models\NewsItemState;
 use App\Models\Person;
 use App\Models\Source;
+use App\Models\User;
 use App\Models\Workspace;
 use App\Monitoring\Fetchers\GoogleNewsFetcher;
 use App\Monitoring\Fetchers\RssFetcher;
 use App\Monitoring\Fetchers\ScraperFetcher;
+use App\Notifications\SourceFailingNotification;
 use App\Support\WorkspaceContext;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -218,6 +221,12 @@ class Ingestor
             'last_error' => mb_strimwidth($e->getMessage(), 0, 1000),
             'consecutive_failures' => $source->consecutive_failures + 1,
         ])->save();
+
+        // Super admins maintain the catalogue: tell them once, when a source starts failing.
+        if ($source->consecutive_failures === SourceFailing::DEFAULT_FAILURES) {
+            User::where('is_super_admin', true)->whereNull('deactivated_at')->get()
+                ->each(fn (User $admin) => $admin->notify(new SourceFailingNotification($source)));
+        }
     }
 
     private function fetcher(Source $source): Fetchers\Fetcher

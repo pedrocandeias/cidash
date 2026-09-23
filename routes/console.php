@@ -18,4 +18,6 @@ Schedule::command('cidash:send-reminders')->everyMinute()->withoutOverlapping();
 
 Schedule::command('cidash:fetch-sources')->everyFiveMinutes()->withoutOverlapping();
 
+Schedule::command('cidash:evaluate-alerts')->everyFiveMinutes()->withoutOverlapping();
+
 Schedule::command('cidash:backup')->dailyAt('03:00');

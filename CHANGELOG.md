@@ -2,6 +2,16 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.18.0 (2026-09-23)
+
+- feat: alertas com o catálogo de regras: evento sem responsável, prazo de pedido de imprensa a terminar, conteúdo parado em revisão, campanha sem conteúdos, notícia de fonte prioritária e fonte com falhas
+- feat: Definições → Alertas (managers): ligar e desligar regras, ajustar horas e dias e escolher a gravidade
+- feat: avaliação a cada 5 minutos (`cidash:evaluate-alerts`) e ao abrir o Início ou os Alertas; cada problema gera um só alerta, que fecha sozinho quando fica resolvido
+- feat: página de Alertas com "Marcar como visto" e os resolvidos nos últimos 30 dias
+- feat: faixa de alertas abertos no Início, por gravidade
+- feat: managers e responsáveis recebem uma notificação quando um alerta abre
+- feat: os super admins são avisados quando uma fonte começa a falhar
+
 ## 0.17.0 (2026-09-23)
 
 - feat: regras de monitorização por equipa (Definições → Monitorização, só managers): termos a incluir e a excluir, pessoa de interesse opcional, categoria e pausa

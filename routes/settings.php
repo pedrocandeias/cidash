@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Settings\AlertRuleController;
 use App\Http\Controllers\Settings\MonitoringRuleController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
@@ -41,6 +42,9 @@ Route::middleware(['auth', 'workspace'])->group(function () {
 
     Route::get('settings/sources', [SourceSubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::patch('settings/sources/{source}', [SourceSubscriptionController::class, 'update'])->name('subscriptions.update');
+
+    Route::get('settings/alerts', [AlertRuleController::class, 'index'])->name('alert-rules.index');
+    Route::patch('settings/alerts/{rule}', [AlertRuleController::class, 'update'])->name('alert-rules.update');
 
     Route::get('settings/monitoring', [MonitoringRuleController::class, 'index'])->name('rules.index');
     Route::post('settings/monitoring', [MonitoringRuleController::class, 'store'])->name('rules.store');

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Alerts\Evaluator;
 use App\Core\RecordTypes;
+use App\Enums\AlertStatus;
 use App\Enums\ContentStage;
 use App\Enums\PressRequestStatus;
 use App\Enums\TaskStatus;
 use App\Enums\WorkspaceRole;
+use App\Models\Alert;
 use App\Models\CalendarEvent;
 use App\Models\ContentItem;
 use App\Models\Notice;
@@ -23,11 +26,20 @@ use Inertia\Response;
  */
 class DashboardController extends Controller
 {
-    public function __invoke(Request $request, WorkspaceContext $context): Response
+    public function __invoke(Request $request, WorkspaceContext $context, Evaluator $evaluator): Response
     {
         $user = $request->user();
         $workspace = $context->get() ?? abort(403);
         $today = now()->startOfDay();
+        $evaluator->refresh($workspace);
+
+        // The strip shows open alerts only; acknowledged ones stay on the Alerts page.
+        $alerts = Alert::with('record')
+            ->where('status', AlertStatus::Open)
+            ->orderByRaw("case severity when 'critical' then 0 when 'warning' then 1 else 2 end")
+            ->orderByRaw('due_at is null')
+            ->orderBy('due_at')
+            ->get();
 
         $events = CalendarEvent::query()
             ->where('start_at', '<', $today->addDays(8))
@@ -75,6 +87,10 @@ class DashboardController extends Controller
         $isManager = $user->hasRole($workspace, WorkspaceRole::Manager);
 
         return Inertia::render('dashboard', [
+            'alerts' => [
+                'count' => $alerts->count(),
+                'items' => $alerts->take(4)->map(fn (Alert $alert) => AlertController::present($alert))->values(),
+            ],
             'counters' => [
                 'events_today' => $events->filter(fn (CalendarEvent $event) => $event->start_at->isToday() || ($event->start_at->lt($today) && $event->end_at?->gte($today)))->count(),
                 'my_tasks' => Task::where('assigned_to', $user->id)->whereIn('status', TaskStatus::open())->count(),

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlertController;
 use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\CampaignController;
@@ -23,6 +24,9 @@ Route::redirect('/', '/dashboard')->name('home');
 
 Route::middleware(['auth', 'workspace'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
+
+    Route::get('alerts', [AlertController::class, 'index'])->name('alerts.index');
+    Route::patch('alerts/{alert}', [AlertController::class, 'update'])->name('alerts.update');
 
     Route::resource('tasks', TaskController::class)->except(['create', 'edit']);
 
