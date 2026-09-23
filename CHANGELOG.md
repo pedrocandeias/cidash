@@ -2,6 +2,12 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.12.0 (2026-09-23)
+
+- feat: página inicial com saudação, contadores (eventos hoje, tarefas abertas, imprensa com prazo < 48 h, conteúdos em revisão) e widgets
+- feat: widgets de próximos 7 dias, as minhas tarefas, pedidos de imprensa por prazo, conteúdos em preparação (e parados em revisão), avisos e os meus lembretes
+- feat: editores e managers veem as aprovações pendentes; managers veem as tarefas em atraso por pessoa
+
 ## 0.11.0 (2026-09-23)
 
 - feat: pesquisa global em todos os registos (tarefas, eventos, avisos, pedidos de imprensa, conteúdos, campanhas, pessoas), sem distinção de acentos nem maiúsculas e com palavras incompletas

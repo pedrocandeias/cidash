@@ -86,7 +86,7 @@
 - [x] Gestão de tags e áreas pelos managers: renomear, fundir, apagar (Definições → Termos)
 - [x] Pessoas de interesse: CRUD de perfis, `expertise_areas`, pesquisa por keyword + dropdown de área, cartões, "Copiar para enviar", aviso de bio por rever, fotografia privada
 - [x] Search global atrás de uma interface (`Core/Search`), implementação FTS5 (unicode61 remove_diacritics, prefixos, bm25), paleta ⌘K, `cidash:search-reindex`
-- [ ] Home: widgets de eventos, avisos, reminders, tarefas, imprensa e conteúdos; vista de equipa para managers; aprovações pendentes para editors
+- [x] Home: widgets de eventos, avisos, reminders, tarefas, imprensa e conteúdos; vista de equipa para managers; aprovações pendentes para editors
 - [ ] Seeds de demonstração realistas
 
 ## 3. MVP-2 — Monitorização

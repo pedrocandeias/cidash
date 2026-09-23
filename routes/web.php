@@ -5,6 +5,7 @@ use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContentItemController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\NotificationController;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/dashboard')->name('home');
 
 Route::middleware(['auth', 'workspace'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
 
     Route::resource('tasks', TaskController::class)->except(['create', 'edit']);
 
