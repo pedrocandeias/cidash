@@ -109,23 +109,23 @@
 
 ## 4. Phase 2
 
-- [ ] AI Assistant: tools estruturadas (incl. `find_people`) + FTS5, citações validadas, painel contextual (confirmar antes o envio de dados para a API)
+- [ ] AI Assistant: tools estruturadas (incl. `find_people`) + FTS5, citações validadas, painel contextual (confirmar antes o envio de dados para a API) — **bloqueado:** chave de API e aprovação institucional para enviar dados
 - [x] Briefing semanal (segundas-feiras: semana que começa e revisão da anterior)
-- [ ] Resumo por IA no briefing diário e semanal (depende do assistente de IA)
-- [ ] Pesquisa semântica (embeddings; `sqlite-vec` ou similaridade em PHP) e melhor agrupamento em stories
+- [ ] Resumo por IA no briefing diário e semanal — **bloqueado:** depende do assistente de IA
+- [ ] Pesquisa semântica (embeddings; `sqlite-vec` ou similaridade em PHP) e melhor agrupamento em stories — **bloqueado:** precisa de um modelo de embeddings (mesma decisão que a IA)
 - [x] Alerta `mention_spike`
 - [x] Notificações e briefing por email (preferências por utilizador; envio quando o SMTP estiver configurado)
 - [x] Assets/anexos
 - [x] ICS export/subscrição
 - [x] Estados e tipos configuráveis: tipos de evento e formatos de conteúdo por equipa (os estados dos fluxos ficam fixos, ver ARCHITECTURE)
 - [x] Scoring de relevância (determinístico: regras, pessoas de interesse, fontes prioritárias, cobertura)
-- [ ] Mais fontes (outros meios; APIs se o scraping não chegar)
+- [ ] Mais fontes (outros meios; APIs se o scraping não chegar) — **à espera da equipa:** que meios acrescentar (o super admin já os pode acrescentar em Administração → Fontes)
 
 ## 5. Phase 3 — Expansão às UOs
 
-- [ ] Avaliar o piloto: volume, contenção de escrita e feedback. Decidir a migração para MariaDB/MySQL
+- [ ] Avaliar o piloto: volume, contenção de escrita e feedback. Decidir a migração para MariaDB/MySQL — **depois do piloto**
 - [ ] (se sim) Implementação de `Core/Search` para o novo motor + script e teste de migração de dados
-- [ ] SSO U.Porto
+- [ ] SSO U.Porto — **bloqueado:** acesso ao fornecedor de identidade da U.Porto
 - [x] Seletor de workspace
 - [x] Administração completa do super admin: criar workspaces, nomear managers, visão geral de todos os workspaces e da ingestão
 - [x] Onboarding por UO (fontes subscritas, regras, áreas de especialidade, guia)
