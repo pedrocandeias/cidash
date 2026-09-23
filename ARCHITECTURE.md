@@ -522,28 +522,40 @@ Laravel não é excessivo para o CIDASH. A aplicação tem cerca de 15 módulos,
 
 ### Deploy em LAMP
 
-- **Requisitos:**
+- **Requisitos do servidor:**
   - PHP 8.3+ com `pdo_sqlite` (SQLite ≥ 3.45 com FTS5), `mbstring`, `intl`, `curl`, `dom`, `fileinfo`;
-  - Composer;
-  - SSH;
+  - SSH, para correr os comandos `php artisan`;
   - cron.
 
-  SSH, cron e o DocumentRoot configurável estão confirmados. Falta verificar as versões.
+  Não são precisos Composer nem Node: a `dist/` já traz tudo. SSH, cron e o DocumentRoot configurável estão confirmados; falta verificar as versões.
 - **DocumentRoot = `public/`.** O ficheiro SQLite, o `storage/` e o `.env` ficam **fora** da pasta pública.
-- **Uma só linha no cron,** a cada minuto: `php artisan schedule:run`. O scheduler lança também o processamento da fila (`queue:work --stop-when-empty --max-time=50`), por isso não é preciso supervisor nem processos permanentes.
-- **Assets:** os ficheiros JS/CSS são compilados antes do deploy (localmente ou em CI). O Node não é necessário no servidor.
-- **Deploy:** `DEPLOY_TARGET=user@host:/caminho scripts/deploy.sh`, corrido na máquina de desenvolvimento:
-  1. compila os assets;
-  2. põe o site em manutenção;
-  3. envia o código por rsync, sem tocar no `.env`, na base de dados nem no `storage/` do servidor;
-  4. no servidor: `composer install --no-dev`, `cidash:backup`, `migrate --force`, `optimize` e `up`.
+- **Uma só linha no cron,** a cada minuto: `cd /caminho/cidash && php artisan schedule:run >> /dev/null 2>&1`. O scheduler lança também o processamento da fila (`queue:work --stop-when-empty --max-time=50`) e o backup diário, por isso não é preciso supervisor nem processos permanentes.
 
-  Os passos da primeira instalação estão no cabeçalho do script.
-- **Deploy contínuo (GitHub Actions):** o job `deploy` de `.github/workflows/tests.yml` corre o mesmo script depois de o CI passar num push para `main`. Fica inativo até existirem, no environment `production` do GitHub:
-  - a variável `DEPLOY_TARGET`;
-  - os secrets `DEPLOY_SSH_KEY` (chave privada de deploy) e `DEPLOY_KNOWN_HOSTS` (fingerprint do servidor).
+**Pacote de deploy: a pasta `dist/`**
+- `scripts/build-dist.sh` gera-a a partir do commit atual e recusa correr com alterações por commitar. Leva o código, o `vendor/` de produção e o frontend compilado. O ficheiro `dist/REVISION` identifica o commit.
+- **Não leva** `.env`, base de dados nem conteúdo do `storage/`, só as pastas vazias. Pode ser enviada por cima de uma instalação existente sem tocar nos dados.
+- **Onde obtê-la:**
+  - em cada push para `main`, depois de o CI passar, o GitHub Actions gera-a e publica-a como artefacto `cidash-dist-<commit>` (Actions → execução → *Artifacts*), guardado 30 dias;
+  - localmente: `ddev exec scripts/build-dist.sh`.
 
-  Aprovações manuais podem ser exigidas nas definições desse environment.
+**Primeira instalação**
+1. Enviar o conteúdo da `dist/` para `/caminho/cidash` e apontar o DocumentRoot para `/caminho/cidash/public`.
+2. `cp .env.example .env` e editar: `APP_ENV=production`, `APP_DEBUG=false` e `APP_URL=https://…`.
+3. `php artisan key:generate`
+4. `touch database/database.sqlite && php artisan migrate --force`
+5. `php artisan optimize`
+6. `php artisan cidash:create-workspace "CI Reitoria" --slug=reitoria`
+7. `php artisan cidash:create-user EMAIL NOME --super-admin --workspace=reitoria --role=manager`. O comando imprime o link para definir a palavra-passe, válido 60 minutos.
+8. Acrescentar a linha do cron.
+9. Garantir que o servidor web pode escrever em `storage/`, `bootstrap/cache/` e `database/`. O SQLite precisa de escrever na pasta para criar os ficheiros `-wal` e `-shm`.
+
+**Atualizações**
+1. `php artisan down`
+2. Enviar a nova `dist/` por cima. Não apagar `.env`, `database/database.sqlite` nem `storage/`.
+3. `php artisan cidash:backup && php artisan migrate --force && php artisan optimize && php artisan up`
+
+Enviar por cima não remove ficheiros apagados entre versões. Se uma versão remover código PHP, apagar a pasta `app/` (ou a que mudou) antes de enviar.
+
 - **Email:** configurado na aplicação, e não no `.env` (ver *Email*).
 
 ### Email
@@ -617,7 +629,7 @@ resources/js/
   modules/<nome>/
 lang/pt_PT.json    (strings da UI; chave = texto em inglês)
 lang/pt_PT/        (mensagens do Laravel)
-scripts/deploy.sh
+scripts/build-dist.sh
 ```
 
 Cada módulo regista o seu `type` no núcleo (label, ícone, rota, campos pesquisáveis e renderer de resumo). É isto que permite ao Search, ao painel de relações, ao Home e à IA tratarem qualquer tipo sem conhecerem o módulo.

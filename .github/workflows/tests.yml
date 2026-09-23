@@ -40,17 +40,12 @@ jobs:
       - name: Run CI Checks
         run: composer ci:check
 
-  # Continuous deployment to the LAMP server after CI passes on main.
-  # Disabled until the repository variable DEPLOY_TARGET (user@host:/path) and the
-  # secrets DEPLOY_SSH_KEY and DEPLOY_KNOWN_HOSTS are set, in the "production" environment.
-  deploy:
+  # Builds dist/ (see scripts/build-dist.sh) after CI passes on main and publishes
+  # it as a downloadable artifact to upload to the LAMP server.
+  dist:
     needs: ci
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.DEPLOY_TARGET != ''
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    environment: production
-    concurrency:
-      group: deploy-production
-      cancel-in-progress: false
 
     steps:
       - name: Checkout code
@@ -73,20 +68,17 @@ jobs:
 
       - name: Prepare build environment
         run: |
-          composer install --no-dev --no-interaction --prefer-dist
+          composer install --no-interaction --prefer-dist
           cp .env.example .env
           php artisan key:generate
 
-      - name: Configure SSH
-        env:
-          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
-        run: |
-          mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
-          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+      - name: Build dist
+        run: scripts/build-dist.sh
 
-      - name: Deploy
-        env:
-          DEPLOY_TARGET: ${{ vars.DEPLOY_TARGET }}
-        run: scripts/deploy.sh
+      - name: Upload dist
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: cidash-dist-${{ github.sha }}
+          path: dist/
+          include-hidden-files: true
+          retention-days: 30

@@ -29,15 +29,15 @@
 
 - [x] `git init`
 - [x] Repositório remoto no GitHub (github.com/pedrocandeias/cidash, público)
-- [x] Deploy contínuo: job `deploy` no GitHub Actions após o CI, inativo até configurar `DEPLOY_TARGET` e os secrets
-- [ ] Primeira instalação no servidor e configuração do deploy (chave SSH, secrets)
+- [x] Pacote de deploy `dist/` (`scripts/build-dist.sh`), gerado também pelo GitHub Actions como artefacto após o CI
+- [ ] Primeira instalação no servidor (ARCHITECTURE §7)
 - [x] Projeto Laravel 13 + starter kit React, DDEV (SQLite, sem contentor de BD, filas no driver `database`)
 - [x] Configuração SQLite (WAL, busy_timeout, foreign_keys, transações IMMEDIATE)
 - [x] Backup diário `cidash:backup` (`VACUUM INTO`, retenção de 14)
 - [ ] Cópia dos backups para fora do servidor (depende do servidor)
 - [x] i18n: `lang/pt_PT.json` (chave = texto em inglês) partilhado via Inertia, hook `useTranslation`, mensagens do Laravel em pt europeu
 - [x] Lint/format, testes, CI (Pint, PHPStan, vp check, tsc, `composer audit`)
-- [x] Deploy em LAMP: `scripts/deploy.sh`, cron `schedule:run`, fila via scheduler (script por testar num servidor real)
+- [x] Deploy em LAMP: `dist/`, cron `schedule:run`, fila via scheduler (por testar num servidor real)
 - [x] Layout base: sidebar agrupada (§3), breadcrumbs e menu do utilizador traduzidos, tema claro/escuro do starter kit
 - [x] `CLAUDE.md` com comandos
 

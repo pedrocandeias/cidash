@@ -24,7 +24,7 @@ Communication & Image Dashboard. An internal operational workspace for the Servi
   - `ddev composer ci:check`: everything CI runs (vp check, tsc, Pint, PHPStan, tests). Must pass before finishing a task
   - `ddev artisan test --filter=Name`: single test
   - `ddev composer lint` / `ddev npm run check:fix`: auto-fix PHP / frontend formatting
-  - `DEPLOY_TARGET=user@host:/path scripts/deploy.sh`: deploy to the LAMP server
+  - `ddev exec scripts/build-dist.sh`: build `dist/` from the current commit to upload to the LAMP server (CI also publishes it as an artifact); install and update steps are in `ARCHITECTURE.md` §7
   - `ddev artisan cidash:create-workspace "CI Reitoria" --slug=reitoria` and `ddev artisan cidash:create-user EMAIL NAME [--super-admin] [--workspace=reitoria --role=manager]`: bootstrap without public registration (prints a set-password link)
   - Local seed (`ddev artisan migrate:fresh --seed`): `test@example.com` / `password`, super admin and manager of CI Reitoria
 - After backend route changes, run `ddev npm run build` before `ci:check`: Wayfinder regenerates `resources/js/actions` and `resources/js/routes`, and stale generated files can hide TypeScript errors.
