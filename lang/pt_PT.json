@@ -426,5 +426,21 @@
     "My tasks": "As minhas tarefas",
     "Content in preparation": "Conteúdos em preparação",
     "Awaiting approval": "A aguardar aprovação",
-    "Overdue tasks by person": "Tarefas em atraso por pessoa"
+    "Overdue tasks by person": "Tarefas em atraso por pessoa",
+    "Add": "Acrescentar",
+    "Add to team": "Acrescentar a uma equipa",
+    "Add to team…": "Acrescentar a uma equipa…",
+    "Deactivate": "Desativar",
+    "Deactivated": "Desativada",
+    "Every account of this CIDASH, with its teams and roles.": "Todas as contas deste CIDASH, com as respetivas equipas e papéis.",
+    "Make super admin": "Tornar super admin",
+    "Reactivate": "Reativar",
+    "Remove from :team": "Retirar de :team",
+    "Remove super admin": "Retirar super admin",
+    "Reset 2FA": "Repor 2FA",
+    "Super admin": "Super admin",
+    "Users": "Utilizadores",
+    "This account has been deactivated.": "Esta conta foi desativada.",
+    "You cannot change your own access.": "Não pode alterar o seu próprio acesso.",
+    "Two-factor authentication reset for :name.": "Autenticação de dois fatores reposta para :name."
 }

@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Audit trail and object history (`activity_log`).
  *
  * @property int $id
- * @property int $workspace_id
+ * @property int|null $workspace_id
+ * @property int|null $subject_user_id
  * @property string|null $object_id
  * @property int|null $user_id
  * @property string $action
@@ -44,6 +45,23 @@ class Activity extends Model
             'action' => $action,
             'changes' => $changes,
         ]);
+    }
+
+    /**
+     * Instance-wide action (no workspace), e.g. by the super admin on a user account.
+     *
+     * @param  array<string, mixed>|null  $changes
+     */
+    public static function logGlobal(string $action, ?User $subject = null, ?array $changes = null): self
+    {
+        // Created without model events: BelongsToWorkspace would require a current workspace.
+        return self::withoutEvents(fn () => self::forceCreate([
+            'workspace_id' => null,
+            'user_id' => auth()->id(),
+            'subject_user_id' => $subject?->id,
+            'action' => $action,
+            'changes' => $changes,
+        ]));
     }
 
     /**

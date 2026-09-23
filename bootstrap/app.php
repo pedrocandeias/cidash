@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureAccountActive;
 use App\Http\Middleware\EnsureWorkspace;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -28,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->prependToPriorityList(before: SubstituteBindings::class, prepend: EnsureWorkspace::class);
 
         $middleware->web(append: [
+            EnsureAccountActive::class,
             HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,

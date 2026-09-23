@@ -52,6 +52,18 @@ class TeamMembers
         return ['user' => $user, ...$this->invitations->send($user, $workspace)];
     }
 
+    /**
+     * Add an existing account to a workspace (super admin).
+     */
+    public function addExisting(Workspace $workspace, User $user, WorkspaceRole $role): void
+    {
+        if ($user->roleIn($workspace) !== null) {
+            throw ValidationException::withMessages(['workspace' => __('This person is already a member of the team.')]);
+        }
+
+        $workspace->members()->attach($user, ['role' => $role]);
+    }
+
     public function changeRole(Workspace $workspace, User $user, WorkspaceRole $role): void
     {
         DB::transaction(function () use ($workspace, $user, $role) {

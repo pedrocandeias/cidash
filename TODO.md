@@ -50,7 +50,7 @@
 - [ ] Identidade visual: logótipo CIDASH (substituir o do Laravel), cores
 - [x] Auth local (Fortify): convites por email ou link copiado (broker `invites`, 7 dias, `/invitation/{token}`), `activated_at`, recuperar password, rate limiting, `uncompromised`, sem registo público
 - [x] 2FA TOTP opcional para todos (ativar/desativar no perfil, códigos de recuperação), vindo do starter kit
-- [ ] Reposição do 2FA de um utilizador pelo super admin (com registo no `activity_log`)
+- [x] Reposição do 2FA de um utilizador pelo super admin (com registo no `activity_log`)
 - [x] Tabela `settings` + `MailSettings` (password cifrada) + painel Administração → Email: SMTP, remetente, email de teste (com a configuração guardada); mailer configurado ao ser resolvido
 - [x] Papéis `manager`/`editor`/`member` por workspace (`WorkspaceRole`, cumulativos) + `is_super_admin`
 - [x] Regra de pelo menos 1 manager (`TeamMembers`), gates `super-admin` e `manage-members`
@@ -58,7 +58,7 @@
 - [x] "Eliminar conta": o único manager de uma equipa não pode eliminar a conta
 - [x] Gestão de membros pelos managers (Definições → Equipa): adicionar por email (conta nova com convite; conta existente entra logo), mudar papel, remover, reenviar convite
 - [x] Área de Administração do super admin: Email
-- [ ] Administração: lista global de utilizadores (desativar conta, super admin)
+- [x] Administração: lista global de utilizadores (desativar/reativar, super admin, 2FA, equipas e papéis)
 - [x] Registo no `activity_log` dos acessos do super admin a workspaces de que não é membro (uma vez por sessão)
 - [x] Workspaces: `workspaces`, `workspace_user`, `users.current_workspace_id`, middleware `workspace` + `WorkspaceContext`, seed "CI Reitoria"
 - [x] Scope global de workspace (`WorkspaceScope`, falha sem workspace ativo)

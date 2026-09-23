@@ -2,6 +2,16 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.13.0 (2026-09-23)
+
+- feat: Administração → Utilizadores (super admin): todas as contas com equipas, papéis e estado
+- feat: desativar e reativar contas; uma conta desativada não entra e perde a sessão aberta
+- feat: atribuir e retirar super admin (nunca ao próprio)
+- feat: repor o 2FA de quem perdeu o telemóvel
+- feat: acrescentar contas a equipas, mudar papel e retirar, mantendo sempre um manager
+- feat: ações globais registadas no histórico sem equipa associada
+- test: teste da lista de membros deixa de depender da ordem de nomes aleatórios
+
 ## 0.12.0 (2026-09-23)
 
 - feat: página inicial com saudação, contadores (eventos hoje, tarefas abertas, imprensa com prazo < 48 h, conteúdos em revisão) e widgets
