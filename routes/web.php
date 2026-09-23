@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ContentItemController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\NotificationController;
@@ -25,6 +26,8 @@ Route::middleware(['auth', 'workspace'])->group(function () {
     Route::resource('notices', NoticeController::class)->except(['create', 'edit']);
 
     Route::resource('press', PressRequestController::class)->except(['create', 'edit']);
+
+    Route::resource('content', ContentItemController::class)->except(['create', 'edit']);
 
     Route::get('records/search', [LinkController::class, 'search'])->name('records.search');
     Route::post('records/{record}/links', [LinkController::class, 'store'])->name('links.store');

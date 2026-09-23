@@ -1,3 +1,5 @@
+import { localToday } from '@/lib/i18n';
+
 export type TaskStatus =
     | 'todo'
     | 'in_progress'
@@ -43,12 +45,7 @@ export const taskFieldLabels: Record<string, string> = {
 };
 
 export function isOverdue(task: TaskSummary): boolean {
-    const now = new Date();
-    const today = [
-        now.getFullYear(),
-        String(now.getMonth() + 1).padStart(2, '0'),
-        String(now.getDate()).padStart(2, '0'),
-    ].join('-');
+    const today = localToday();
 
     return (
         task.deadline !== null &&

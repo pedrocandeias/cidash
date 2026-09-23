@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
     CalendarDays,
+    Columns3,
     House,
     ListTodo,
     Mail,
@@ -21,6 +22,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { edit as editEmailSettings } from '@/routes/admin/email';
+import { index as content } from '@/routes/content';
 import { index as events } from '@/routes/events';
 import { index as notices } from '@/routes/notices';
 import { index as press } from '@/routes/press';
@@ -38,6 +40,7 @@ const navGroups: { label?: string; items: NavItem[] }[] = [
         items: [
             { title: 'Calendar', href: events(), icon: CalendarDays },
             { title: 'Tasks', href: tasks(), icon: ListTodo },
+            { title: 'Content', href: content(), icon: Columns3 },
             { title: 'Press requests', href: press(), icon: Newspaper },
             { title: 'Notices', href: notices(), icon: Megaphone },
         ],

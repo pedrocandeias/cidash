@@ -2,6 +2,15 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.8.0 (2026-09-23)
+
+- feat: Pipeline de conteúdos em Kanban com as fases Ideia, Em preparação, Revisão, Aprovado, Agendado, Publicado e Arquivado
+- feat: arrastar e largar entre fases; aprovar (ou saltar a revisão) é exclusivo de editores e managers, verificado no servidor
+- feat: editores e managers recebem uma notificação quando um conteúdo entra em Revisão
+- feat: conteúdos com formato, canais, responsável, prazo, data de publicação e endereço publicado
+- feat: indicação de conteúdos parados em Revisão há 3 dias ou mais
+- feat: página do conteúdo com relações, comentários, histórico e "Criar tarefa"
+
 ## 0.7.0 (2026-09-23)
 
 - feat: Pedidos de Imprensa com jornalista, meio, contacto, pedido, receção, prazo, responsável, estado e notas da resposta

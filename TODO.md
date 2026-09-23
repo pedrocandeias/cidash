@@ -78,7 +78,8 @@
 - [ ] Tasks: vista Kanban por estado
 - [x] Press Requests: CRUD, lista por prazo com semáforo, autocompletar jornalista e meio, data de resposta, lembretes, criar tarefa
 - [ ] Press Requests: sugerir especialistas (com Pessoas de interesse)
-- [ ] Content Pipeline: Kanban com 7 estados, drag & drop, `stage_changed_at`, Review → Approved só por editors, managers e super admin; notificação aos editors e managers quando um conteúdo entra em Review
+- [x] Content Pipeline: Kanban com 7 estados, drag & drop, `stage_changed_at`, aprovação só por editors, managers e super admin (sem saltar a revisão); notificação aos editors e managers quando um conteúdo entra em Review
+- [ ] Content Pipeline: vista de lista e calendário editorial (publish_at)
 - [ ] Campaigns: CRUD, responsáveis, relações com eventos e conteúdos
 - [x] Termos normalizados (backend): `Terms`, `normalized_name` + índice único, reutilizar em vez de duplicar, sugestões (distância ≤ 2), testes
 - [x] Termos normalizados (UI): TagInput com sugestões e "Queria dizer…?"
