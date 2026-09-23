@@ -53,6 +53,16 @@ class HandleInertiaRequests extends Middleware
                     'role' => $request->user()?->roleIn($workspace)?->value,
                 ] : null;
             },
+            'notifications' => fn () => $request->user() ? [
+                'unread' => $request->user()->unreadNotifications()->count(),
+                'items' => $request->user()->notifications()->latest()->limit(8)->get()
+                    ->map(fn ($notification) => [
+                        'id' => $notification->id,
+                        'data' => $notification->data,
+                        'read' => $notification->read_at !== null,
+                        'created_at' => $notification->created_at?->toIso8601String(),
+                    ]),
+            ] : null,
             'locale' => app()->getLocale(),
             'translations' => fn () => trans()->getLoader()->load(app()->getLocale(), '*', '*'),
         ];

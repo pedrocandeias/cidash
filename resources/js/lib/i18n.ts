@@ -16,3 +16,32 @@ export function useTranslation() {
 
     return { t, locale };
 }
+
+function intlLocale(locale: string) {
+    return locale.replace('_', '-');
+}
+
+export function formatDate(value: string, locale: string) {
+    // Plain dates (YYYY-MM-DD) are local calendar days, not UTC midnight.
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(value)
+        ? new Date(`${value}T00:00:00`)
+        : new Date(value);
+
+    return new Intl.DateTimeFormat(intlLocale(locale), {
+        day: 'numeric',
+        month: 'short',
+        year:
+            date.getFullYear() === new Date().getFullYear()
+                ? undefined
+                : 'numeric',
+    }).format(date);
+}
+
+export function formatDateTime(value: string, locale: string) {
+    return new Intl.DateTimeFormat(intlLocale(locale), {
+        day: 'numeric',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+    }).format(new Date(value));
+}

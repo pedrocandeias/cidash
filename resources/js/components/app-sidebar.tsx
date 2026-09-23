@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { House, Mail } from 'lucide-react';
+import { House, ListTodo, Mail } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { edit as editEmailSettings } from '@/routes/admin/email';
+import { index as tasks } from '@/routes/tasks';
 import type { NavItem } from '@/types';
 
 // Grouped as in ARCHITECTURE.md §3. Each module adds its entry when it is built;
@@ -22,7 +23,10 @@ const navGroups: { label?: string; items: NavItem[] }[] = [
     {
         items: [{ title: 'Home', href: dashboard(), icon: House }],
     },
-    { label: 'Operations', items: [] },
+    {
+        label: 'Operations',
+        items: [{ title: 'Tasks', href: tasks(), icon: ListTodo }],
+    },
     { label: 'Monitoring', items: [] },
 ];
 

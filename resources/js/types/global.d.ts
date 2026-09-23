@@ -18,6 +18,20 @@ declare module '@inertiajs/core' {
                 name: string;
                 role: 'member' | 'editor' | 'manager' | null;
             } | null;
+            notifications: {
+                unread: number;
+                items: {
+                    id: string;
+                    data: {
+                        message: string;
+                        title: string;
+                        by: string | null;
+                        url: string;
+                    };
+                    read: boolean;
+                    created_at: string;
+                }[];
+            } | null;
             locale: string;
             translations: Record<string, string>;
             [key: string]: unknown;

@@ -64,13 +64,16 @@
 - [x] Scope global de workspace (`WorkspaceScope`, falha sem workspace ativo)
 - [ ] Suite de testes de isolamento entre workspaces (cresce com cada módulo)
 - [x] Núcleo: `objects` (`Record`), `relations` (`Link`, só dentro do workspace), `tags`, `comments`, `activity_log`; trait `IsRecord`; serviços `Links`, `Tags`, `Terms`
-- [ ] `reminders` e notificações in-app (com o primeiro módulo que os use)
+- [x] Notificações in-app (tabela `notifications`, sino, abrir muda para o workspace da notificação)
+- [ ] `reminders` (com o Calendário)
 - [x] Registo de tipos: *morph map* (alias = `objects.type`)
 - [ ] Metadados por tipo (label, ícone, rota, campos pesquisáveis), com a pesquisa e o painel de relações
-- [ ] Componentes partilhados: ObjectDrawer, RelationsPanel, CreateTaskAction, CommentsThread, ActivityFeed
+- [x] Componentes partilhados: CommentsThread (comentários em qualquer registo), ActivityFeed, NotificationsMenu (sino)
+- [ ] Componentes partilhados: ObjectDrawer, RelationsPanel, CreateTaskAction (com o segundo módulo)
 - [ ] Calendar: CRUD; vistas mês, semana, dia e lista; filtros; reminders
 - [ ] Notice Board: CRUD, pinned, expiração
-- [ ] Tasks: CRUD, criar a partir de qualquer objeto, minhas/equipa, comentários
+- [x] Tasks: CRUD, minhas/equipa, filtros de estado, conclusão rápida, detalhe com comentários e histórico, apagar (criador ou manager), origem (`source_id` + relação `originated_from`), notificação in-app de atribuição
+- [ ] Tasks: vista Kanban por estado
 - [ ] Press Requests: CRUD, lista por deadline com semáforo, autocompletar jornalista e meio, relacionar especialistas
 - [ ] Content Pipeline: Kanban com 7 estados, drag & drop, `stage_changed_at`, Review → Approved só por editors, managers e super admin; notificação aos editors e managers quando um conteúdo entra em Review
 - [ ] Campaigns: CRUD, responsáveis, relações com eventos e conteúdos

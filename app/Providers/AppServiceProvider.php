@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Enums\WorkspaceRole;
+use App\Models\Task;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Support\MailSettings;
 use App\Support\WorkspaceContext;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +42,11 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         $this->configureGates();
+
+        // Record types: the alias is stored in objects.type (ARCHITECTURE.md §2.1).
+        Relation::morphMap([
+            'task' => Task::class,
+        ]);
     }
 
     /**
