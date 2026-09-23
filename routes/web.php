@@ -4,6 +4,7 @@ use App\Http\Controllers\AlertController;
 use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\BriefingController;
 use App\Http\Controllers\CalendarEventController;
+use App\Http\Controllers\CalendarSubscriptionController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContentItemController;
@@ -23,6 +24,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard')->name('home');
 
+// Calendar apps cannot log in: the secret token in the URL is the credential.
+Route::get('calendar/{token}.ics', [CalendarSubscriptionController::class, 'feed'])
+    ->middleware('throttle:60,1')
+    ->name('calendar.feed');
+
 Route::middleware(['auth', 'workspace'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 
@@ -38,6 +44,9 @@ Route::middleware(['auth', 'workspace'])->group(function () {
     Route::resource('tasks', TaskController::class)->except(['create', 'edit']);
 
     Route::get('events/feed', [CalendarEventController::class, 'feed'])->name('events.feed');
+    Route::get('events/{event}/ics', [CalendarSubscriptionController::class, 'event'])->name('events.ics');
+    Route::post('calendar/subscription', [CalendarSubscriptionController::class, 'store'])->name('calendar.subscription.store');
+    Route::delete('calendar/subscription', [CalendarSubscriptionController::class, 'destroy'])->name('calendar.subscription.destroy');
     Route::resource('events', CalendarEventController::class)->except(['create', 'edit']);
 
     Route::resource('notices', NoticeController::class)->except(['create', 'edit']);

@@ -2,6 +2,12 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.22.0 (2026-09-23)
+
+- feat: subscrever o calendário no Outlook, Google Calendar ou telemóvel com uma ligação pessoal secreta: eventos de todas as equipas da pessoa, ou só aqueles de que é responsável
+- feat: criar uma nova ligação ou revogar a atual
+- feat: "Adicionar ao meu calendário" (.ics) na página de cada evento
+
 ## 0.21.0 (2026-09-23)
 
 - feat: notificações também por email: tarefas atribuídas, conteúdos para revisão, lembretes e alertas, com o email em fila e o sino imediato

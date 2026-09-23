@@ -22,18 +22,27 @@ import {
 import { localDate, useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import EventFields, { eventFormTransform } from '@/modules/events/event-fields';
+import SubscribeDialog from '@/modules/events/subscribe-dialog';
 import type { EventStatus, EventType } from '@/modules/events/types';
 import { typeColors, typeLabels } from '@/modules/events/types';
 import type { Member } from '@/modules/tasks/types';
 import { feed, index, store, update } from '@/routes/events';
 
-type Props = { members: Member[]; campaigns: { id: string; name: string }[] };
+type Props = {
+    members: Member[];
+    campaigns: { id: string; name: string }[];
+    subscriptionUrl: string | null;
+};
 
 const ALL = 'all';
 
 type Draft = { start_at: string; all_day: boolean };
 
-export default function Calendar({ members, campaigns }: Props) {
+export default function Calendar({
+    members,
+    campaigns,
+    subscriptionUrl,
+}: Props) {
     const { t, locale } = useTranslation();
     const [draft, setDraft] = useState<Draft | null>(null);
     const [hiddenTypes, setHiddenTypes] = useState<EventType[]>([]);
@@ -121,9 +130,12 @@ export default function Calendar({ members, campaigns }: Props) {
             <div className="space-y-4 px-4 py-6">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                     <Heading title={t('Calendar')} />
-                    <Button onClick={() => openDraft()}>
-                        {t('New event')}
-                    </Button>
+                    <div className="flex gap-2">
+                        <SubscribeDialog url={subscriptionUrl} />
+                        <Button onClick={() => openDraft()}>
+                            {t('New event')}
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">

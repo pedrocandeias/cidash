@@ -1,4 +1,5 @@
 import { Form, Head, router } from '@inertiajs/react';
+import { CalendarPlus } from 'lucide-react';
 import ActivityFeed from '@/components/core/activity-feed';
 import type { ActivityItem } from '@/components/core/activity-feed';
 import CommentsThread from '@/components/core/comments-thread';
@@ -28,7 +29,7 @@ import {
     typeLabels,
 } from '@/modules/events/types';
 import type { Member } from '@/modules/tasks/types';
-import { destroy, index, update } from '@/routes/events';
+import { destroy, ics, index, update } from '@/routes/events';
 
 type Props = {
     event: EventDetails;
@@ -104,11 +105,19 @@ export default function ShowEvent({
                 </div>
 
                 <aside className="space-y-10">
-                    <CreateTaskButton
-                        sourceId={recordId}
-                        sourceTitle={event.title}
-                        members={members}
-                    />
+                    <div className="flex flex-wrap gap-2">
+                        <CreateTaskButton
+                            sourceId={recordId}
+                            sourceTitle={event.title}
+                            members={members}
+                        />
+                        <Button asChild variant="outline" size="sm">
+                            <a href={ics(event.id).url}>
+                                <CalendarPlus />
+                                {t('Add to my calendar')}
+                            </a>
+                        </Button>
+                    </div>
                     <RemindersPanel
                         recordId={recordId}
                         anchor={event.start_at}

@@ -30,9 +30,12 @@ class CalendarEventController extends Controller
 {
     public function __construct(private WorkspaceContext $context, private Tags $tags) {}
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $token = $request->user()->calendar_token;
+
         return Inertia::render('events/index', [
+            'subscriptionUrl' => $token !== null ? route('calendar.feed', $token) : null,
             'members' => $this->members(),
             'campaigns' => Campaign::whereIn('status', [CampaignStatus::Planning, CampaignStatus::Active])
                 ->orderBy('name')->get(['id', 'name']),

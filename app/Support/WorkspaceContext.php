@@ -21,4 +21,24 @@ class WorkspaceContext
     {
         return $this->workspace;
     }
+
+    /**
+     * Runs $callback with $workspace as the current workspace, for work that spans teams.
+     *
+     * @template T
+     *
+     * @param  callable(): T  $callback
+     * @return T
+     */
+    public function within(Workspace $workspace, callable $callback): mixed
+    {
+        $previous = $this->workspace;
+        $this->workspace = $workspace;
+
+        try {
+            return $callback();
+        } finally {
+            $this->workspace = $previous;
+        }
+    }
 }

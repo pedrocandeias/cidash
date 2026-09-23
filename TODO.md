@@ -116,7 +116,7 @@
 - [x] Alerta `mention_spike`
 - [x] Notificações e briefing por email (preferências por utilizador; envio quando o SMTP estiver configurado)
 - [ ] Assets/anexos
-- [ ] ICS export/subscrição
+- [x] ICS export/subscrição
 - [ ] Estados e tipos configuráveis
 - [ ] Scoring de relevância
 - [ ] Mais fontes (outros meios; APIs se o scraping não chegar)

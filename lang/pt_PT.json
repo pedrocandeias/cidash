@@ -601,5 +601,18 @@
     "Daily briefing": "Briefing diário",
     "At 07:00 on working days.": "Às 07:00 nos dias úteis.",
     "Weekly briefing": "Briefing semanal",
-    "On Mondays at 07:00.": "Às segundas-feiras às 07:00."
+    "On Mondays at 07:00.": "Às segundas-feiras às 07:00.",
+    "My events": "Os meus eventos",
+    "Add to my calendar": "Adicionar ao meu calendário",
+    "Subscribe": "Subscrever",
+    "Subscribe to the calendar": "Subscrever o calendário",
+    "Add this link to Outlook, Google Calendar or your phone to see the events of your teams there. It updates by itself. Anyone with the link can see the events, so keep it to yourself.": "Adicione esta ligação ao Outlook, ao Google Calendar ou ao telemóvel para ver lá os eventos das suas equipas. Atualiza-se sozinha. Quem tiver a ligação consegue ver os eventos, por isso não a partilhe.",
+    "Create my link": "Criar a minha ligação",
+    "All events": "Todos os eventos",
+    "Only events I am responsible for": "Só os eventos de que sou responsável",
+    "Create a new link": "Criar nova ligação",
+    "Revoke link": "Revogar ligação",
+    "A new link stops the old one from working.": "Uma nova ligação faz a anterior deixar de funcionar.",
+    "Copy": "Copiar",
+    "Link copied.": "Ligação copiada."
 }
