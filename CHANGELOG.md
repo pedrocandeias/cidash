@@ -2,6 +2,13 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.6.0 (2026-09-23)
+
+- feat: Avisos internos com texto, prioridade, publicação agendada e expiração
+- feat: avisos fixados (só managers) aparecem primeiro e destacados
+- feat: vistas "Em vigor" e "Agendados e expirados"
+- feat: página do aviso com comentários, relações e histórico
+
 ## 0.5.0 (2026-09-23)
 
 - feat: Calendário com vistas mês, semana, dia e agenda (FullCalendar), cores por tipo de evento

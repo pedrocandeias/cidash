@@ -73,7 +73,7 @@
 - [ ] Componentes partilhados: ObjectDrawer (pré-visualização lateral)
 - [x] Calendar: CRUD; vistas mês, semana, dia e agenda; cores por tipo; tags; lembretes; relações; criar tarefa a partir do evento
 - [ ] Calendar: filtros (tipo, responsável, campanha), arrastar eventos para mudar a data
-- [ ] Notice Board: CRUD, pinned, expiração
+- [x] Notice Board: CRUD, fixados (só managers), publicação agendada, expiração, arquivo
 - [x] Tasks: CRUD, minhas/equipa, filtros de estado, conclusão rápida, detalhe com comentários e histórico, apagar (criador ou manager), origem (`source_id` + relação `originated_from`), notificação in-app de atribuição
 - [ ] Tasks: vista Kanban por estado
 - [ ] Press Requests: CRUD, lista por deadline com semáforo, autocompletar jornalista e meio, relacionar especialistas

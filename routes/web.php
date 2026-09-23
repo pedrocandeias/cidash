@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LinkController;
+use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\TagController;
@@ -19,6 +20,8 @@ Route::middleware(['auth', 'workspace'])->group(function () {
 
     Route::get('events/feed', [CalendarEventController::class, 'feed'])->name('events.feed');
     Route::resource('events', CalendarEventController::class)->except(['create', 'edit']);
+
+    Route::resource('notices', NoticeController::class)->except(['create', 'edit']);
 
     Route::get('records/search', [LinkController::class, 'search'])->name('records.search');
     Route::post('records/{record}/links', [LinkController::class, 'store'])->name('links.store');
