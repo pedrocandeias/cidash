@@ -44,7 +44,8 @@ class HandleInertiaRequests extends Middleware
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'workspace' => function () use ($request) {
-                $workspace = app(WorkspaceContext::class)->get();
+                // Pages outside the "workspace" middleware (e.g. settings) show the last used one.
+                $workspace = app(WorkspaceContext::class)->get() ?? $request->user()?->currentWorkspace;
 
                 return $workspace ? [
                     'id' => $workspace->id,

@@ -24,6 +24,8 @@ class ResetUserPassword implements ResetsUserPasswords
 
         $user->forceFill([
             'password' => $input['password'],
+            // A pending user who resets their password has effectively accepted the invitation.
+            'activated_at' => $user->activated_at ?? now(),
         ])->save();
     }
 }

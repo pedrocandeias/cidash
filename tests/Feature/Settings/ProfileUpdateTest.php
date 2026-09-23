@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Settings;
 
+use App\Enums\WorkspaceRole;
 use App\Models\User;
+use App\Models\Workspace;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -76,6 +78,26 @@ class ProfileUpdateTest extends TestCase
             ->assertRedirect(route('home'));
 
         $this->assertGuest();
+        $this->assertNull($user->fresh());
+    }
+
+    public function test_the_only_manager_of_a_team_cannot_delete_their_account()
+    {
+        $workspace = Workspace::factory()->create();
+        $user = User::factory()->inWorkspace($workspace, WorkspaceRole::Manager)->create();
+
+        $this->actingAs($user)
+            ->delete(route('profile.destroy'), ['password' => 'password'])
+            ->assertSessionHasErrors('password');
+
+        $this->assertNotNull($user->fresh());
+
+        User::factory()->inWorkspace($workspace, WorkspaceRole::Manager)->create();
+
+        $this->actingAs($user)
+            ->delete(route('profile.destroy'), ['password' => 'password'])
+            ->assertSessionHasNoErrors();
+
         $this->assertNull($user->fresh());
     }
 

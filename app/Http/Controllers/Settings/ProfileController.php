@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileDeleteRequest;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
+use App\Support\TeamMembers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -41,9 +43,17 @@ class ProfileController extends Controller
     /**
      * Delete the user's profile.
      */
-    public function destroy(ProfileDeleteRequest $request): RedirectResponse
+    public function destroy(ProfileDeleteRequest $request, TeamMembers $members): RedirectResponse
     {
         $user = $request->user();
+
+        $team = $members->workspacesManagedOnlyBy($user)->first();
+
+        if ($team !== null) {
+            throw ValidationException::withMessages([
+                'password' => __('You are the only manager of :team. Appoint another manager before deleting your account.', ['team' => $team->name]),
+            ]);
+        }
 
         Auth::logout();
 

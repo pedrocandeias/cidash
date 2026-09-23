@@ -34,7 +34,7 @@ class CreateUserTest extends TestCase
             '--workspace' => 'reitoria',
             '--role' => 'manager',
         ])
-            ->expectsOutputToContain('/reset-password/')
+            ->expectsOutputToContain('/invitation/')
             ->assertSuccessful();
 
         $user = User::where('email', 'ana@up.pt')->firstOrFail();

@@ -111,7 +111,7 @@ relations (source_id → objects, target_id → objects, relation_type, note, cr
 | Tabela | Campos principais | Notas |
 |---|---|---|
 | `workspaces` | name, slug | Uma equipa de CI. No piloto só existe a Reitoria (§2.5) |
-| `users` | name, email, locale, active, is_super_admin, current_workspace_id (workspace ativo), two_factor_secret, two_factor_recovery_codes, two_factor_confirmed_at | Ver §2.6 e *Autenticação* (§7) |
+| `users` | name, email, locale, active, activated_at (null = convite por aceitar), is_super_admin, current_workspace_id (workspace ativo), two_factor_secret, two_factor_recovery_codes, two_factor_confirmed_at | Ver §2.6 e *Autenticação* (§7) |
 | `workspace_user` | workspace_id, user_id, role | Role por workspace: `manager`, `editor` ou `member` (§2.6). Cada workspace tem sempre ≥ 1 manager |
 | `objects` | id, **workspace_id**, type, title, created_by, timestamps, archived_at | Registo universal. Tudo pertence a um workspace |
 | `objects_fts` | object_id, title, body | Tabela virtual FTS5 para a pesquisa global |
@@ -563,7 +563,7 @@ Enviar por cima não remove ficheiros apagados entre versões. Se uma versão re
 - **Painel "Email"** na Administração (só super admin). Campos:
   - servidor SMTP: host, porta, encriptação (TLS/SSL/nenhuma), utilizador e password;
   - remetente: endereço e nome.
-- **Enviar email de teste** para confirmar a configuração antes de a guardar como ativa.
+- **Enviar email de teste** para o endereço do super admin, com a configuração já guardada. Se falhar, o erro é mostrado e corrige-se a configuração.
 - Os valores ficam em `settings`, com a password cifrada (`APP_KEY`). Ao arrancar, o mailer do Laravel é configurado a partir destes valores.
 - **Usos:** convites, reset de password, notificações (opcionais por utilizador) e, na Phase 2, o briefing.
 - **Sem configuração:** os envios são bloqueados com um aviso na Administração, e os links de convite ou reset podem ser copiados à mão.
@@ -580,7 +580,10 @@ Enviar por cima não remove ficheiros apagados entre versões. Se uma versão re
 ### Autenticação
 
 - **Agora:** contas locais (email + password).
-  - Sem registo público: as contas só nascem por convite de um manager ou do super admin, através de um link por email para definir a password. Se o email ainda não estiver configurado, o link pode ser copiado e enviado à mão.
+  - Sem registo público: as contas só nascem por convite de um manager ou do super admin.
+  - O convite é um link para definir a palavra-passe, através do *password broker* `invites`, válido 7 dias. Usa a mesma tabela de tokens da recuperação de palavra-passe (60 minutos), mas tem página própria (`/invitation/{token}`).
+  - O link é enviado por email quando o email está configurado. Se não estiver, ou se o envio falhar, é mostrado ao manager para ser copiado.
+  - `activated_at` marca a aceitação do convite. Uma recuperação de palavra-passe também ativa a conta.
   - **2FA (TOTP) opcional para todos os utilizadores:** cada um ativa ou desativa no seu perfil, com uma app de autenticação e códigos de recuperação. Ninguém é obrigado.
   - **Telemóvel perdido:** o super admin pode repor o 2FA de um utilizador, e a ação fica registada no `activity_log`.
   - Implementação: Laravel Fortify (2FA, reset de password, confirmação de password).

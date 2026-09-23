@@ -1,5 +1,5 @@
-import { Link } from '@inertiajs/react';
-import { House } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { House, Mail } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -13,6 +13,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { edit as editEmailSettings } from '@/routes/admin/email';
 import type { NavItem } from '@/types';
 
 // Grouped as in ARCHITECTURE.md §3. Each module adds its entry when it is built;
@@ -25,7 +26,17 @@ const navGroups: { label?: string; items: NavItem[] }[] = [
     { label: 'Monitoring', items: [] },
 ];
 
+const adminGroup = {
+    label: 'Administration',
+    items: [{ title: 'Email', href: editEmailSettings(), icon: Mail }],
+};
+
 export function AppSidebar() {
+    const { auth } = usePage().props;
+    const groups = auth.user?.is_super_admin
+        ? [...navGroups, adminGroup]
+        : navGroups;
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -41,7 +52,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                {navGroups
+                {groups
                     .filter((group) => group.items.length > 0)
                     .map((group, index) => (
                         <NavMain
