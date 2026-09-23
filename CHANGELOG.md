@@ -2,6 +2,15 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.17.0 (2026-09-23)
+
+- feat: regras de monitorização por equipa (Definições → Monitorização, só managers): termos a incluir e a excluir, pessoa de interesse opcional, categoria e pausa
+- feat: correspondência por palavras inteiras, sem distinguir maiúsculas nem acentos; uma regra com pessoa de interesse procura também o nome dela
+- feat: Menções: notícias que correspondem a uma regra, com triagem (por triar, relevantes, não relevantes), relevância, comentários, relações e "Criar tarefa"
+- feat: menções de uma pessoa de interesse ficam ligadas ao perfil dela
+- feat: cada regra pode fazer a sua própria pesquisa no Google News (a cada 30 minutos), só para a equipa dela
+- feat: subscrições com "só as que correspondem às regras", ligado por omissão, para as Notícias não se encherem de notícias gerais; uma equipa sem regras continua a receber tudo
+
 ## 0.16.0 (2026-09-23)
 
 - feat: catálogo global de fontes (Administração → Fontes): RSS/Atom, pesquisas do Google News e recolhedor HTML genérico, com estado, erros e "Recolher agora"

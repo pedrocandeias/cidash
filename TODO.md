@@ -23,7 +23,7 @@
 - [ ] **Email:** dados do servidor SMTP a introduzir no painel quando estiverem disponíveis
 - [ ] **Servidor:** confirmar as versões de PHP (≥ 8.3) e SQLite (≥ 3.45, com FTS5)
 - [ ] **Pessoas de interesse:** lista inicial de áreas de especialidade; há perfis existentes (folha de cálculo, Word) para importar?
-- [ ] **Monitorização:** keywords das primeiras regras (ex. "Universidade do Porto", "U.Porto", nome do Reitor…)
+- [ ] **Monitorização:** keywords das primeiras regras (ex. "Universidade do Porto", "U.Porto", nome do Reitor…) — introduzidas pelos managers em Definições → Monitorização
 
 ## 1. Setup
 
@@ -97,12 +97,12 @@
 - [x] Scraper genérico configurável (páginas de secção → artigos → OpenGraph), com robots.txt, User-Agent identificado e rate limit por domínio
 - [x] SAPO Notícias (agregador): deduplicação por URL canónico e agrupamento em histórias
 - [x] Google News RSS (pesquisa); título sem o meio, agrupado na mesma história que o artigo original
-- [ ] Google News RSS por regra de monitorização (com as regras)
+- [x] Google News RSS por regra de monitorização (com as regras)
 - [x] Processamento de notícias: normalizar, URL canónico, dedup por hash, `news_items` só com metadados (sem texto integral)
 - [x] Agrupamento em stories (trigramas no título, 72 h)
 - [x] `news_item_states`: triagem e relevância por workspace (tipo de registo `news`)
-- [ ] `monitoring_rules`: include/exclude terms, pessoa de interesse opcional → `mentions` por workspace
-- [ ] Inboxes de triagem News e Mentions (relevante / irrelevante / criar tarefa / relacionar)
+- [x] `monitoring_rules`: include/exclude terms, pessoa de interesse opcional → `mentions` por workspace
+- [x] Inboxes de triagem News e Mentions (relevante / irrelevante / criar tarefa / relacionar)
 - [ ] Alerts: motor + regras do catálogo (incluindo `source_failing`), parâmetros editáveis, faixa no Home e 🔔
 - [ ] Briefing diário determinístico (página + arquivo)
 - [ ] Widgets de notícias e menções no Home

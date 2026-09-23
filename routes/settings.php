@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Settings\MonitoringRuleController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
 use App\Http\Controllers\Settings\SourceSubscriptionController;
@@ -40,6 +41,11 @@ Route::middleware(['auth', 'workspace'])->group(function () {
 
     Route::get('settings/sources', [SourceSubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::patch('settings/sources/{source}', [SourceSubscriptionController::class, 'update'])->name('subscriptions.update');
+
+    Route::get('settings/monitoring', [MonitoringRuleController::class, 'index'])->name('rules.index');
+    Route::post('settings/monitoring', [MonitoringRuleController::class, 'store'])->name('rules.store');
+    Route::patch('settings/monitoring/{rule}', [MonitoringRuleController::class, 'update'])->name('rules.update');
+    Route::delete('settings/monitoring/{rule}', [MonitoringRuleController::class, 'destroy'])->name('rules.destroy');
 
     Route::get('settings/terms', [TermsController::class, 'index'])->name('terms.index');
     Route::patch('settings/terms/{kind}/{id}', [TermsController::class, 'update'])->name('terms.update');

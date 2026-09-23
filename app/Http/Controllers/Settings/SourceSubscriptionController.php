@@ -25,12 +25,13 @@ class SourceSubscriptionController extends Controller
         $subscriptions = $workspace->sources()->get()->keyBy('id');
 
         return Inertia::render('settings/sources', [
-            'sources' => Source::where('active', true)->orderBy('name')->get()->map(fn (Source $source) => [
+            'sources' => Source::where('active', true)->orderBy('name')->get()->reject(fn (Source $source) => $source->isSystem())->values()->map(fn (Source $source) => [
                 'id' => $source->id,
                 'name' => $source->name,
                 'kind' => $source->kind->value,
                 'subscribed' => $subscriptions->has($source->id),
                 'is_priority' => (bool) ($subscriptions[$source->id]->pivot->is_priority ?? false),
+                'only_matching' => (bool) ($subscriptions[$source->id]->pivot->only_matching ?? true),
             ]),
         ]);
     }
@@ -38,10 +39,13 @@ class SourceSubscriptionController extends Controller
     public function update(Request $request, Source $source): RedirectResponse
     {
         $workspace = $this->authorizeManager();
-        $validated = $request->validate(['subscribed' => ['required', 'boolean'], 'is_priority' => ['sometimes', 'boolean']]);
+        $validated = $request->validate(['subscribed' => ['required', 'boolean'], 'is_priority' => ['sometimes', 'boolean'], 'only_matching' => ['sometimes', 'boolean']]);
 
         if ($validated['subscribed']) {
-            $workspace->sources()->syncWithoutDetaching([$source->id => ['is_priority' => $validated['is_priority'] ?? false]]);
+            $workspace->sources()->syncWithoutDetaching([$source->id => [
+                'is_priority' => $validated['is_priority'] ?? false,
+                'only_matching' => $validated['only_matching'] ?? true,
+            ]]);
         } else {
             $workspace->sources()->detach($source->id);
         }

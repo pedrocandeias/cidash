@@ -40,7 +40,23 @@ class Source extends Model
      */
     public function workspaces(): BelongsToMany
     {
-        return $this->belongsToMany(Workspace::class, 'workspace_sources')->withPivot('is_priority')->withTimestamps();
+        return $this->belongsToMany(Workspace::class, 'workspace_sources')->withPivot('is_priority', 'only_matching')->withTimestamps();
+    }
+
+    /**
+     * The hidden source used for the Google News searches of monitoring rules.
+     */
+    public static function system(): self
+    {
+        return self::firstOrCreate(
+            ['url' => 'system://google-news-rules'],
+            ['name' => 'Google News (monitoring rules)', 'kind' => SourceKind::GoogleNews, 'config' => ['system' => true, 'language' => 'pt']],
+        );
+    }
+
+    public function isSystem(): bool
+    {
+        return (bool) ($this->config['system'] ?? false);
     }
 
     public function isDue(): bool

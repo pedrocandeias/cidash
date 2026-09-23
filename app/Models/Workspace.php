@@ -32,7 +32,7 @@ class Workspace extends Model
      */
     public function sources(): BelongsToMany
     {
-        return $this->belongsToMany(Source::class, 'workspace_sources')->withPivot('is_priority')->withTimestamps();
+        return $this->belongsToMany(Source::class, 'workspace_sources')->withPivot('is_priority', 'only_matching')->withTimestamps();
     }
 
     /**

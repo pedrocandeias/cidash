@@ -12,6 +12,7 @@ import {
     Rss,
     UserCog,
     Users,
+    AtSign,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
@@ -32,6 +33,7 @@ import { index as adminUsers } from '@/routes/admin/users';
 import { index as campaigns } from '@/routes/campaigns';
 import { index as content } from '@/routes/content';
 import { index as events } from '@/routes/events';
+import { index as mentions } from '@/routes/mentions';
 import { index as news } from '@/routes/news';
 import { index as notices } from '@/routes/notices';
 import { index as people } from '@/routes/people';
@@ -59,7 +61,10 @@ const navGroups: { label?: string; items: NavItem[] }[] = [
     },
     {
         label: 'Monitoring',
-        items: [{ title: 'News coverage', href: news(), icon: Radio }],
+        items: [
+            { title: 'News coverage', href: news(), icon: Radio },
+            { title: 'Media mentions', href: mentions(), icon: AtSign },
+        ],
     },
 ];
 
