@@ -20,4 +20,7 @@ Schedule::command('cidash:fetch-sources')->everyFiveMinutes()->withoutOverlappin
 
 Schedule::command('cidash:evaluate-alerts')->everyFiveMinutes()->withoutOverlapping();
 
+// Alerts were evaluated at 06:55, so the briefing lists the current ones.
+Schedule::command('cidash:generate-briefings')->weekdays()->at('07:00');
+
 Schedule::command('cidash:backup')->dailyAt('03:00');

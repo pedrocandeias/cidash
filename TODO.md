@@ -104,8 +104,8 @@
 - [x] `monitoring_rules`: include/exclude terms, pessoa de interesse opcional → `mentions` por workspace
 - [x] Inboxes de triagem News e Mentions (relevante / irrelevante / criar tarefa / relacionar)
 - [x] Alerts: motor + regras do catálogo (incluindo `source_failing`), parâmetros editáveis, faixa no Home e 🔔
-- [ ] Briefing diário determinístico (página + arquivo)
-- [ ] Widgets de notícias e menções no Home
+- [x] Briefing diário determinístico (página + arquivo)
+- [x] Widgets de notícias e menções no Home
 
 ## 4. Phase 2
 

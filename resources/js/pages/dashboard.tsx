@@ -23,6 +23,9 @@ import { index as contentIndex, show as showContent } from '@/routes/content';
 import { index as eventsIndex, show as showEvent } from '@/routes/events';
 import { index as noticesIndex, show as showNotice } from '@/routes/notices';
 import { index as pressIndex, show as showPress } from '@/routes/press';
+import { today as briefingToday } from '@/routes/briefings';
+import { index as mentionsIndex, show as showMention } from '@/routes/mentions';
+import { index as newsIndex, show as showNews } from '@/routes/news';
 import { index as tasksIndex, show as showTask } from '@/routes/tasks';
 
 type Props = {
@@ -32,6 +35,17 @@ type Props = {
         my_tasks: number;
         press_48h: number;
         in_review: number;
+        new_mentions: number;
+    };
+    news: {
+        id: string;
+        headline: string;
+        outlet: string | null;
+        story_count: number;
+    }[];
+    mentions: {
+        by_rule: { name: string; count: number }[];
+        latest: { id: string; headline: string; outlet: string | null }[];
     };
     events: {
         id: string;
@@ -111,6 +125,8 @@ function greeting(): string {
 export default function Dashboard({
     alerts,
     counters,
+    news,
+    mentions,
     events,
     tasks,
     press,
@@ -147,6 +163,11 @@ export default function Dashboard({
             alert: counters.press_48h > 0,
         },
         {
+            label: 'New mentions',
+            value: counters.new_mentions,
+            href: mentionsIndex().url,
+        },
+        {
             label: 'In review',
             value: counters.in_review,
             href: contentIndex().url,
@@ -158,13 +179,21 @@ export default function Dashboard({
             <Head title={t('Home')} />
 
             <div className="space-y-6 px-4 py-6">
-                <header>
-                    <h1 className="text-2xl font-semibold tracking-tight">
-                        {t(greeting())}, {auth.user.name.split(' ')[0]}
-                    </h1>
-                    <p className="text-sm text-muted-foreground first-letter:uppercase">
-                        {dayLabel}
-                    </p>
+                <header className="flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                        <h1 className="text-2xl font-semibold tracking-tight">
+                            {t(greeting())}, {auth.user.name.split(' ')[0]}
+                        </h1>
+                        <p className="text-sm text-muted-foreground first-letter:uppercase">
+                            {dayLabel}
+                        </p>
+                    </div>
+                    <Link
+                        href={briefingToday()}
+                        className="text-sm font-medium hover:underline"
+                    >
+                        {t("See today's briefing")} →
+                    </Link>
                 </header>
 
                 {alerts.count > 0 && (
@@ -189,7 +218,7 @@ export default function Dashboard({
                     </section>
                 )}
 
-                <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
                     {counterItems.map((item) => (
                         <Link
                             key={item.label}
@@ -452,6 +481,70 @@ export default function Dashboard({
                                 </ul>
                             </Widget>
                         )}
+
+                        <Widget title="Latest news" href={newsIndex().url}>
+                            {news.length === 0 ? (
+                                <Empty>
+                                    {t('No news in the last two days.')}
+                                </Empty>
+                            ) : (
+                                <ul className="space-y-2 text-sm">
+                                    {news.map((line) => (
+                                        <li key={line.id}>
+                                            <span className="block text-xs text-muted-foreground">
+                                                {line.outlet}
+                                                {line.story_count > 1 &&
+                                                    ` · ${line.story_count}×`}
+                                            </span>
+                                            <Link
+                                                href={showNews(line.id)}
+                                                className="hover:underline"
+                                            >
+                                                {line.headline}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </Widget>
+
+                        <Widget title="New mentions" href={mentionsIndex().url}>
+                            {counters.new_mentions === 0 ? (
+                                <Empty>{t('Nothing left to triage.')}</Empty>
+                            ) : (
+                                <div className="space-y-3 text-sm">
+                                    <p className="text-muted-foreground">
+                                        {t(':count to review', {
+                                            count: counters.new_mentions,
+                                        })}
+                                        {': '}
+                                        {mentions.by_rule
+                                            .map(
+                                                (rule) =>
+                                                    `${rule.name} ${rule.count}`,
+                                            )
+                                            .join(' · ')}
+                                    </p>
+                                    <ul className="space-y-2">
+                                        {mentions.latest.map((mention) => (
+                                            <li key={mention.id}>
+                                                <span className="block text-xs text-muted-foreground">
+                                                    {mention.outlet}
+                                                </span>
+                                                <Link
+                                                    href={showMention(
+                                                        mention.id,
+                                                    )}
+                                                    className="hover:underline"
+                                                >
+                                                    {mention.headline}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </Widget>
 
                         <Widget title="Notices" href={noticesIndex().url}>
                             {notices.length === 0 ? (

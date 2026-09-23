@@ -14,6 +14,7 @@ import {
     Users,
     AtSign,
     TriangleAlert,
+    FileText,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
@@ -35,6 +36,7 @@ import { index as campaigns } from '@/routes/campaigns';
 import { index as content } from '@/routes/content';
 import { index as events } from '@/routes/events';
 import { index as alerts } from '@/routes/alerts';
+import { index as briefings } from '@/routes/briefings';
 import { index as mentions } from '@/routes/mentions';
 import { index as news } from '@/routes/news';
 import { index as notices } from '@/routes/notices';
@@ -47,7 +49,10 @@ import type { NavItem } from '@/types';
 // empty groups are not rendered.
 const navGroups: { label?: string; items: NavItem[] }[] = [
     {
-        items: [{ title: 'Home', href: dashboard(), icon: House }],
+        items: [
+            { title: 'Home', href: dashboard(), icon: House },
+            { title: 'Briefing', href: briefings(), icon: FileText },
+        ],
     },
     {
         label: 'Operations',

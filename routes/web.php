@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AlertController;
 use App\Http\Controllers\Auth\InvitationController;
+use App\Http\Controllers\BriefingController;
 use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CommentController;
@@ -24,6 +25,11 @@ Route::redirect('/', '/dashboard')->name('home');
 
 Route::middleware(['auth', 'workspace'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
+
+    Route::get('briefings', [BriefingController::class, 'index'])->name('briefings.index');
+    Route::get('briefings/today', [BriefingController::class, 'today'])->name('briefings.today');
+    Route::get('briefings/{briefing}', [BriefingController::class, 'show'])->name('briefings.show');
+    Route::post('briefings/{briefing}/refresh', [BriefingController::class, 'refresh'])->name('briefings.refresh');
 
     Route::get('alerts', [AlertController::class, 'index'])->name('alerts.index');
     Route::patch('alerts/{alert}', [AlertController::class, 'update'])->name('alerts.update');

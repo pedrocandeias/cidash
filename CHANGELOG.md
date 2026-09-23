@@ -2,6 +2,13 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.19.0 (2026-09-23)
+
+- feat: briefing diário gerado às 07:00 nos dias úteis (`cidash:generate-briefings`): alertas abertos, eventos do dia, prazos de imprensa até amanhã, tarefas para hoje ou em atraso, conteúdos a publicar ou em revisão, notícias e menções desde o briefing anterior e avisos fixados
+- feat: arquivo de briefings; cada briefing guarda o que se sabia nesse dia, e o de hoje pode ser atualizado
+- feat: o briefing de hoje é gerado ao abrir, se ainda não existir (fins de semana, equipas novas)
+- feat: Início com "Ver o briefing de hoje", contador de menções novas e widgets de últimas notícias e novas menções por regra
+
 ## 0.18.0 (2026-09-23)
 
 - feat: alertas com o catálogo de regras: evento sem responsável, prazo de pedido de imprensa a terminar, conteúdo parado em revisão, campanha sem conteúdos, notícia de fonte prioritária e fonte com falhas

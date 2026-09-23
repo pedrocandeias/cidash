@@ -8,10 +8,13 @@ use App\Enums\AlertStatus;
 use App\Enums\ContentStage;
 use App\Enums\PressRequestStatus;
 use App\Enums\TaskStatus;
+use App\Enums\TriageStatus;
 use App\Enums\WorkspaceRole;
 use App\Models\Alert;
 use App\Models\CalendarEvent;
 use App\Models\ContentItem;
+use App\Models\Mention;
+use App\Models\NewsItemState;
 use App\Models\Notice;
 use App\Models\PressRequest;
 use App\Models\Reminder;
@@ -83,6 +86,25 @@ class DashboardController extends Controller
             ->limit(6)
             ->get();
 
+        // Latest stories still to triage or marked relevant, one line per story.
+        $news = NewsItemState::with('newsItem')
+            ->whereIn('status', [TriageStatus::New, TriageStatus::Relevant])
+            ->where('created_at', '>=', now()->subDays(2))
+            ->latest()
+            ->limit(100)
+            ->get()
+            ->groupBy(fn (NewsItemState $state) => $state->newsItem->story_id ?? 'item-'.$state->id)
+            ->take(5)
+            ->map(fn ($group) => [
+                'id' => $group->first()->id,
+                'headline' => $group->first()->newsItem->headline,
+                'outlet' => $group->first()->newsItem->outlet,
+                'story_count' => $group->count(),
+            ])
+            ->values();
+
+        $newMentions = Mention::with('rule:id,name')->where('review_status', TriageStatus::New)->get();
+
         $isEditor = $user->hasRole($workspace, WorkspaceRole::Editor);
         $isManager = $user->hasRole($workspace, WorkspaceRole::Manager);
 
@@ -96,6 +118,18 @@ class DashboardController extends Controller
                 'my_tasks' => Task::where('assigned_to', $user->id)->whereIn('status', TaskStatus::open())->count(),
                 'press_48h' => PressRequest::whereIn('status', PressRequestStatus::open())->whereNotNull('deadline')->where('deadline', '<', now()->addHours(48))->count(),
                 'in_review' => $inReview->count(),
+                'new_mentions' => $newMentions->count(),
+            ],
+            'news' => $news,
+            'mentions' => [
+                'by_rule' => $newMentions->groupBy(fn (Mention $mention) => $mention->rule->name ?? $mention->matched_keyword)
+                    ->map(fn ($group, $name) => ['name' => $name, 'count' => $group->count()])
+                    ->sortByDesc('count')
+                    ->take(5)
+                    ->values(),
+                'latest' => $newMentions->sortByDesc('published_at')->take(3)
+                    ->map(fn (Mention $mention) => ['id' => $mention->id, 'headline' => $mention->headline, 'outlet' => $mention->outlet])
+                    ->values(),
             ],
             'events' => $events->map(fn (CalendarEvent $event) => [
                 'id' => $event->id,
