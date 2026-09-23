@@ -76,7 +76,8 @@
 - [x] Notice Board: CRUD, fixados (só managers), publicação agendada, expiração, arquivo
 - [x] Tasks: CRUD, minhas/equipa, filtros de estado, conclusão rápida, detalhe com comentários e histórico, apagar (criador ou manager), origem (`source_id` + relação `originated_from`), notificação in-app de atribuição
 - [ ] Tasks: vista Kanban por estado
-- [ ] Press Requests: CRUD, lista por deadline com semáforo, autocompletar jornalista e meio, relacionar especialistas
+- [x] Press Requests: CRUD, lista por prazo com semáforo, autocompletar jornalista e meio, data de resposta, lembretes, criar tarefa
+- [ ] Press Requests: sugerir especialistas (com Pessoas de interesse)
 - [ ] Content Pipeline: Kanban com 7 estados, drag & drop, `stage_changed_at`, Review → Approved só por editors, managers e super admin; notificação aos editors e managers quando um conteúdo entra em Review
 - [ ] Campaigns: CRUD, responsáveis, relações com eventos e conteúdos
 - [x] Termos normalizados (backend): `Terms`, `normalized_name` + índice único, reutilizar em vez de duplicar, sugestões (distância ≤ 2), testes

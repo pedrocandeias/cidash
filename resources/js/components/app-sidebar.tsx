@@ -1,5 +1,12 @@
 import { Link, usePage } from '@inertiajs/react';
-import { CalendarDays, House, ListTodo, Mail, Megaphone } from 'lucide-react';
+import {
+    CalendarDays,
+    House,
+    ListTodo,
+    Mail,
+    Megaphone,
+    Newspaper,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -16,6 +23,7 @@ import { dashboard } from '@/routes';
 import { edit as editEmailSettings } from '@/routes/admin/email';
 import { index as events } from '@/routes/events';
 import { index as notices } from '@/routes/notices';
+import { index as press } from '@/routes/press';
 import { index as tasks } from '@/routes/tasks';
 import type { NavItem } from '@/types';
 
@@ -30,6 +38,7 @@ const navGroups: { label?: string; items: NavItem[] }[] = [
         items: [
             { title: 'Calendar', href: events(), icon: CalendarDays },
             { title: 'Tasks', href: tasks(), icon: ListTodo },
+            { title: 'Press requests', href: press(), icon: Newspaper },
             { title: 'Notices', href: notices(), icon: Megaphone },
         ],
     },

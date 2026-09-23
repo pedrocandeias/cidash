@@ -4,6 +4,7 @@ namespace App\Core;
 
 use App\Models\CalendarEvent;
 use App\Models\Notice;
+use App\Models\PressRequest;
 use App\Models\Record;
 use App\Models\Task;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -21,6 +22,7 @@ class RecordTypes
         'task' => ['model' => Task::class, 'route' => 'tasks.show', 'label' => 'Task'],
         'event' => ['model' => CalendarEvent::class, 'route' => 'events.show', 'label' => 'Event'],
         'notice' => ['model' => Notice::class, 'route' => 'notices.show', 'label' => 'Notice'],
+        'press_request' => ['model' => PressRequest::class, 'route' => 'press.show', 'label' => 'Press request'],
     ];
 
     public static function register(): void
