@@ -31,6 +31,13 @@ class ContentItem extends Model
 {
     use IsRecord;
 
+    /**
+     * Attributes indexed for the global search, besides the title.
+     *
+     * @var array<int, string>
+     */
+    protected array $searchable = ['brief'];
+
     protected static function booted(): void
     {
         static::saving(function (ContentItem $item) {

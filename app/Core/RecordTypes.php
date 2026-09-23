@@ -36,6 +36,14 @@ class RecordTypes
         Relation::morphMap(array_map(fn (array $type) => $type['model'], self::TYPES));
     }
 
+    /**
+     * @return array<int, class-string>
+     */
+    public static function models(): array
+    {
+        return array_values(array_map(fn (array $type) => $type['model'], self::TYPES));
+    }
+
     public static function label(string $type): string
     {
         return self::TYPES[$type]['label'] ?? $type;

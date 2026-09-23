@@ -28,6 +28,13 @@ class PressRequest extends Model
 {
     use IsRecord;
 
+    /**
+     * Attributes indexed for the global search, besides the title.
+     *
+     * @var array<int, string>
+     */
+    protected array $searchable = ['request', 'journalist', 'media_outlet', 'response_notes'];
+
     protected static function booted(): void
     {
         static::saving(function (PressRequest $request) {

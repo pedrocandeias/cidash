@@ -3,6 +3,7 @@
 namespace App\Core\Concerns;
 
 use App\Core\Scopes\WorkspaceScope;
+use App\Core\Search\Search;
 use App\Models\Activity;
 use App\Models\Record;
 use Illuminate\Database\Eloquent\Model;
@@ -39,6 +40,7 @@ trait IsRecord
 
         static::created(function (self $model) {
             Activity::log('created', $model->record);
+            $model->indexForSearch();
         });
 
         static::updated(function (self $model) {
@@ -49,6 +51,7 @@ trait IsRecord
             }
 
             $model->record->forceFill(['title' => $model->recordTitle()])->touch();
+            $model->indexForSearch();
 
             Activity::log('updated', $model->record, collect($changes)
                 ->map(fn ($value, $key) => ['from' => $model->getOriginal($key), 'to' => $value])
@@ -59,6 +62,7 @@ trait IsRecord
             Activity::log('deleted', $model->record, ['title' => $model->recordTitle()]);
 
             Record::whereKey($model->getKey())->delete();
+            app(Search::class)->remove($model->getKey());
         });
     }
 
@@ -74,6 +78,27 @@ trait IsRecord
     public function record(): BelongsTo
     {
         return $this->belongsTo(Record::class, $this->getKeyName());
+    }
+
+    /**
+     * Text indexed for the global search besides the title: the model's
+     * `$searchable` attributes (a property the model may declare).
+     */
+    public function searchableText(): string
+    {
+        /** @var array<int, string> $fields */
+        $fields = property_exists($this, 'searchable') ? $this->searchable : [];
+
+        return collect($fields)
+            ->map(fn (string $field) => $this->getAttribute($field))
+            ->map(fn ($value) => is_array($value) ? implode(' ', $value) : (string) $value)
+            ->filter()
+            ->implode("\n");
+    }
+
+    public function indexForSearch(): void
+    {
+        app(Search::class)->index($this->record, $this->searchableText());
     }
 
     /**

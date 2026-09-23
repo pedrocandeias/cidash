@@ -11,6 +11,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\PressRequestController;
 use App\Http\Controllers\ReminderController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
@@ -37,7 +38,7 @@ Route::middleware(['auth', 'workspace'])->group(function () {
     Route::get('people/{person}/photo', [PersonController::class, 'photo'])->name('people.photo');
     Route::resource('people', PersonController::class)->except(['create', 'edit']);
 
-    Route::get('records/search', [LinkController::class, 'search'])->name('records.search');
+    Route::get('records/search', SearchController::class)->name('records.search');
     Route::post('records/{record}/links', [LinkController::class, 'store'])->name('links.store');
     Route::delete('links/{link}', [LinkController::class, 'destroy'])->name('links.destroy');
 

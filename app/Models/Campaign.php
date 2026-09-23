@@ -27,6 +27,13 @@ class Campaign extends Model
 {
     use IsRecord;
 
+    /**
+     * Attributes indexed for the global search, besides the title.
+     *
+     * @var array<int, string>
+     */
+    protected array $searchable = ['description', 'objectives', 'audiences'];
+
     protected function casts(): array
     {
         return [

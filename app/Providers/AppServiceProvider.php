@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Core\RecordTypes;
+use App\Core\Search\Search;
+use App\Core\Search\SqliteSearch;
 use App\Enums\WorkspaceRole;
 use App\Models\User;
 use App\Models\Workspace;
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->scoped(WorkspaceContext::class);
+        $this->app->singleton(Search::class, SqliteSearch::class);
 
         $this->app->resolving('mail.manager', function () {
             try {

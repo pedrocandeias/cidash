@@ -666,7 +666,8 @@ Cada módulo regista o seu `type` no núcleo (label, ícone, rota, campos pesqui
 ### Pesquisa
 - **Índice:** tabela virtual FTS5 `objects_fts` com o tokenizer `unicode61 remove_diacritics 2` (ignora acentos), sempre filtrada pelo workspace ativo. A camada de serviço atualiza-a a partir dos campos que cada tipo declara.
 - **Ranking:** por `bm25`.
-- **Erros de escrita e títulos semelhantes:** uma segunda tabela, com o tokenizer `trigram`.
+- **Palavras incompletas:** cada palavra é pesquisada como prefixo ("invest" encontra "investigação"). Não há tolerância a erros de escrita; a tabela de trigramas prevista foi abandonada, porque dá pesquisa por partes de palavras e não correção de gralhas.
+- **Implementação:** `App\Core\Search\Search` (interface) com `SqliteSearch` (tabela `objects_fts`). Cada modelo declara `$searchable`, e o `IsRecord` mantém o índice atualizado. `cidash:search-reindex` reconstrói o índice (por exemplo, depois de importar dados). A tabela FTS não passa pelo filtro do Eloquent, por isso a implementação filtra explicitamente pelo workspace.
 - **Limitação:** o FTS5 não reconhece variações de palavras em português ("notícia"/"notícias"). Usa-se pesquisa por prefixo.
 
 ### AI Assistant (Phase 2): desenho

@@ -25,6 +25,13 @@ class Notice extends Model
 {
     use IsRecord;
 
+    /**
+     * Attributes indexed for the global search, besides the title.
+     *
+     * @var array<int, string>
+     */
+    protected array $searchable = ['body'];
+
     protected function casts(): array
     {
         return [

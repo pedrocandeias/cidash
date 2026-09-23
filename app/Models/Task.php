@@ -26,6 +26,13 @@ class Task extends Model
 {
     use IsRecord;
 
+    /**
+     * Attributes indexed for the global search, besides the title.
+     *
+     * @var array<int, string>
+     */
+    protected array $searchable = ['description'];
+
     protected static function booted(): void
     {
         static::saving(function (Task $task) {

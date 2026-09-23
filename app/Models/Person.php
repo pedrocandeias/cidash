@@ -31,6 +31,13 @@ class Person extends Model
 {
     use IsRecord;
 
+    /**
+     * Attributes indexed for the global search, besides the title.
+     *
+     * @var array<int, string>
+     */
+    protected array $searchable = ['academic_title', 'affiliation', 'short_bio', 'bio', 'keywords'];
+
     protected $table = 'people';
 
     protected function casts(): array

@@ -2,6 +2,13 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.11.0 (2026-09-23)
+
+- feat: pesquisa global em todos os registos (tarefas, eventos, avisos, pedidos de imprensa, conteúdos, campanhas, pessoas), sem distinção de acentos nem maiúsculas e com palavras incompletas
+- feat: paleta de pesquisa e navegação com Ctrl+K / ⌘K, com excertos e navegação por teclado
+- feat: o painel de relações e a secção de campanha passam a usar a mesma pesquisa
+- feat: comando `cidash:search-reindex` para reconstruir o índice
+
 ## 0.10.0 (2026-09-23)
 
 - feat: Pessoas de interesse: perfis de especialistas com cargo, afiliação, bio curta e longa, palavras-chave, línguas, contactos, fotografia e notas sobre media

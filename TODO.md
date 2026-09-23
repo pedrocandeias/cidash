@@ -67,7 +67,7 @@
 - [x] Notificações in-app (tabela `notifications`, sino, abrir muda para o workspace da notificação)
 - [x] `reminders` + `cidash:send-reminders` (notificação in-app)
 - [x] Registo de tipos: `App\Core\RecordTypes` (alias, modelo, rota, rótulo) → *morph map*
-- [ ] Metadados por tipo para a pesquisa (campos pesquisáveis, ícone)
+- [x] Metadados por tipo para a pesquisa (`$searchable` em cada modelo)
 - [x] Componentes partilhados: CommentsThread (comentários em qualquer registo), ActivityFeed, NotificationsMenu (sino)
 - [x] Componentes partilhados: RelationsPanel (com pesquisa por título), RemindersPanel, CreateTaskButton, TagInput
 - [ ] Componentes partilhados: ObjectDrawer (pré-visualização lateral)
@@ -85,7 +85,7 @@
 - [x] Termos normalizados (UI): TagInput com sugestões e "Queria dizer…?"
 - [x] Gestão de tags e áreas pelos managers: renomear, fundir, apagar (Definições → Termos)
 - [x] Pessoas de interesse: CRUD de perfis, `expertise_areas`, pesquisa por keyword + dropdown de área, cartões, "Copiar para enviar", aviso de bio por rever, fotografia privada
-- [ ] Search global atrás de uma interface (`Core/Search`), implementação FTS5 (unicode61 remove_diacritics + trigram), paleta ⌘K
+- [x] Search global atrás de uma interface (`Core/Search`), implementação FTS5 (unicode61 remove_diacritics, prefixos, bm25), paleta ⌘K, `cidash:search-reindex`
 - [ ] Home: widgets de eventos, avisos, reminders, tarefas, imprensa e conteúdos; vista de equipa para managers; aprovações pendentes para editors
 - [ ] Seeds de demonstração realistas
 

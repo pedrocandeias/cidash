@@ -34,6 +34,13 @@ class CalendarEvent extends Model
 {
     use IsRecord;
 
+    /**
+     * Attributes indexed for the global search, besides the title.
+     *
+     * @var array<int, string>
+     */
+    protected array $searchable = ['description', 'location', 'organizer', 'notes'];
+
     protected $table = 'events';
 
     protected function casts(): array
