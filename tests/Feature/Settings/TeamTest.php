@@ -56,9 +56,10 @@ class TeamTest extends TestCase
                 ->component('settings/team')
                 ->where('team', 'CI Reitoria')
                 ->has('members', 2)
-                ->where('members.0.id', $pending->id)
-                ->where('members.0.role', 'editor')
-                ->where('members.0.pending', true));
+                // Members are sorted by name, and the manager's name is random: find Ana by id.
+                ->where('members', fn ($members) => collect($members)->contains(
+                    fn ($member) => $member['id'] === $pending->id && $member['role'] === 'editor' && $member['pending'] === true,
+                )));
     }
 
     public function test_adding_a_new_person_creates_a_pending_account_and_an_invitation_link()
