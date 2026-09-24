@@ -160,7 +160,7 @@ export default function CampaignFields({
 
             <fieldset className="grid gap-2">
                 <legend className="mb-2 text-sm font-medium">
-                    {t('Responsible')}
+                    {t('People responsible')}
                 </legend>
                 <div className="flex flex-wrap gap-x-4 gap-y-2">
                     {members.map((member) => (

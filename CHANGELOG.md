@@ -2,6 +2,11 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.35.1 (2026-09-24)
+
+- fix: a página da campanha mostra os dados para ler (estado, datas, responsáveis, canais, públicos, descrição e objetivos) e só abre o formulário ao clicar em "Editar", com "Guardar" e "Cancelar"
+- fix: "Nova tarefa" fica só nas Tarefas da campanha, em vez de repetida na coluna lateral
+
 ## 0.35.0 (2026-09-24)
 
 - feat: tarefas da campanha na página da campanha: as suas e as dos eventos e conteúdos que fazem parte dela, com o progresso ("3 de 7 concluídas") e marcar como feita

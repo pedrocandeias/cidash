@@ -785,5 +785,7 @@
     "Campaign tasks": "Tarefas da campanha",
     ":done of :total done": ":done de :total concluídas",
     "No tasks yet. Tasks of its events and content also appear here.": "Ainda não há tarefas. As tarefas dos eventos e conteúdos da campanha também aparecem aqui.",
-    "That item is not part of the campaign.": "Esse item não faz parte da campanha."
+    "That item is not part of the campaign.": "Esse item não faz parte da campanha.",
+    "People responsible": "Responsáveis",
+    "Dates": "Datas"
 }

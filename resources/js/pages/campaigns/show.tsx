@@ -1,5 +1,6 @@
 import { Form, Head, router } from '@inertiajs/react';
-import { X } from 'lucide-react';
+import { Pencil, X } from 'lucide-react';
+import { useState } from 'react';
 import ActivityFeed from '@/components/core/activity-feed';
 import AttachmentsPanel from '@/components/core/attachments-panel';
 import type { AttachmentItem } from '@/components/core/attachments-panel';
@@ -7,7 +8,6 @@ import type { ActivityItem } from '@/components/core/activity-feed';
 import CommentsThread from '@/components/core/comments-thread';
 import type { CommentItem } from '@/components/core/comments-thread';
 import { RecordLink } from '@/components/core/object-drawer';
-import CreateTaskButton from '@/components/core/create-task-button';
 import RecordSearch from '@/components/core/record-search';
 import RelationsPanel from '@/components/core/relations-panel';
 import type {
@@ -31,6 +31,7 @@ import CampaignFields, {
 } from '@/modules/campaigns/campaign-fields';
 import CampaignTasks from '@/modules/campaigns/campaign-tasks';
 import type { CampaignTask } from '@/modules/campaigns/campaign-tasks';
+import CampaignSummaryView from '@/modules/campaigns/campaign-summary';
 import type { CampaignDetails } from '@/modules/campaigns/types';
 import { campaignFieldLabels } from '@/modules/campaigns/types';
 import type { Member } from '@/modules/tasks/types';
@@ -63,6 +64,7 @@ export default function ShowCampaign({
     can,
 }: Props) {
     const { t } = useTranslation();
+    const [editing, setEditing] = useState(false);
 
     return (
         <>
@@ -70,9 +72,55 @@ export default function ShowCampaign({
 
             <div className="grid gap-10 px-4 py-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
                 <div className="space-y-10">
-                    <Heading title={campaign.name} />
+                    <div className="flex flex-wrap items-start justify-between gap-4">
+                        <Heading title={campaign.name} />
+                        {!editing && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setEditing(true)}
+                            >
+                                <Pencil />
+                                {t('Edit')}
+                            </Button>
+                        )}
+                    </div>
 
-                    <section className="-mt-6 space-y-3">
+                    {editing ? (
+                        <Form
+                            {...update.form(campaign.id)}
+                            transform={campaignFormTransform}
+                            options={{ preserveScroll: true }}
+                            onSuccess={() => setEditing(false)}
+                            className="-mt-6 space-y-6 rounded-lg border p-4"
+                        >
+                            {({ processing, errors }) => (
+                                <>
+                                    <CampaignFields
+                                        members={members}
+                                        errors={errors}
+                                        defaults={campaign}
+                                    />
+                                    <div className="flex items-center gap-2">
+                                        <Button disabled={processing}>
+                                            {t('Save')}
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            onClick={() => setEditing(false)}
+                                        >
+                                            {t('Cancel')}
+                                        </Button>
+                                    </div>
+                                </>
+                            )}
+                        </Form>
+                    ) : (
+                        <CampaignSummaryView campaign={campaign} />
+                    )}
+
+                    <section className="space-y-3">
                         <h2 className="text-base font-medium">
                             {t('In this campaign')}
                         </h2>
@@ -140,42 +188,10 @@ export default function ShowCampaign({
                         members={members}
                     />
 
-                    <Form
-                        {...update.form(campaign.id)}
-                        transform={campaignFormTransform}
-                        options={{ preserveScroll: true }}
-                        className="space-y-6"
-                    >
-                        {({ processing, errors, recentlySuccessful }) => (
-                            <>
-                                <CampaignFields
-                                    members={members}
-                                    errors={errors}
-                                    defaults={campaign}
-                                />
-                                <div className="flex items-center gap-4">
-                                    <Button disabled={processing}>
-                                        {t('Save')}
-                                    </Button>
-                                    {recentlySuccessful && (
-                                        <span className="text-sm text-muted-foreground">
-                                            {t('Saved.')}
-                                        </span>
-                                    )}
-                                </div>
-                            </>
-                        )}
-                    </Form>
-
                     <CommentsThread recordId={recordId} comments={comments} />
                 </div>
 
                 <aside className="space-y-10">
-                    <CreateTaskButton
-                        sourceId={recordId}
-                        sourceTitle={campaign.name}
-                        members={members}
-                    />
                     <AttachmentsPanel
                         recordId={recordId}
                         attachments={attachments}
