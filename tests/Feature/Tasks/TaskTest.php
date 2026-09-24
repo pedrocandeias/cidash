@@ -10,6 +10,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Notifications\TaskAssigned;
+use App\Support\Assignments;
 use App\Support\WorkspaceContext;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
@@ -59,6 +60,63 @@ class TaskTest extends TestCase
         $this->assertSame(TaskStatus::Todo, $task->status);
         $this->assertSame($this->ana->id, $task->record->created_by);
         Notification::assertSentTo($this->rui, TaskAssigned::class);
+    }
+
+    public function test_a_new_task_starts_on_its_creation_day_and_the_start_can_be_changed()
+    {
+        $this->travelTo('2026-09-24 10:00');
+
+        $this->actingAs($this->ana)->post(route('tasks.store'), ['title' => 'Traduzir o discurso'])->assertSessionHasNoErrors();
+        $task = Task::withoutGlobalScopes()->firstOrFail();
+        $this->assertSame('2026-09-24', $task->start_date->toDateString());
+
+        $this->actingAs($this->ana)->patch(route('tasks.update', $task), ['start_date' => '2026-09-28'])->assertSessionHasNoErrors();
+        $task->refresh();
+        $this->assertSame('2026-09-28', $task->start_date->toDateString());
+
+        // The creation date stays as it was, and the page shows both.
+        $this->actingAs($this->ana)->get(route('tasks.show', $task))
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('task.start_date', '2026-09-28')
+                ->where('task.created_at', $task->record->created_at->toIso8601String()));
+    }
+
+    public function test_the_deadline_has_a_time()
+    {
+        $this->actingAs($this->ana)->post(route('tasks.store'), ['title' => 'Vídeo', 'deadline' => '2026-10-01T15:30'])->assertSessionHasNoErrors();
+
+        $task = Task::withoutGlobalScopes()->firstOrFail();
+        $this->assertSame('2026-10-01 15:30', $task->deadline->format('Y-m-d H:i'));
+    }
+
+    public function test_a_task_has_people_responsible_and_co_responsible()
+    {
+        Notification::fake();
+        $rita = User::factory()->inWorkspace($this->workspace)->create(['name' => 'Rita']);
+
+        $this->actingAs($this->ana)
+            ->post(route('tasks.store'), ['title' => 'Artigo', 'assignees' => [$this->rui->id], 'co_assignees' => [$rita->id]])
+            ->assertSessionHasNoErrors();
+        $task = Task::withoutGlobalScopes()->firstOrFail();
+
+        // The co-responsible is told too and sees the task among theirs.
+        Notification::assertSentTo($rita, TaskAssigned::class);
+        $this->actingAs($rita)->get(route('tasks.show', $task))
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('task.assignees', [['id' => $this->rui->id, 'name' => 'Rui']])
+                ->where('task.co_assignees', [['id' => $rita->id, 'name' => 'Rita']]));
+        $this->actingAs($rita)->get(route('tasks.index'))
+            ->assertInertia(fn (Assert $page) => $page->has('tasks', 1));
+
+        // Changing only the people responsible keeps the co-responsible.
+        $this->actingAs($this->ana)->patch(route('tasks.update', $task), ['assignees' => [$this->ana->id]]);
+        $task->load('assignees');
+        $this->assertSame([$rita->id], array_column(Assignments::present($task, 'co'), 'id'));
+        $this->assertSame([$this->ana->id], array_column(Assignments::present($task, 'lead'), 'id'));
+
+        $this->actingAs($this->ana)
+            ->patch(route('tasks.update', $task), ['co_assignees' => [User::factory()->inWorkspace()->create()->id]])
+            ->assertSessionHasErrors('co_assignees.0');
     }
 
     public function test_only_members_of_the_workspace_can_be_assigned()

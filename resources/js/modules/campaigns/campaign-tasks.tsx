@@ -20,7 +20,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { formatDate, localToday, useTranslation } from '@/lib/i18n';
+import { formatDateTime, useTranslation } from '@/lib/i18n';
 import { useOptions } from '@/lib/options';
 import { cn } from '@/lib/utils';
 import type { RecordSummary } from '@/components/core/relations-panel';
@@ -211,7 +211,7 @@ function NewTaskDialog({
                                     <Input
                                         id="campaign-task-deadline"
                                         name="deadline"
-                                        type="date"
+                                        type="datetime-local"
                                     />
                                     <InputError message={errors.deadline} />
                                 </div>
@@ -249,7 +249,6 @@ export default function CampaignTasks({
     const taskTypes = useOptions('task_type');
     const counted = tasks.filter((task) => task.status !== 'cancelled');
     const done = counted.filter((task) => task.status === 'done').length;
-    const today = localToday();
 
     return (
         <section className="space-y-3">
@@ -358,16 +357,17 @@ export default function CampaignTasks({
                                 </span>
                                 <span
                                     className={cn(
-                                        'w-20 text-right',
+                                        'w-32 text-right',
                                         task.deadline &&
-                                            task.deadline < today &&
+                                            new Date(task.deadline) <
+                                                new Date() &&
                                             !closed
                                             ? 'font-medium text-critical'
                                             : 'text-muted-foreground',
                                     )}
                                 >
                                     {task.deadline &&
-                                        formatDate(task.deadline, locale)}
+                                        formatDateTime(task.deadline, locale)}
                                 </span>
                             </li>
                         );

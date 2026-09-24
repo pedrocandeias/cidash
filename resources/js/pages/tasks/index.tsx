@@ -18,7 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { formatDate, useTranslation } from '@/lib/i18n';
+import { formatDateTime, useTranslation } from '@/lib/i18n';
 import { useOptions } from '@/lib/options';
 import { cn } from '@/lib/utils';
 import PriorityBadge from '@/modules/tasks/priority-badge';
@@ -251,7 +251,10 @@ export default function Tasks({ tasks, filters, members }: Props) {
                                                     : ''
                                             }
                                         >
-                                            {formatDate(task.deadline, locale)}
+                                            {formatDateTime(
+                                                task.deadline,
+                                                locale,
+                                            )}
                                         </span>
                                     )}
                                 </div>
@@ -310,14 +313,14 @@ export default function Tasks({ tasks, filters, members }: Props) {
                                 )}
                                 <span
                                     className={cn(
-                                        'w-20 text-right text-sm',
+                                        'w-32 text-right text-sm',
                                         isOverdue(task)
                                             ? 'font-medium text-critical'
                                             : 'text-muted-foreground',
                                     )}
                                 >
                                     {task.deadline &&
-                                        formatDate(task.deadline, locale)}
+                                        formatDateTime(task.deadline, locale)}
                                 </span>
                             </li>
                         ))}

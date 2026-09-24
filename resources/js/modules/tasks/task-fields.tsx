@@ -10,7 +10,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { useTranslation } from '@/lib/i18n';
+import { localToday, useTranslation } from '@/lib/i18n';
 import { useOptions } from '@/lib/options';
 import type { Member, Priority } from './types';
 import { priorityLabels } from './types';
@@ -25,6 +25,7 @@ export function taskFormTransform(
         ...data,
         type: data.type === NO_TYPE ? null : data.type,
         assignees: data.assignees ?? [],
+        co_assignees: data.co_assignees ?? [],
     };
 }
 
@@ -43,6 +44,8 @@ export default function TaskFields({
         type?: string | null;
         description?: string | null;
         assignees?: { id: number; name: string }[];
+        co_assignees?: { id: number; name: string }[];
+        start_date?: string | null;
         deadline?: string | null;
         priority?: Priority;
     };
@@ -110,7 +113,34 @@ export default function TaskFields({
                 error={errors.assignees}
             />
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <AssigneesField
+                id={`${idPrefix}co_assignees`}
+                name="co_assignees"
+                label="Co-responsible"
+                members={members}
+                defaultValue={defaults.co_assignees?.map((person) => person.id)}
+                error={errors.co_assignees}
+            />
+
+            <div className="grid gap-4 sm:grid-cols-3">
+                <div className="grid gap-2">
+                    <Label htmlFor={`${idPrefix}start_date`}>
+                        {t('Start date')}
+                    </Label>
+                    <Input
+                        id={`${idPrefix}start_date`}
+                        name="start_date"
+                        type="date"
+                        // A new task starts on the day it is created.
+                        defaultValue={
+                            defaults.title === undefined
+                                ? localToday()
+                                : (defaults.start_date ?? '')
+                        }
+                    />
+                    <InputError message={errors.start_date} />
+                </div>
+
                 <div className="grid gap-2">
                     <Label htmlFor={`${idPrefix}deadline`}>
                         {t('Deadline')}
@@ -118,8 +148,9 @@ export default function TaskFields({
                     <Input
                         id={`${idPrefix}deadline`}
                         name="deadline"
-                        type="date"
-                        defaultValue={defaults.deadline ?? ''}
+                        type="datetime-local"
+                        // Server time is ISO 8601; the input takes YYYY-MM-DDTHH:mm.
+                        defaultValue={defaults.deadline?.slice(0, 16) ?? ''}
                     />
                     <InputError message={errors.deadline} />
                 </div>

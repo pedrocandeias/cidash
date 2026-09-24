@@ -119,7 +119,7 @@ class DailyBriefing extends Builder
         return $this->section('tasks', 'Tasks due today or overdue', $tasks->map(fn (Task $task) => $this->item(
             $task->title,
             route('tasks.show', $task, absolute: false),
-            $task->deadline?->toDateString(),
+            $task->deadline?->toIso8601String(),
             $task->assigneeNames(),
             flag: $task->deadline !== null && $task->deadline->lt($day),
         ))->all());

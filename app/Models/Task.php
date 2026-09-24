@@ -16,13 +16,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $title
  * @property string|null $type key of the team's task types (App\Support\Options)
  * @property string|null $description
- * @property CarbonImmutable|null $deadline
+ * @property CarbonImmutable|null $start_date when the work starts (the creation date unless changed)
+ * @property CarbonImmutable|null $deadline date and time
  * @property Priority $priority
  * @property TaskStatus $status
  * @property string|null $source_object_id
  * @property CarbonImmutable|null $completed_at
  */
-#[Fillable(['title', 'type', 'description', 'deadline', 'priority', 'status', 'source_object_id'])]
+#[Fillable(['title', 'type', 'description', 'start_date', 'deadline', 'priority', 'status', 'source_object_id'])]
 class Task extends Model
 {
     use HasAssignees, IsRecord;
@@ -46,7 +47,8 @@ class Task extends Model
     protected function casts(): array
     {
         return [
-            'deadline' => 'date',
+            'start_date' => 'date',
+            'deadline' => 'datetime',
             'priority' => Priority::class,
             'status' => TaskStatus::class,
             'completed_at' => 'datetime',

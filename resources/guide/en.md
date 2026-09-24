@@ -28,7 +28,7 @@ A summary of the day at 07:00 on working days, and a weekly one on Mondays. **Up
 
 ## Tasks
 
-**New task**: title, people responsible (several), deadline and priority; they are notified. Switch between Mine and Team, List and Board.
+**New task**: title, people responsible and co-responsible, start date (today unless you change it; the creation date is kept and shown), deadline with a time, and priority; they are notified. Switch between Mine and Team, List and Board.
 
 ![Tasks](/images/guide/tarefas.jpg)
 

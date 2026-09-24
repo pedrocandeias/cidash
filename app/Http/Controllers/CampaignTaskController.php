@@ -63,6 +63,7 @@ class CampaignTaskController extends Controller
             $task = Task::create([
                 'title' => $validated['title'],
                 'type' => $validated['type'] ?? null,
+                'start_date' => today(),
                 'deadline' => $validated['deadline'] ?? null,
                 'priority' => Priority::Normal,
                 'status' => TaskStatus::Todo,
@@ -119,7 +120,7 @@ class CampaignTaskController extends Controller
                 'title' => $task->title,
                 'type' => $task->type,
                 'status' => $task->status->value,
-                'deadline' => $task->deadline?->toDateString(),
+                'deadline' => $task->deadline?->toIso8601String(),
                 'assignees' => $task->assigneeNames(),
                 // The item it is about, when it is not the campaign itself.
                 'about' => $task->source_object_id !== null && $task->source_object_id !== $campaign->id ? ($titles[$task->source_object_id] ?? null) : null,

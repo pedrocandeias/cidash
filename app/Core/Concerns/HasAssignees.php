@@ -21,19 +21,27 @@ trait HasAssignees
     public function assignees(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'record_assignees', 'object_id', 'user_id')
+            ->withPivot('role')
             ->withTimestamps()
             ->orderBy('users.name');
     }
 
     /**
-     * Sets who is responsible.
+     * Sets who is responsible and, for tasks, who shares the work (co-responsible).
+     * Someone in both lists is responsible.
      *
      * @param  array<int, int|string>  $userIds
-     * @return array<int, int> the people who were not responsible before (to notify)
+     * @param  array<int, int|string>  $coUserIds
+     * @return array<int, int> the people who were not assigned before (to notify)
      */
-    public function syncAssignees(array $userIds): array
+    public function syncAssignees(array $userIds, array $coUserIds = []): array
     {
-        $changes = $this->assignees()->sync(array_values(array_unique(array_map('intval', $userIds))));
+        $roles = array_fill_keys(array_map('intval', $coUserIds), ['role' => 'co']);
+        foreach (array_map('intval', $userIds) as $userId) {
+            $roles[$userId] = ['role' => 'lead'];
+        }
+
+        $changes = $this->assignees()->sync($roles);
 
         return array_map('intval', $changes['attached']);
     }

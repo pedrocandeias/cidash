@@ -28,12 +28,13 @@ class TaskRequest extends FormRequest
             'title' => [$creating ? 'required' : 'sometimes', 'string', 'max:255'],
             'type' => ['sometimes', 'nullable', Rule::in(app(Options::class)->keys('task_type'))],
             'description' => ['sometimes', 'nullable', 'string', 'max:10000'],
+            'start_date' => ['sometimes', 'nullable', 'date'],
             'deadline' => ['sometimes', 'nullable', 'date'],
             'priority' => ['sometimes', Rule::enum(Priority::class)],
             'status' => ['sometimes', Rule::enum(TaskStatus::class)],
             'source_id' => [$creating ? 'nullable' : 'prohibited', 'uuid'],
             // Only members of the current workspace can be assigned.
-            ...Assignments::rules(),
+            ...Assignments::rules(withCo: true),
         ];
     }
 }

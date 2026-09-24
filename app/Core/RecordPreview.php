@@ -12,6 +12,7 @@ use App\Models\Person;
 use App\Models\PressRequest;
 use App\Models\Record;
 use App\Models\Task;
+use App\Support\Assignments;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -50,12 +51,15 @@ class RecordPreview
     {
         $field = fn (string $label, mixed $value, string $kind = 'text') => ['label' => $label, 'value' => $value, 'kind' => $kind];
         $status = fn (\BackedEnum $value, string $list) => ['value' => (string) $value->value, 'list' => $list];
+        $names = fn (Task $task, string $role) => collect(Assignments::present($task, $role))->pluck('name')->implode(', ') ?: null;
 
         return match (true) {
             $subject instanceof Task => [$status($subject->status, 'task'), [
                 $field('Task type', $subject->type, 'task_type'),
-                $field('Deadline', $subject->deadline?->toDateString(), 'date'),
-                $field('Assignees', $subject->assigneeNames()),
+                $field('Start date', $subject->start_date?->toDateString(), 'date'),
+                $field('Deadline', $subject->deadline?->toIso8601String(), 'datetime'),
+                $field('Assignees', $names($subject, 'lead')),
+                $field('Co-responsible', $names($subject, 'co')),
                 $field('Priority', $subject->priority->value, 'priority'),
             ], $subject->description],
             $subject instanceof CalendarEvent => [$status($subject->status, 'event'), [

@@ -71,8 +71,8 @@ O Início responde a "o que exige a minha atenção hoje?".
 **Criar uma tarefa**
 
 1. Em **Tarefas**, clique em **Nova tarefa**.
-2. Dê um título, uma descrição se for útil, os **Responsáveis**, o prazo e a prioridade.
-3. Clique em **Criar tarefa**. Os responsáveis recebem uma notificação.
+2. Dê um título, uma descrição se for útil, os **Responsáveis** e, se quiser, os **Co-responsáveis**, o prazo (dia e hora) e a prioridade. A **Data de início** vem preenchida com o dia de hoje e pode ser alterada; a data de criação fica registada e aparece na página da tarefa.
+3. Clique em **Criar tarefa**. Os responsáveis e co-responsáveis recebem uma notificação.
 
 ![Nova tarefa](/images/guide/nova-tarefa.jpg)
 

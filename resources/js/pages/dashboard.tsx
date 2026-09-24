@@ -5,12 +5,7 @@ import type { RecordSummary } from '@/components/core/relations-panel';
 import AlertLine from '@/modules/alerts/alert-line';
 import type { AlertItem } from '@/modules/alerts/types';
 import { index as alertsIndex } from '@/routes/alerts';
-import {
-    formatDate,
-    formatDateTime,
-    localToday,
-    useTranslation,
-} from '@/lib/i18n';
+import { formatDate, formatDateTime, useTranslation } from '@/lib/i18n';
 import { useOptions } from '@/lib/options';
 import { cn } from '@/lib/utils';
 import { stageLabels } from '@/modules/content/types';
@@ -149,7 +144,6 @@ export default function Dashboard({
     const { t, locale } = useTranslation();
     const types = useOptions('event_type');
     const { auth } = usePage().props;
-    const today = localToday();
     const dayLabel = new Intl.DateTimeFormat(locale.replace('_', '-'), {
         weekday: 'long',
         day: 'numeric',
@@ -383,12 +377,14 @@ export default function Dashboard({
                                                 <span
                                                     className={cn(
                                                         'text-xs',
-                                                        task.deadline < today
+                                                        new Date(
+                                                            task.deadline,
+                                                        ) < new Date()
                                                             ? 'font-medium text-critical'
                                                             : 'text-muted-foreground',
                                                     )}
                                                 >
-                                                    {formatDate(
+                                                    {formatDateTime(
                                                         task.deadline,
                                                         locale,
                                                     )}

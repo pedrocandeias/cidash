@@ -144,7 +144,7 @@ class DashboardController extends Controller
             'tasks' => $myTasks->map(fn (Task $task) => [
                 'id' => $task->id,
                 'title' => $task->title,
-                'deadline' => $task->deadline?->toDateString(),
+                'deadline' => $task->deadline?->toIso8601String(),
                 'priority' => $task->priority->value,
             ]),
             'press' => $press->map(fn (PressRequest $request) => [
@@ -178,7 +178,7 @@ class DashboardController extends Controller
                 ? Task::with('assignees:id,name')
                     ->whereIn('status', TaskStatus::open())
                     ->whereNotNull('deadline')
-                    ->where('deadline', '<', $today)
+                    ->where('deadline', '<', now())
                     ->get()
                     // A task shared by two people counts for each of them.
                     ->flatMap(fn (Task $task) => $task->assignees->isEmpty() ? [__('Unassigned')] : $task->assignees->pluck('name')->all())

@@ -1,5 +1,3 @@
-import { localToday } from '@/lib/i18n';
-
 export type TaskStatus =
     | 'todo'
     | 'in_progress'
@@ -14,8 +12,11 @@ export type TaskSummary = {
     type: string | null;
     status: TaskStatus;
     priority: Priority;
+    start_date: string | null;
+    /** Date and time (ISO 8601). */
     deadline: string | null;
     assignees: { id: number; name: string }[];
+    co_assignees: { id: number; name: string }[];
 };
 
 export type Member = { id: number; name: string };
@@ -41,17 +42,17 @@ export const taskFieldLabels: Record<string, string> = {
     type: 'Task type',
     description: 'Description',
     assignees: 'People responsible',
+    co_assignees: 'Co-responsible',
+    start_date: 'Start date',
     deadline: 'Deadline',
     priority: 'Priority',
     status: 'Status',
 };
 
 export function isOverdue(task: TaskSummary): boolean {
-    const today = localToday();
-
     return (
         task.deadline !== null &&
-        task.deadline < today &&
+        new Date(task.deadline) < new Date() &&
         task.status !== 'done' &&
         task.status !== 'cancelled'
     );

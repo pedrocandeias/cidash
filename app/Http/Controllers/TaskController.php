@@ -57,7 +57,9 @@ class TaskController extends Controller
 
         $task = DB::transaction(function () use ($request, $source, $links) {
             $task = Task::create([
-                ...$request->safe()->except(['source_id', 'assignees']),
+                ...$request->safe()->except(['source_id', 'assignees', 'co_assignees']),
+                // The work starts when the task is created, unless someone says otherwise.
+                'start_date' => $request->input('start_date') ?: today(),
                 'priority' => $request->input('priority', Priority::Normal->value),
                 'status' => $request->input('status', TaskStatus::Todo->value),
                 'source_object_id' => $source?->id,
@@ -70,7 +72,7 @@ class TaskController extends Controller
             return $task;
         });
 
-        Assignments::sync($task, $request->input('assignees', []), $request->user());
+        Assignments::sync($task, $request->input('assignees', []), $request->user(), $request->input('co_assignees', []));
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Task created.')]);
 
@@ -96,10 +98,15 @@ class TaskController extends Controller
 
     public function update(TaskRequest $request, Task $task): RedirectResponse
     {
-        $task->update($request->safe()->except('assignees'));
+        $task->update($request->safe()->except(['assignees', 'co_assignees']));
 
-        if ($request->has('assignees')) {
-            Assignments::sync($task, $request->input('assignees', []), $request->user());
+        if ($request->has('assignees') || $request->has('co_assignees')) {
+            Assignments::sync(
+                $task,
+                $request->input('assignees', array_column(Assignments::present($task, 'lead'), 'id')),
+                $request->user(),
+                $request->input('co_assignees', array_column(Assignments::present($task, 'co'), 'id')),
+            );
         }
 
         return back();
@@ -127,8 +134,10 @@ class TaskController extends Controller
             'type' => $task->type,
             'status' => $task->status->value,
             'priority' => $task->priority->value,
-            'deadline' => $task->deadline?->toDateString(),
-            'assignees' => Assignments::present($task),
+            'start_date' => $task->start_date?->toDateString(),
+            'deadline' => $task->deadline?->toIso8601String(),
+            'assignees' => Assignments::present($task, 'lead'),
+            'co_assignees' => Assignments::present($task, 'co'),
         ];
     }
 

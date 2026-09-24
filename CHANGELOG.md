@@ -2,6 +2,12 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.41.0 (2026-09-24)
+
+- feat: data de início nas tarefas, preenchida com o dia da criação e editável; a data de criação continua fixa e visível
+- feat: co-responsáveis nas tarefas, notificados e com a tarefa nas suas listas
+- feat: o prazo das tarefas passa a ter hora; os prazos existentes ficam às 23:59 do mesmo dia
+
 ## 0.40.1 (2026-09-24)
 
 - fix: nas páginas de um conteúdo e de uma tarefa, a "Fase" e o "Estado" deixam de ficar por cima do título (margem negativa maior do que o espaço por baixo do título)

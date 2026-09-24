@@ -33,7 +33,7 @@ class RecordPreviewTest extends TestCase
 
     public function test_the_preview_shows_the_main_fields_of_each_type()
     {
-        $task = Task::create(['title' => 'Kit de imprensa', 'description' => 'Juntar <b>fotos</b> e texto.', 'deadline' => '2026-10-01', 'priority' => 'high', 'status' => 'in_progress']);
+        $task = Task::create(['title' => 'Kit de imprensa', 'description' => 'Juntar <b>fotos</b> e texto.', 'start_date' => '2026-09-24', 'deadline' => '2026-10-01 18:00', 'priority' => 'high', 'status' => 'in_progress']);
         $task->syncAssignees([$this->user->id]);
 
         $this->actingAs($this->user)->getJson(route('records.preview', $task->id))
@@ -45,7 +45,8 @@ class RecordPreviewTest extends TestCase
                 'url' => route('tasks.show', $task->id, absolute: false),
                 'status' => ['value' => 'in_progress', 'list' => 'task'],
                 'fields' => [
-                    ['label' => 'Deadline', 'value' => '2026-10-01', 'kind' => 'date'],
+                    ['label' => 'Start date', 'value' => '2026-09-24', 'kind' => 'date'],
+                    ['label' => 'Deadline', 'value' => '2026-10-01T18:00:00+01:00', 'kind' => 'datetime'],
                     ['label' => 'Assignees', 'value' => 'Ana Reis', 'kind' => 'text'],
                     ['label' => 'Priority', 'value' => 'high', 'kind' => 'priority'],
                 ],

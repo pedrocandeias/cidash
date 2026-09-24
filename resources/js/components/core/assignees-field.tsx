@@ -22,12 +22,15 @@ export default function AssigneesField({
     members,
     defaultValue = [],
     id = 'assignees',
+    name = 'assignees',
     label = 'People responsible',
     error,
 }: {
     members: Member[];
     defaultValue?: number[];
     id?: string;
+    /** Posted as `name[]`. */
+    name?: string;
     label?: string;
     error?: string;
 }) {
@@ -71,7 +74,7 @@ export default function AssigneesField({
                             </button>
                             <input
                                 type="hidden"
-                                name="assignees[]"
+                                name={`${name}[]`}
                                 value={userId}
                             />
                         </Badge>

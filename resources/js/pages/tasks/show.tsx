@@ -122,6 +122,8 @@ export default function ShowTask({
                                         type: task.type,
                                         description: task.description,
                                         assignees: task.assignees,
+                                        co_assignees: task.co_assignees,
+                                        start_date: task.start_date,
                                         deadline: task.deadline,
                                         priority: task.priority,
                                     }}
