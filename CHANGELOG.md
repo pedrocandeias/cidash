@@ -2,6 +2,12 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.35.0 (2026-09-24)
+
+- feat: tarefas da campanha na página da campanha: as suas e as dos eventos e conteúdos que fazem parte dela, com o progresso ("3 de 7 concluídas") e marcar como feita
+- feat: "Nova tarefa" na campanha, sobre a campanha ou um dos seus itens; quando a tarefa é criar um conteúdo, o conteúdo é criado também, já na campanha e ligado à tarefa
+- fix: tradução do campo "Acrescentar um evento ou conteúdo" nas campanhas
+
 ## 0.34.0 (2026-09-24)
 
 - feat: nas Menções, com "Redes sociais" escolhido, filtrar por uma ou várias redes (Mastodon, Bluesky, YouTube, Instagram), cada uma com o número de menções

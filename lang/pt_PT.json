@@ -775,5 +775,15 @@
     "The file and its comments will be deleted. This cannot be undone.": "O ficheiro e os comentários serão eliminados. Não é possível anular.",
     "Screen colours": "Cores do ecrã",
     "All networks": "Todas as redes",
-    "News and social posts that match the team monitoring rules and hashtags.": "Notícias e publicações nas redes sociais que correspondem às regras de monitorização e às hashtags da equipa."
+    "News and social posts that match the team monitoring rules and hashtags.": "Notícias e publicações nas redes sociais que correspondem às regras de monitorização e às hashtags da equipa.",
+    "New task in this campaign": "Nova tarefa nesta campanha",
+    "e.g. Video of the open day": "p. ex. Vídeo do Dia Aberto",
+    "e.g. Book the photographer": "p. ex. Reservar o fotógrafo",
+    "The task is to create content: create it too, in this campaign": "A tarefa é criar um conteúdo: criá-lo também, nesta campanha",
+    "About": "Sobre",
+    "The campaign": "A campanha",
+    "Campaign tasks": "Tarefas da campanha",
+    ":done of :total done": ":done de :total concluídas",
+    "No tasks yet. Tasks of its events and content also appear here.": "Ainda não há tarefas. As tarefas dos eventos e conteúdos da campanha também aparecem aqui.",
+    "That item is not part of the campaign.": "Esse item não faz parte da campanha."
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\BriefingController;
 use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\CalendarSubscriptionController;
 use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\CampaignTaskController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContentItemController;
 use App\Http\Controllers\DashboardController;
@@ -66,6 +67,7 @@ Route::middleware(['auth', 'workspace'])->group(function () {
     Route::resource('content', ContentItemController::class)->except(['create', 'edit']);
 
     Route::resource('campaigns', CampaignController::class)->except(['create', 'edit']);
+    Route::post('campaigns/{campaign}/tasks', [CampaignTaskController::class, 'store'])->name('campaigns.tasks.store');
 
     Route::get('assets/{asset}/file', [AssetController::class, 'file'])->name('assets.file');
     Route::get('assets/{asset}/thumbnail', [AssetController::class, 'thumbnail'])->name('assets.thumbnail');

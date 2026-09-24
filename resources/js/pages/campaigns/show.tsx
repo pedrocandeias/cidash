@@ -29,6 +29,8 @@ import { useTranslation } from '@/lib/i18n';
 import CampaignFields, {
     campaignFormTransform,
 } from '@/modules/campaigns/campaign-fields';
+import CampaignTasks from '@/modules/campaigns/campaign-tasks';
+import type { CampaignTask } from '@/modules/campaigns/campaign-tasks';
 import type { CampaignDetails } from '@/modules/campaigns/types';
 import { campaignFieldLabels } from '@/modules/campaigns/types';
 import type { Member } from '@/modules/tasks/types';
@@ -38,6 +40,7 @@ import { destroy as unlink, store as link } from '@/routes/links';
 type Props = {
     campaign: CampaignDetails;
     parts: { link_id: number; record: RecordSummary }[];
+    tasks: CampaignTask[];
     members: Member[];
     recordId: string;
     comments: CommentItem[];
@@ -50,6 +53,7 @@ type Props = {
 export default function ShowCampaign({
     campaign,
     parts,
+    tasks,
     members,
     recordId,
     comments,
@@ -128,6 +132,13 @@ export default function ShowCampaign({
                             }
                         />
                     </section>
+
+                    <CampaignTasks
+                        campaignId={campaign.id}
+                        tasks={tasks}
+                        parts={parts}
+                        members={members}
+                    />
 
                     <Form
                         {...update.form(campaign.id)}

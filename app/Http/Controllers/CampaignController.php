@@ -74,11 +74,11 @@ class CampaignController extends Controller
 
         // Records that are part of the campaign are shown in their own section.
         $parts = $links->of($campaign)
-            ->filter(fn (array $item) => $item['link']->type === RelationType::PartOf && ! $item['outgoing'])
+            ->filter(fn (array $item) => $item['link']->type === RelationType::PartOf && ! $item['outgoing'] && $item['other']->type !== 'task')
             ->map(fn (array $item) => ['link_id' => $item['link']->id, 'record' => RecordTypes::summary($item['other'])])
             ->values();
 
-        /** @var Collection<int, array{type: string, outgoing: bool}> $relations */
+        /** @var Collection<int, array{type: string, outgoing: bool, record: array{type: string}}> $relations */
         $relations = $shared['relations'];
 
         return Inertia::render('campaigns/show', [
@@ -88,9 +88,14 @@ class CampaignController extends Controller
                 'objectives' => $campaign->objectives,
             ],
             'parts' => $parts,
+            // Tasks are shown in their own section, with the campaign's progress.
+            'tasks' => CampaignTaskController::tasksOf($campaign),
             'members' => $this->members(),
             ...$shared,
-            'relations' => $relations->reject(fn (array $relation) => $relation['type'] === RelationType::PartOf->value && ! $relation['outgoing'])->values(),
+            'relations' => $relations
+                ->reject(fn (array $relation) => $relation['type'] === RelationType::PartOf->value && ! $relation['outgoing'])
+                ->reject(fn (array $relation) => $relation['record']['type'] === 'task')
+                ->values(),
             'can' => ['delete' => $request->user()->can('delete', $campaign)],
         ]);
     }
