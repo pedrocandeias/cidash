@@ -20,8 +20,15 @@ class GuideController extends Controller
         $path = resource_path('guide/'.app()->getLocale().'.md');
         $markdown = File::get(File::exists($path) ? $path : resource_path('guide/pt_PT.md'));
 
-        // Our own file, not user input: HTML in it is trusted.
-        return Inertia::render('guide', ['html' => Str::markdown($markdown, ['heading_permalink' => false])]);
+        // Our own file, not user input: HTML in it is trusted. Sections get ids
+        // like "notificacoes-e-email", so the guide's contents can link to them.
+        $html = (string) preg_replace_callback(
+            '/<h2>(.*?)<\/h2>/',
+            fn (array $match) => '<h2 id="'.Str::slug(strip_tags($match[1])).'">'.$match[1].'</h2>',
+            Str::markdown($markdown),
+        );
+
+        return Inertia::render('guide', ['html' => $html]);
     }
 
     public function dismissOnboarding(WorkspaceContext $context): RedirectResponse

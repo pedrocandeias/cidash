@@ -2,6 +2,11 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.37.1 (2026-09-24)
+
+- docs: guia de utilização reescrito com instruções passo a passo para cada secção (Início, Briefing, Calendário, Tarefas, Conteúdos, Campanhas, Imprensa, Pessoas e Dead or Alive, Avisos, Assets, Notícias, Menções, Alertas, notificações, managers e super admin), índice com ligações e capturas de ecrã com dados de demonstração
+- docs: versão inglesa do guia atualizada
+
 ## 0.37.0 (2026-09-24)
 
 - feat: calendário de cada campanha, com o período da campanha, os seus eventos, as datas de publicação e os prazos dos conteúdos, e os prazos das tarefas, com cores e filtros por tipo de data
