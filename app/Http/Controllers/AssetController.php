@@ -7,7 +7,6 @@ use App\Core\RecordPage;
 use App\Core\Search\Search;
 use App\Core\Tags;
 use App\Models\Asset;
-use App\Models\Tag;
 use App\Support\Options;
 use App\Support\WorkspaceContext;
 use Illuminate\Http\RedirectResponse;
@@ -52,14 +51,16 @@ class AssetController extends Controller
         return Inertia::render('assets/index', [
             'assets' => $assets->map(fn (Asset $asset) => $this->summary($asset)),
             'filters' => $filters,
-            // Tags used by the team's assets, for the filter.
-            'tags' => Tag::whereIn('id', DB::table('object_tag')
+            // Tags used by the team's assets are its collections, with how many assets each has.
+            'collections' => DB::table('object_tag')
                 ->join('objects', 'objects.id', '=', 'object_tag.object_id')
+                ->join('tags', 'tags.id', '=', 'object_tag.tag_id')
                 ->where('objects.type', 'asset')
                 ->where('objects.workspace_id', $workspace->id)
-                ->select('object_tag.tag_id'))
-                ->orderBy('name')
-                ->pluck('name'),
+                ->groupBy('tags.id', 'tags.name')
+                ->orderBy('tags.name')
+                ->get(['tags.name', DB::raw('count(*) as count')])
+                ->map(fn (object $row) => ['name' => $row->name, 'count' => (int) $row->count]),
         ]);
     }
 

@@ -2,6 +2,11 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.42.0 (2026-09-24)
+
+- feat: coleções de assets (as tags), com filtro por coleção, seleção de vários assets para os juntar ou retirar e carregamentos que entram na coleção aberta
+- feat: novas tipologias de tarefas: Discurso, PAD, Notícia, Evento, Redes sociais, Atualização, Paginação, Design, Tradução, Orçamento e Vídeo; as antigas que saem da lista ficam desativadas
+
 ## 0.41.0 (2026-09-24)
 
 - feat: data de início nas tarefas, preenchida com o dia da criação e editável; a data de criação continua fixa e visível

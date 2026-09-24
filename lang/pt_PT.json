@@ -756,8 +756,6 @@
     "Search by title, caption, credit…": "Pesquisar por título, legenda, crédito…",
     "All categories": "Todas as categorias",
     "All types": "Todos os tipos",
-    "Tag": "Tag",
-    "Any tag": "Qualquer tag",
     "Drop the files to upload them.": "Largue os ficheiros para os carregar.",
     "Nothing matches this search.": "Nada corresponde a esta pesquisa.",
     "No assets yet. Upload files or drop them on this page.": "Ainda não há assets. Carregue ficheiros ou largue-os nesta página.",
@@ -818,5 +816,18 @@
     "Task type": "Tipologia",
     "Outreach": "Divulgação",
     "Start date": "Data de início",
-    "Co-responsible": "Co-responsáveis"
+    "Co-responsible": "Co-responsáveis",
+    "Select": "Selecionar",
+    "Collections": "Coleções",
+    "All assets": "Todos",
+    ":count selected": ":count selecionados",
+    "Collection name": "Nome da coleção",
+    "Add to collection": "Adicionar à coleção",
+    "Remove from :name": "Retirar de :name",
+    "Click the assets to select them.": "Clique nos assets para os selecionar.",
+    "Collection :name updated.": "Coleção :name atualizada.",
+    "PAD": "PAD",
+    "Content update": "Atualização",
+    "Page layout": "Paginação",
+    "Budget": "Orçamento"
 }

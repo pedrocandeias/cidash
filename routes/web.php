@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AlertController;
+use App\Http\Controllers\AssetCollectionController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Auth\InvitationController;
@@ -69,6 +70,8 @@ Route::middleware(['auth', 'workspace'])->group(function () {
     Route::resource('campaigns', CampaignController::class)->except(['create', 'edit']);
     Route::post('campaigns/{campaign}/tasks', [CampaignTaskController::class, 'store'])->name('campaigns.tasks.store');
 
+    Route::post('assets/collection', [AssetCollectionController::class, 'store'])->name('assets.collection.store');
+    Route::delete('assets/collection', [AssetCollectionController::class, 'destroy'])->name('assets.collection.destroy');
     Route::get('assets/{asset}/file', [AssetController::class, 'file'])->name('assets.file');
     Route::get('assets/{asset}/thumbnail', [AssetController::class, 'thumbnail'])->name('assets.thumbnail');
     Route::resource('assets', AssetController::class)->except(['create', 'edit']);

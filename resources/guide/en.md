@@ -56,7 +56,7 @@ Experts to suggest to the media, with a full profile (bio, career, topics, CV, p
 
 ## Assets
 
-The team's gallery of images, videos and graphics: upload or drop files, then add a caption, credit, category and tags. Search by free text, tag, category and type.
+The team's gallery of images, videos and graphics: upload or drop files, then add a caption, credit, category and tags. Search by free text, category and type. Each tag is a **collection**, shown above the gallery: **Select** several assets to add them to a collection (or take them out), and files uploaded while a collection is open join it.
 
 ![Assets](/images/guide/assets.jpg)
 

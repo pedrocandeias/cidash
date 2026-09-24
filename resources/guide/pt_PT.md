@@ -155,7 +155,9 @@ A galeria da equipa: imagens, vídeos e gráficos (logótipos, ilustrações, SV
 
 1. Clique em **Carregar ficheiros** ou arraste os ficheiros para a página (vários de uma vez, até 100 MB cada).
 2. Um ficheiro sozinho abre a sua página: dê-lhe título, **legenda**, **crédito** (fotógrafo ou autor), data, **categoria** e **tags**, e clique em **Guardar**.
-3. Para encontrar um asset, pesquise por texto livre (título, legenda, crédito) ou filtre por categoria, tipo e tag.
+3. Para encontrar um asset, pesquise por texto livre (título, legenda, crédito) ou filtre por categoria e tipo.
+
+**Coleções.** Cada tag dos assets é uma coleção: as coleções aparecem por cima da galeria, com o número de assets, e um clique mostra só essa coleção. Para juntar vários assets de uma vez, clique em **Selecionar**, escolha os assets, escreva o nome da coleção (nova ou existente) e clique em **Adicionar à coleção**. Com uma coleção aberta, pode **Retirar** os assets selecionados, e os ficheiros carregados entram diretamente nela.
 
 Na página de cada asset, **Descarregar** traz o ficheiro com o nome original. Os vídeos veem-se na própria página.
 

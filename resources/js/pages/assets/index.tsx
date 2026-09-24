@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { FileImage, Film, Shapes, Upload } from 'lucide-react';
+import { Check, FileImage, Film, Shapes, Upload } from 'lucide-react';
 import { useRef, useState } from 'react';
 import type { DragEvent } from 'react';
 import { toast } from 'sonner';
@@ -19,30 +19,57 @@ import { cn } from '@/lib/utils';
 import type { AssetSummary } from '@/modules/assets/types';
 import { kindLabels } from '@/modules/assets/types';
 import { index, show, store } from '@/routes/assets';
+import {
+    destroy as removeFromCollection,
+    store as addToCollection,
+} from '@/routes/assets/collection';
 
 type Filters = { q: string; category: string; kind: string; tag: string };
 
 type Props = {
     assets: AssetSummary[];
     filters: Filters;
-    tags: string[];
+    /** Collections are the tags of the team's assets. */
+    collections: { name: string; count: number }[];
 };
 
 const ALL = 'all';
 
 const kindIcons = { image: FileImage, video: Film, graphic: Shapes };
 
-/** A tile of the gallery: the thumbnail (or the video's first frame), title and category. */
-function Tile({ asset }: { asset: AssetSummary }) {
+/**
+ * A tile of the gallery: the thumbnail (or the video's first frame), title and category.
+ * While selecting, a click picks the asset instead of opening it.
+ */
+function Tile({
+    asset,
+    selected,
+    onToggle,
+}: {
+    asset: AssetSummary;
+    selected: boolean;
+    onToggle: (() => void) | null;
+}) {
     const { t } = useTranslation();
     const categories = useOptions('asset_category');
     const Icon = kindIcons[asset.kind];
-
-    return (
-        <Link
-            href={show(asset.id)}
-            className="group flex flex-col overflow-hidden rounded-lg border bg-card hover:border-primary"
-        >
+    const className = cn(
+        'group relative flex flex-col overflow-hidden rounded-lg border bg-card text-left hover:border-primary',
+        selected && 'border-primary ring-2 ring-primary',
+    );
+    const content = (
+        <>
+            {onToggle && (
+                <span
+                    className={cn(
+                        'absolute top-2 left-2 z-10 flex size-6 items-center justify-center rounded-sm border bg-background',
+                        selected &&
+                            'border-primary bg-primary text-primary-foreground',
+                    )}
+                >
+                    {selected && <Check className="size-4" />}
+                </span>
+            )}
             <div className="flex aspect-[4/3] items-center justify-center overflow-hidden bg-muted">
                 {asset.kind === 'video' ? (
                     <video
@@ -80,17 +107,62 @@ function Tile({ asset }: { asset: AssetSummary }) {
                         ` · ${t(categories.label(asset.category))}`}
                 </p>
             </div>
+        </>
+    );
+
+    return onToggle ? (
+        <button
+            type="button"
+            className={className}
+            aria-pressed={selected}
+            onClick={onToggle}
+        >
+            {content}
+        </button>
+    ) : (
+        <Link href={show(asset.id)} className={className}>
+            {content}
         </Link>
     );
 }
 
-export default function Assets({ assets, filters, tags }: Props) {
+export default function Assets({ assets, filters, collections }: Props) {
     const { t } = useTranslation();
     const categories = useOptions('asset_category');
     const [query, setQuery] = useState(filters.q);
     const [dragging, setDragging] = useState(false);
     const [uploading, setUploading] = useState(false);
     const input = useRef<HTMLInputElement>(null);
+    const [selecting, setSelecting] = useState(false);
+    const [selected, setSelected] = useState<string[]>([]);
+    const [collection, setCollection] = useState('');
+
+    const stopSelecting = () => {
+        setSelecting(false);
+        setSelected([]);
+        setCollection('');
+    };
+
+    const toggle = (id: string) =>
+        setSelected(
+            selected.includes(id)
+                ? selected.filter((other) => other !== id)
+                : [...selected, id],
+        );
+
+    const collect = (name: string, remove = false) => {
+        const route = remove ? removeFromCollection() : addToCollection();
+        router.visit(route.url, {
+            method: route.method,
+            data: { name, assets: selected },
+            preserveScroll: true,
+            onSuccess: stopSelecting,
+            onError: (errors) =>
+                toast.error(
+                    Object.values(errors)[0] ?? t('Something went wrong.'),
+                ),
+        });
+    };
 
     const apply = (next: Partial<Filters>) => {
         const merged = { ...filters, q: query, ...next };
@@ -116,6 +188,8 @@ export default function Assets({ assets, filters, tags }: Props) {
             {
                 files: Array.from(files),
                 ...(filters.category ? { category: filters.category } : {}),
+                // Files uploaded while a collection is open join it.
+                ...(filters.tag ? { tags: [filters.tag] } : {}),
             },
             {
                 forceFormData: true,
@@ -161,13 +235,27 @@ export default function Assets({ assets, filters, tags }: Props) {
                             'Images, videos and graphics of the team, with captions, categories and tags.',
                         )}
                     />
-                    <Button
-                        disabled={uploading}
-                        onClick={() => input.current?.click()}
-                    >
-                        <Upload />
-                        {t(uploading ? 'Uploading…' : 'Upload files')}
-                    </Button>
+                    <div className="flex gap-2">
+                        {assets.length > 0 && (
+                            <Button
+                                variant="outline"
+                                onClick={() =>
+                                    selecting
+                                        ? stopSelecting()
+                                        : setSelecting(true)
+                                }
+                            >
+                                {t(selecting ? 'Cancel' : 'Select')}
+                            </Button>
+                        )}
+                        <Button
+                            disabled={uploading}
+                            onClick={() => input.current?.click()}
+                        >
+                            <Upload />
+                            {t(uploading ? 'Uploading…' : 'Upload files')}
+                        </Button>
+                    </div>
                     <input
                         ref={input}
                         type="file"
@@ -235,31 +323,91 @@ export default function Assets({ assets, filters, tags }: Props) {
                             ))}
                         </SelectContent>
                     </Select>
-                    {tags.length > 0 && (
-                        <Select
-                            value={filters.tag || ALL}
-                            onValueChange={(tag) => apply({ tag })}
-                        >
-                            <SelectTrigger
-                                className="w-44"
-                                aria-label={t('Tag')}
-                            >
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value={ALL}>
-                                    {t('Any tag')}
-                                </SelectItem>
-                                {tags.map((tag) => (
-                                    <SelectItem key={tag} value={tag}>
-                                        {tag}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    )}
                     <Button variant="outline">{t('Search')}</Button>
                 </form>
+
+                {collections.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-sm font-bold">
+                            {t('Collections')}
+                        </span>
+                        {[{ name: '', count: null }, ...collections].map(
+                            (item) => (
+                                <Button
+                                    key={item.name}
+                                    size="sm"
+                                    variant={
+                                        filters.tag === item.name
+                                            ? 'default'
+                                            : 'outline'
+                                    }
+                                    aria-pressed={filters.tag === item.name}
+                                    onClick={() => apply({ tag: item.name })}
+                                >
+                                    {item.name || t('All assets')}
+                                    {item.count !== null && (
+                                        <span className="opacity-70">
+                                            {item.count}
+                                        </span>
+                                    )}
+                                </Button>
+                            ),
+                        )}
+                    </div>
+                )}
+
+                {selecting && (
+                    <form
+                        className="flex flex-wrap items-center gap-2 rounded-lg border bg-muted/50 p-3"
+                        onSubmit={(event) => {
+                            event.preventDefault();
+                            collect(collection.trim());
+                        }}
+                    >
+                        <span className="text-sm">
+                            {selected.length === 0
+                                ? t('Click the assets to select them.')
+                                : t(':count selected', {
+                                      count: selected.length,
+                                  })}
+                        </span>
+                        <Input
+                            value={collection}
+                            onChange={(event) =>
+                                setCollection(event.target.value)
+                            }
+                            list="asset-collections"
+                            placeholder={t('Collection name')}
+                            aria-label={t('Collection name')}
+                            className="w-56 max-w-full"
+                        />
+                        <datalist id="asset-collections">
+                            {collections.map((item) => (
+                                <option key={item.name} value={item.name} />
+                            ))}
+                        </datalist>
+                        <Button
+                            size="sm"
+                            disabled={
+                                selected.length === 0 ||
+                                collection.trim() === ''
+                            }
+                        >
+                            {t('Add to collection')}
+                        </Button>
+                        {filters.tag && (
+                            <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                disabled={selected.length === 0}
+                                onClick={() => collect(filters.tag, true)}
+                            >
+                                {t('Remove from :name', { name: filters.tag })}
+                            </Button>
+                        )}
+                    </form>
+                )}
 
                 {dragging && (
                     <div className="rounded-lg border-2 border-dashed border-primary bg-muted/50 p-8 text-center text-sm">
@@ -281,7 +429,14 @@ export default function Assets({ assets, filters, tags }: Props) {
                 ) : (
                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
                         {assets.map((asset) => (
-                            <Tile key={asset.id} asset={asset} />
+                            <Tile
+                                key={asset.id}
+                                asset={asset}
+                                selected={selected.includes(asset.id)}
+                                onToggle={
+                                    selecting ? () => toggle(asset.id) : null
+                                }
+                            />
                         ))}
                     </div>
                 )}

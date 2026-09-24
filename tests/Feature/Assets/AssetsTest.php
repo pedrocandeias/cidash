@@ -96,7 +96,7 @@ class AssetsTest extends TestCase
         $this->assertSame(['a'], array_column($titles(['tag' => 'Cerimónias']), 'title'));
         $this->assertSame(['a'], array_column($titles(['category' => 'photos']), 'title'));
         $this->assertSame(['c'], array_column($titles(['kind' => 'video']), 'title'));
-        $this->actingAs($this->member)->get(route('assets.index'))->assertInertia(fn (Assert $page) => $page->where('tags', ['Cerimónias', 'Imprensa']));
+        $this->actingAs($this->member)->get(route('assets.index'))->assertInertia(fn (Assert $page) => $page->where('collections', [['name' => 'Cerimónias', 'count' => 1], ['name' => 'Imprensa', 'count' => 1]]));
     }
 
     public function test_files_are_served_sandboxed_and_downloaded_with_their_name()
@@ -121,5 +121,37 @@ class AssetsTest extends TestCase
 
         $this->actingAs($this->member)->delete(route('assets.destroy', $asset->id))->assertRedirect(route('assets.index'));
         Storage::disk('local')->assertMissing([$asset->path, $asset->thumbnail_path]);
+    }
+
+    public function test_assets_are_gathered_in_collections_and_filtered_by_them()
+    {
+        $this->upload([UploadedFile::fake()->image('a.jpg'), UploadedFile::fake()->image('b.jpg'), UploadedFile::fake()->image('c.jpg')]);
+        [$a, $b] = [$this->asset('a'), $this->asset('b')];
+
+        $this->actingAs($this->member)
+            ->post(route('assets.collection.store'), ['name' => 'Dia Aberto', 'assets' => [$a->id, $b->id]])
+            ->assertSessionHasNoErrors();
+
+        // Uploading while the collection is open adds the file to it.
+        $this->upload([UploadedFile::fake()->image('d.jpg'), UploadedFile::fake()->image('e.jpg')], ['tags' => ['dia aberto']]);
+
+        $this->actingAs($this->member)->get(route('assets.index', ['tag' => 'Dia Aberto']))
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('assets', 4)
+                ->where('collections', [['name' => 'Dia Aberto', 'count' => 4]]));
+
+        $this->actingAs($this->member)->delete(route('assets.collection.destroy'), ['name' => 'Dia Aberto', 'assets' => [$a->id]]);
+        $this->actingAs($this->member)->get(route('assets.index', ['tag' => 'Dia Aberto']))
+            ->assertInertia(fn (Assert $page) => $page->has('assets', 3));
+    }
+
+    public function test_assets_of_another_team_cannot_be_added_to_a_collection()
+    {
+        $this->upload([UploadedFile::fake()->image('nossa.jpg')]);
+        $outsider = User::factory()->inWorkspace(Workspace::factory()->create())->create();
+
+        $this->actingAs($outsider)->post(route('assets.collection.store'), ['name' => 'Roubada', 'assets' => [$this->asset('nossa')->id]]);
+
+        $this->assertSame([], $this->asset('nossa')->record->tags->pluck('name')->all());
     }
 }

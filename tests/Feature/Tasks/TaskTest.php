@@ -233,6 +233,6 @@ class TaskTest extends TestCase
         $this->actingAs($this->ana)->get(route('tasks.index', ['view' => 'team', 'type' => 'translation']))
             ->assertInertia(fn (Assert $page) => $page->has('tasks', 1)->where('tasks.0.type', 'translation')->where('filters.type', 'translation'));
         $this->actingAs($this->ana)->get(route('tasks.index', ['view' => 'team']))
-            ->assertInertia(fn (Assert $page) => $page->has('tasks', 3)->has('options.task_type', 8));
+            ->assertInertia(fn (Assert $page) => $page->has('tasks', 3)->has('options.task_type', 11));
     }
 }
