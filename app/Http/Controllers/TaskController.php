@@ -11,7 +11,7 @@ use App\Http\Requests\TaskRequest;
 use App\Models\Record;
 use App\Models\Task;
 use App\Models\User;
-use App\Notifications\TaskAssigned;
+use App\Support\Assignments;
 use App\Support\WorkspaceContext;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -31,8 +31,8 @@ class TaskController extends Controller
         $layout = $request->query('layout') === 'board' ? 'board' : 'list';
 
         $tasks = Task::query()
-            ->with('assignee:id,name')
-            ->when($view === 'mine', fn ($query) => $query->where('assigned_to', $request->user()->id))
+            ->with('assignees:id,name')
+            ->when($view === 'mine', fn ($query) => $query->assignedTo($request->user()->id))
             ->when($status === 'open', fn ($query) => $query->whereIn('status', TaskStatus::open()))
             ->when($status === 'done', fn ($query) => $query->where('status', TaskStatus::Done))
             // Nearest deadline first, tasks without deadline last.
@@ -55,7 +55,7 @@ class TaskController extends Controller
 
         $task = DB::transaction(function () use ($request, $source, $links) {
             $task = Task::create([
-                ...$request->safe()->except('source_id'),
+                ...$request->safe()->except(['source_id', 'assignees']),
                 'priority' => $request->input('priority', Priority::Normal->value),
                 'status' => $request->input('status', TaskStatus::Todo->value),
                 'source_object_id' => $source?->id,
@@ -68,7 +68,7 @@ class TaskController extends Controller
             return $task;
         });
 
-        $this->notifyAssignee($task, $request->user());
+        Assignments::sync($task, $request->input('assignees', []), $request->user());
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Task created.')]);
 
@@ -77,7 +77,7 @@ class TaskController extends Controller
 
     public function show(Request $request, Task $task, RecordPage $page): Response
     {
-        $task->load(['assignee:id,name', 'source', 'record']);
+        $task->load(['assignees:id,name', 'source', 'record']);
 
         return Inertia::render('tasks/show', [
             'task' => [
@@ -94,12 +94,10 @@ class TaskController extends Controller
 
     public function update(TaskRequest $request, Task $task): RedirectResponse
     {
-        $previousAssignee = $task->assigned_to;
+        $task->update($request->safe()->except('assignees'));
 
-        $task->update($request->validated());
-
-        if ($task->assigned_to !== $previousAssignee) {
-            $this->notifyAssignee($task, $request->user());
+        if ($request->has('assignees')) {
+            Assignments::sync($task, $request->input('assignees', []), $request->user());
         }
 
         return back();
@@ -127,7 +125,7 @@ class TaskController extends Controller
             'status' => $task->status->value,
             'priority' => $task->priority->value,
             'deadline' => $task->deadline?->toDateString(),
-            'assignee' => $task->assignee ? ['id' => $task->assignee->id, 'name' => $task->assignee->name] : null,
+            'assignees' => Assignments::present($task),
         ];
     }
 
@@ -141,12 +139,5 @@ class TaskController extends Controller
         return $workspace->members()->orderBy('name')->get(['users.id', 'users.name'])
             ->map(fn (User $user) => ['id' => $user->id, 'name' => $user->name])
             ->all();
-    }
-
-    private function notifyAssignee(Task $task, User $actor): void
-    {
-        if ($task->assignee !== null && ! $task->assignee->is($actor)) {
-            $task->assignee->notify(new TaskAssigned($task, $actor));
-        }
     }
 }

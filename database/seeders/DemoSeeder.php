@@ -60,8 +60,9 @@ class DemoSeeder extends Seeder
             ['Prazo: relatório de atividades', 'deadline', $day(12, 0), null],
         ])->map(fn (array $row) => CalendarEvent::create([
             'title' => $row[0], 'type' => $row[1], 'start_at' => $row[2], 'all_day' => in_array($row[1], ['ephemeris', 'deadline'], true),
-            'location' => $row[3], 'priority' => 'normal', 'status' => 'confirmed', 'responsible_user_id' => $row[1] === 'institutional' ? $ines->id : null,
+            'location' => $row[3], 'priority' => 'normal', 'status' => 'confirmed',
         ]));
+        $events->filter(fn (CalendarEvent $event) => $event->type === 'institutional')->each->syncAssignees([$ines->id]);
         $links->link($events[2], $campaign, RelationType::PartOf);
         $tags->sync($events[3]->record, ['Ciência', 'Investigação']);
 
@@ -72,13 +73,15 @@ class DemoSeeder extends Seeder
             ['Reservar sala para o Dia Aberto', $joao, 1, 'normal', 'blocked'],
             ['Atualizar página de candidaturas', $ines, 6, 'normal', 'todo'],
         ] as [$title, $user, $days, $priority, $status]) {
-            Task::create(['title' => $title, 'assigned_to' => $user->id, 'deadline' => now()->addDays($days), 'priority' => $priority, 'status' => $status]);
+            Task::create(['title' => $title, 'deadline' => now()->addDays($days), 'priority' => $priority, 'status' => $status])
+                ->syncAssignees([$user->id]);
         }
 
         Notice::create(['title' => 'Edifício da Reitoria fechado na sexta-feira à tarde', 'body' => 'Por motivos de manutenção, o edifício fecha às 14h de sexta-feira.', 'published_at' => now()->subDay(), 'priority' => 'high', 'pinned' => true]);
         Notice::create(['title' => 'Novo manual de normas gráficas disponível', 'body' => 'A versão atualizada está na pasta partilhada da equipa.', 'published_at' => now()->subDays(3), 'priority' => 'normal']);
 
-        $press = PressRequest::create(['subject' => 'Posição da U.Porto no ranking internacional', 'journalist' => 'Jornalista de exemplo', 'media_outlet' => 'Público', 'contact' => 'redacao@example.com', 'request' => 'Pedido de declaração do Reitor sobre a subida no ranking.', 'received_at' => now()->subHours(3), 'deadline' => now()->addHours(5), 'responsible_user_id' => $ines->id, 'status' => 'in_progress']);
+        $press = PressRequest::create(['subject' => 'Posição da U.Porto no ranking internacional', 'journalist' => 'Jornalista de exemplo', 'media_outlet' => 'Público', 'contact' => 'redacao@example.com', 'request' => 'Pedido de declaração do Reitor sobre a subida no ranking.', 'received_at' => now()->subHours(3), 'deadline' => now()->addHours(5), 'status' => 'in_progress']);
+        $press->syncAssignees([$ines->id]);
         PressRequest::create(['subject' => 'Entrevista sobre investigação em saúde pública', 'journalist' => 'Jornalista de exemplo', 'media_outlet' => 'RTP', 'received_at' => now()->subDay(), 'deadline' => now()->addDays(2), 'status' => 'received']);
 
         foreach ([
@@ -87,7 +90,8 @@ class DemoSeeder extends Seeder
             ['Série de publicações "Porquê a U.Porto?"', 'social_post', 'idea', ['instagram', 'tiktok']],
             ['Newsletter de outubro', 'newsletter', 'approved', ['newsletter']],
         ] as [$title, $format, $stage, $channels]) {
-            $item = ContentItem::create(['title' => $title, 'format' => $format, 'stage' => $stage, 'channels' => $channels, 'owner_id' => $marta->id, 'due_at' => now()->addDays(4)]);
+            $item = ContentItem::create(['title' => $title, 'format' => $format, 'stage' => $stage, 'channels' => $channels, 'due_at' => now()->addDays(4)]);
+            $item->syncAssignees([$marta->id]);
 
             if ($format !== 'news') {
                 $links->link($item, $campaign, RelationType::PartOf);

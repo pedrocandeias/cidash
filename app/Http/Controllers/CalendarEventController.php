@@ -14,6 +14,7 @@ use App\Models\Campaign;
 use App\Models\Link;
 use App\Models\Tag;
 use App\Models\User;
+use App\Support\Assignments;
 use App\Support\WorkspaceContext;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
@@ -62,7 +63,7 @@ class CalendarEventController extends Controller
                 ->where('end_at', '>=', $start)
                 ->orWhere(fn ($query) => $query->whereNull('end_at')->where('start_at', '>=', $start)))
             ->when($validated['types'] ?? null, fn ($query, $types) => $query->whereIn('type', $types))
-            ->when($validated['responsible'] ?? null, fn ($query, $user) => $query->where('responsible_user_id', $user))
+            ->when($validated['responsible'] ?? null, fn ($query, $user) => $query->assignedTo((int) $user))
             // Events that are part of the campaign (relation part_of).
             ->when($validated['campaign'] ?? null, fn ($query, $campaign) => $query->whereIn('id', Link::where('target_id', $campaign)
                 ->where('type', RelationType::PartOf)->select('source_id')))
@@ -93,6 +94,7 @@ class CalendarEventController extends Controller
                 'status' => $request->input('status', EventStatus::Confirmed->value),
             ]);
             $this->tags->sync($event->record, $request->input('tags', []));
+            Assignments::sync($event, $request->input('assignees', []), $request->user());
 
             return $event;
         });
@@ -102,7 +104,7 @@ class CalendarEventController extends Controller
 
     public function show(Request $request, CalendarEvent $event, RecordPage $page): Response
     {
-        $event->load(['record.tags', 'responsible:id,name']);
+        $event->load(['record.tags', 'assignees:id,name']);
 
         return Inertia::render('events/show', [
             'event' => [
@@ -115,7 +117,7 @@ class CalendarEventController extends Controller
                 'all_day' => $event->all_day,
                 'location' => $event->location,
                 'organizer' => $event->organizer,
-                'responsible_user_id' => $event->responsible_user_id,
+                'assignees' => Assignments::present($event),
                 'priority' => $event->priority->value,
                 'status' => $event->status->value,
                 'notes' => $event->notes,
@@ -134,6 +136,9 @@ class CalendarEventController extends Controller
 
             if ($request->has('tags')) {
                 $this->tags->sync($event->record, $request->input('tags', []));
+            }
+            if ($request->has('assignees')) {
+                Assignments::sync($event, $request->input('assignees', []), $request->user());
             }
         });
 
@@ -158,7 +163,7 @@ class CalendarEventController extends Controller
      */
     private function attributes(CalendarEventRequest $request): array
     {
-        $attributes = $request->safe()->except('tags');
+        $attributes = $request->safe()->except(['tags', 'assignees']);
 
         foreach (['start_at', 'end_at'] as $field) {
             if (! empty($attributes[$field])) {

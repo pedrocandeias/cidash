@@ -1,4 +1,5 @@
 import type { FormDataConvertible } from '@inertiajs/core';
+import AssigneesField from '@/components/core/assignees-field';
 import InputError from '@/components/input-error';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,16 +14,11 @@ import { useTranslation } from '@/lib/i18n';
 import type { Member, Priority } from './types';
 import { priorityLabels } from './types';
 
-const UNASSIGNED = 'none';
-
-/** Form data from TaskFields, with "unassigned" sent as null. */
+/** Form data from TaskFields; no one picked means nobody is responsible. */
 export function taskFormTransform(
     data: Record<string, FormDataConvertible>,
 ): Record<string, FormDataConvertible> {
-    return {
-        ...data,
-        assigned_to: data.assigned_to === UNASSIGNED ? null : data.assigned_to,
-    };
+    return { ...data, assignees: data.assignees ?? [] };
 }
 
 export default function TaskFields({
@@ -38,7 +34,7 @@ export default function TaskFields({
     defaults?: {
         title?: string;
         description?: string | null;
-        assigned_to?: number | null;
+        assignees?: { id: number; name: string }[];
         deadline?: string | null;
         priority?: Priority;
     };
@@ -73,37 +69,14 @@ export default function TaskFields({
                 <InputError message={errors.description} />
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-3">
-                <div className="grid gap-2">
-                    <Label htmlFor={`${idPrefix}assigned_to`}>
-                        {t('Assignee')}
-                    </Label>
-                    <Select
-                        name="assigned_to"
-                        defaultValue={String(
-                            defaults.assigned_to ?? UNASSIGNED,
-                        )}
-                    >
-                        <SelectTrigger id={`${idPrefix}assigned_to`}>
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value={UNASSIGNED}>
-                                {t('Unassigned')}
-                            </SelectItem>
-                            {members.map((member) => (
-                                <SelectItem
-                                    key={member.id}
-                                    value={String(member.id)}
-                                >
-                                    {member.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <InputError message={errors.assigned_to} />
-                </div>
+            <AssigneesField
+                id={`${idPrefix}assignees`}
+                members={members}
+                defaultValue={defaults.assignees?.map((person) => person.id)}
+                error={errors.assignees}
+            />
 
+            <div className="grid gap-4 sm:grid-cols-2">
                 <div className="grid gap-2">
                     <Label htmlFor={`${idPrefix}deadline`}>
                         {t('Deadline')}

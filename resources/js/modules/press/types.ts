@@ -15,14 +15,13 @@ export type PressSummary = {
     deadline: string | null;
     status: PressStatus;
     answered_at: string | null;
-    responsible: string | null;
+    assignees: { id: number; name: string }[];
 };
 
 export type PressDetails = PressSummary & {
     request: string | null;
     contact: string | null;
     response_notes: string | null;
-    responsible_user_id: number | null;
 };
 
 export type Known = { journalists: string[]; outlets: string[] };
@@ -61,7 +60,7 @@ export const pressFieldLabels: Record<string, string> = {
     contact: 'Contact',
     received_at: 'Received',
     deadline: 'Deadline',
-    responsible_user_id: 'Responsible',
+    assignees: 'People responsible',
     status: 'Status',
     response_notes: 'Response notes',
 };

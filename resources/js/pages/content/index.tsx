@@ -63,7 +63,8 @@ function CardContent({ item }: { item: ContentSummary }) {
             </Link>
             <p className="text-xs text-muted-foreground">
                 {t(formats.label(item.format))}
-                {item.owner && ` · ${item.owner.name}`}
+                {item.assignees.length > 0 &&
+                    ` · ${item.assignees.map((person) => person.name).join(', ')}`}
             </p>
             <div className="flex flex-wrap gap-2 text-xs">
                 {item.due_at && (
@@ -275,7 +276,9 @@ export default function ContentBoard({
                                         {t(formats.label(item.format))}
                                     </td>
                                     <td className="py-2 text-muted-foreground">
-                                        {item.owner?.name ?? '—'}
+                                        {item.assignees
+                                            .map((person) => person.name)
+                                            .join(', ') || '—'}
                                     </td>
                                     <td className="py-2 text-muted-foreground">
                                         {item.due_at

@@ -67,7 +67,7 @@ class DailyBriefing extends Builder
      */
     private function events(CarbonImmutable $day): array
     {
-        $events = CalendarEvent::with('responsible:id,name')
+        $events = CalendarEvent::with('assignees:id,name')
             ->where('start_at', '<', $day->addDay())
             ->where(fn ($query) => $query->where('start_at', '>=', $day)->orWhere('end_at', '>=', $day))
             ->where('status', '!=', EventStatus::Cancelled)
@@ -78,8 +78,8 @@ class DailyBriefing extends Builder
             $event->title,
             route('events.show', $event, absolute: false),
             $event->all_day ? null : $event->start_at->toIso8601String(),
-            collect([$event->location, $event->responsible?->name])->filter()->implode(' · ') ?: null,
-            flag: $event->responsible_user_id === null,
+            collect([$event->location, $event->assigneeNames()])->filter()->implode(' · ') ?: null,
+            flag: $event->assignees->isEmpty(),
         ))->all());
     }
 
@@ -88,7 +88,7 @@ class DailyBriefing extends Builder
      */
     private function press(CarbonImmutable $day): array
     {
-        $requests = PressRequest::with('responsible:id,name')
+        $requests = PressRequest::with('assignees:id,name')
             ->whereIn('status', PressRequestStatus::open())
             ->whereNotNull('deadline')
             ->where('deadline', '<', $day->addDays(2))
@@ -99,7 +99,7 @@ class DailyBriefing extends Builder
             $request->subject,
             route('press.show', $request, absolute: false),
             $request->deadline?->toIso8601String(),
-            collect([$request->media_outlet, $request->responsible?->name])->filter()->implode(' · ') ?: null,
+            collect([$request->media_outlet, $request->assigneeNames()])->filter()->implode(' · ') ?: null,
             flag: $request->deadline !== null && $request->deadline->isPast(),
         ))->all());
     }
@@ -109,7 +109,7 @@ class DailyBriefing extends Builder
      */
     private function tasks(CarbonImmutable $day): array
     {
-        $tasks = Task::with('assignee:id,name')
+        $tasks = Task::with('assignees:id,name')
             ->whereIn('status', TaskStatus::open())
             ->whereNotNull('deadline')
             ->where('deadline', '<=', $day->endOfDay())
@@ -120,7 +120,7 @@ class DailyBriefing extends Builder
             $task->title,
             route('tasks.show', $task, absolute: false),
             $task->deadline?->toDateString(),
-            $task->assignee?->name,
+            $task->assigneeNames(),
             flag: $task->deadline !== null && $task->deadline->lt($day),
         ))->all());
     }
@@ -130,7 +130,7 @@ class DailyBriefing extends Builder
      */
     private function content(CarbonImmutable $day): array
     {
-        $items = ContentItem::with('owner:id,name')
+        $items = ContentItem::with('assignees:id,name')
             ->where(fn ($query) => $query
                 ->where(fn ($query) => $query->where('publish_at', '>=', $day)->where('publish_at', '<', $day->addDay()))
                 ->orWhere('stage', ContentStage::Review))
@@ -143,7 +143,7 @@ class DailyBriefing extends Builder
             $item->title,
             route('content.show', $item, absolute: false),
             $item->publish_at?->toIso8601String(),
-            $item->owner?->name,
+            $item->assigneeNames(),
             label: $item->stage === ContentStage::Review ? 'In review' : null,
         ))->all());
     }

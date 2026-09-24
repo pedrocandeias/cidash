@@ -2,6 +2,13 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.36.0 (2026-09-24)
+
+- feat: várias pessoas responsáveis por tarefas, conteúdos, eventos e pedidos de imprensa (também nas tarefas da campanha), escolhidas uma a uma no formulário
+- feat: cada pessoa acrescentada como responsável recebe uma notificação (no sino e, se quiser, por email), exceto quem fez a alteração
+- feat: "As minhas tarefas", a subscrição "só os meus eventos", os alertas e o briefing contam com todos os responsáveis; as tarefas em atraso por pessoa contam para cada um
+- refactor: os responsáveis passam para uma tabela do núcleo (`record_assignees`); os valores existentes foram migrados
+
 ## 0.35.1 (2026-09-24)
 
 - fix: a página da campanha mostra os dados para ler (estado, datas, responsáveis, canais, públicos, descrição e objetivos) e só abre o formulário ao clicar em "Editar", com "Guardar" e "Cancelar"

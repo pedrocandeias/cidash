@@ -148,7 +148,9 @@ export default function PressRequests({
                                         {t(statusLabels[request.status])}
                                     </span>
                                     <span className="w-32 truncate text-sm text-muted-foreground">
-                                        {request.responsible ?? t('Nobody')}
+                                        {request.assignees
+                                            .map((person) => person.name)
+                                            .join(', ') || t('Nobody')}
                                     </span>
                                     <span
                                         className={cn(

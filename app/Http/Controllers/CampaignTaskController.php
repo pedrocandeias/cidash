@@ -12,9 +12,8 @@ use App\Models\ContentItem;
 use App\Models\Link;
 use App\Models\Record;
 use App\Models\Task;
-use App\Notifications\TaskAssigned;
+use App\Support\Assignments;
 use App\Support\Options;
-use App\Support\WorkspaceContext;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -27,12 +26,11 @@ use Inertia\Inertia;
  */
 class CampaignTaskController extends Controller
 {
-    public function store(Request $request, Campaign $campaign, Links $links, Options $options, WorkspaceContext $context): RedirectResponse
+    public function store(Request $request, Campaign $campaign, Links $links, Options $options): RedirectResponse
     {
-        $workspaceId = ($context->get() ?? abort(403))->id;
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'assigned_to' => ['nullable', 'integer', Rule::exists('workspace_user', 'user_id')->where('workspace_id', $workspaceId)],
+            ...Assignments::rules(),
             'deadline' => ['nullable', 'date'],
             'about' => ['nullable', 'uuid'],
             'create_content' => ['sometimes', 'boolean'],
@@ -53,16 +51,16 @@ class CampaignTaskController extends Controller
                     'title' => $validated['title'],
                     'format' => $validated['format'],
                     'stage' => ContentStage::Idea,
-                    'owner_id' => $validated['assigned_to'] ?? null,
                     'due_at' => $validated['deadline'] ?? null,
                 ]);
                 $links->link($content, $campaign, RelationType::PartOf);
+                // The people doing the task are responsible for the content too.
+                Assignments::sync($content, $validated['assignees'] ?? [], $request->user());
                 $about = $content->record;
             }
 
             $task = Task::create([
                 'title' => $validated['title'],
-                'assigned_to' => $validated['assigned_to'] ?? null,
                 'deadline' => $validated['deadline'] ?? null,
                 'priority' => Priority::Normal,
                 'status' => TaskStatus::Todo,
@@ -73,9 +71,7 @@ class CampaignTaskController extends Controller
             return $task;
         });
 
-        if ($task->assignee !== null && ! $task->assignee->is($request->user())) {
-            $task->assignee->notify(new TaskAssigned($task, $request->user()));
-        }
+        Assignments::sync($task, $validated['assignees'] ?? [], $request->user());
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Task created.')]);
 
@@ -112,7 +108,7 @@ class CampaignTaskController extends Controller
             ->values();
         $titles = Record::whereKey($ids)->pluck('title', 'id');
 
-        return Task::with(['assignee:id,name', 'record'])
+        return Task::with(['assignees:id,name', 'record'])
             ->whereKey($taskIds)
             ->get()
             ->sortBy(fn (Task $task) => [$task->status === TaskStatus::Done || $task->status === TaskStatus::Cancelled, $task->deadline->timestamp ?? PHP_INT_MAX])
@@ -121,7 +117,7 @@ class CampaignTaskController extends Controller
                 'title' => $task->title,
                 'status' => $task->status->value,
                 'deadline' => $task->deadline?->toDateString(),
-                'assignee' => $task->assignee?->name,
+                'assignees' => $task->assigneeNames(),
                 // The item it is about, when it is not the campaign itself.
                 'about' => $task->source_object_id !== null && $task->source_object_id !== $campaign->id ? ($titles[$task->source_object_id] ?? null) : null,
             ])

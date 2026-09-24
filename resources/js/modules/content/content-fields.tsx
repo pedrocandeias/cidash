@@ -1,4 +1,5 @@
 import type { FormDataConvertible } from '@inertiajs/core';
+import AssigneesField from '@/components/core/assignees-field';
 import InputError from '@/components/input-error';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -16,14 +17,12 @@ import type { Member } from '@/modules/tasks/types';
 import type { ContentDetails } from './types';
 import { channelLabels } from './types';
 
-const NONE = 'none';
-
 export function contentFormTransform(
     data: Record<string, FormDataConvertible>,
 ): Record<string, FormDataConvertible> {
     return {
         ...data,
-        owner_id: data.owner_id === NONE ? null : data.owner_id,
+        assignees: data.assignees ?? [],
         channels: data.channels ?? [],
     };
 }
@@ -79,29 +78,13 @@ export default function ContentFields({
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="owner_id">{t('Owner')}</Label>
-                    <Select
-                        name="owner_id"
-                        defaultValue={String(defaults?.owner_id ?? NONE)}
-                    >
-                        <SelectTrigger id="owner_id">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value={NONE}>{t('Nobody')}</SelectItem>
-                            {members.map((member) => (
-                                <SelectItem
-                                    key={member.id}
-                                    value={String(member.id)}
-                                >
-                                    {member.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <InputError message={errors.owner_id} />
-                </div>
+                <AssigneesField
+                    members={members}
+                    defaultValue={defaults?.assignees.map(
+                        (person) => person.id,
+                    )}
+                    error={errors.assignees}
+                />
                 <div className="grid gap-2">
                     <Label htmlFor="due_at">{t('Deadline')}</Label>
                     <Input

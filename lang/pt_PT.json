@@ -787,5 +787,9 @@
     "No tasks yet. Tasks of its events and content also appear here.": "Ainda não há tarefas. As tarefas dos eventos e conteúdos da campanha também aparecem aqui.",
     "That item is not part of the campaign.": "Esse item não faz parte da campanha.",
     "People responsible": "Responsáveis",
-    "Dates": "Datas"
+    "Dates": "Datas",
+    "Assignees": "Responsáveis",
+    "You were made responsible": "Ficou como responsável",
+    "Nobody yet: add a person": "Ninguém ainda: acrescentar uma pessoa",
+    "Add another person": "Acrescentar outra pessoa"
 }

@@ -1,6 +1,7 @@
 import { Form, Link, router } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
+import AssigneesField from '@/components/core/assignees-field';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -33,7 +34,7 @@ export type CampaignTask = {
     title: string;
     status: TaskStatus;
     deadline: string | null;
-    assignee: string | null;
+    assignees: string | null;
     about: string | null;
 };
 
@@ -73,8 +74,7 @@ function NewTaskDialog({
                     {...store.form(campaignId)}
                     transform={(data) => ({
                         ...data,
-                        assigned_to:
-                            data.assigned_to === NONE ? null : data.assigned_to,
+                        assignees: data.assignees ?? [],
                         about: data.about === NONE ? null : data.about,
                         create_content: withContent,
                     })}
@@ -171,33 +171,12 @@ function NewTaskDialog({
                                 )
                             )}
 
-                            <div className="grid gap-4 sm:grid-cols-2">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="campaign-task-assignee">
-                                        {t('Assignee')}
-                                    </Label>
-                                    <Select
-                                        name="assigned_to"
-                                        defaultValue={NONE}
-                                    >
-                                        <SelectTrigger id="campaign-task-assignee">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value={NONE}>
-                                                {t('Unassigned')}
-                                            </SelectItem>
-                                            {members.map((member) => (
-                                                <SelectItem
-                                                    key={member.id}
-                                                    value={String(member.id)}
-                                                >
-                                                    {member.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
+                            <div className="grid gap-4">
+                                <AssigneesField
+                                    id="campaign-task-assignees"
+                                    members={members}
+                                    error={errors.assignees}
+                                />
                                 <div className="grid gap-2">
                                     <Label htmlFor="campaign-task-deadline">
                                         {t('Deadline')}
@@ -337,7 +316,7 @@ export default function CampaignTasks({
                                     </span>
                                 )}
                                 <span className="w-32 truncate text-muted-foreground">
-                                    {task.assignee ?? t('Unassigned')}
+                                    {task.assignees ?? t('Unassigned')}
                                 </span>
                                 <span
                                     className={cn(

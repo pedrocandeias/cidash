@@ -45,13 +45,14 @@ class CampaignTasksTest extends TestCase
         $colleague = User::factory()->inWorkspace($this->workspace, WorkspaceRole::Member)->create();
 
         $this->actingAs($this->member)->post(route('campaigns.tasks.store', $this->campaign->id), [
-            'title' => 'Vídeo do Dia Aberto', 'assigned_to' => $colleague->id, 'deadline' => '2026-10-10',
+            'title' => 'Vídeo do Dia Aberto', 'assignees' => [$colleague->id], 'deadline' => '2026-10-10',
             'create_content' => true, 'format' => 'video',
         ])->assertSessionHasNoErrors();
 
         $content = ContentItem::sole();
         $task = Task::sole();
-        $this->assertSame(['Vídeo do Dia Aberto', 'video', 'idea', $colleague->id], [$content->title, $content->format, $content->stage->value, $content->owner_id]);
+        $this->assertSame(['Vídeo do Dia Aberto', 'video', 'idea', [$colleague->id]], [$content->title, $content->format, $content->stage->value, $content->assigneeIds()]);
+        $this->assertSame([$colleague->id], $task->assigneeIds());
         $this->assertTrue(Link::where(['source_id' => $content->id, 'target_id' => $this->campaign->id, 'type' => RelationType::PartOf])->exists());
         $this->assertSame($content->id, $task->source_object_id);
         Notification::assertSentTo($colleague, TaskAssigned::class);

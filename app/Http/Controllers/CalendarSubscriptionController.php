@@ -43,7 +43,7 @@ class CalendarSubscriptionController extends Controller
             ->where('start_at', '>=', now()->subMonths(3))
             ->where('start_at', '<', now()->addYear())
             ->where('status', '!=', EventStatus::Cancelled)
-            ->when($mine, fn ($query) => $query->where('responsible_user_id', $user->id))
+            ->when($mine, fn ($query) => $query->assignedTo($user->id))
             ->orderBy('start_at')
             ->get()));
 

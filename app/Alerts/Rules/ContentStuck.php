@@ -39,13 +39,13 @@ class ContentStuck implements RuleType
 
     public function evaluate(AlertRule $rule, Workspace $workspace): iterable
     {
-        $items = ContentItem::query()
+        $items = ContentItem::with('assignees:id')
             ->where('stage', ContentStage::Review)
             ->where('stage_changed_at', '<=', now()->subDays((int) $rule->param('days')))
             ->get();
 
         foreach ($items as $item) {
-            $owners = $item->owner_id !== null ? [$item->owner_id] : [];
+            $owners = $item->assigneeIds();
 
             yield new Finding("content_stuck:{$item->id}", $item->title, $item->id, null, $owners);
         }

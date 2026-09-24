@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\Core\Concerns\HasAssignees;
 use App\Core\Concerns\IsRecord;
 use App\Enums\PressRequestStatus;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $id
@@ -18,15 +18,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $contact
  * @property CarbonImmutable $received_at
  * @property CarbonImmutable|null $deadline
- * @property int|null $responsible_user_id
  * @property PressRequestStatus $status
  * @property string|null $response_notes
  * @property CarbonImmutable|null $answered_at
  */
-#[Fillable(['subject', 'request', 'journalist', 'media_outlet', 'contact', 'received_at', 'deadline', 'responsible_user_id', 'status', 'response_notes'])]
+#[Fillable(['subject', 'request', 'journalist', 'media_outlet', 'contact', 'received_at', 'deadline', 'status', 'response_notes'])]
 class PressRequest extends Model
 {
-    use IsRecord;
+    use HasAssignees, IsRecord;
 
     /**
      * Attributes indexed for the global search, besides the title.
@@ -57,13 +56,5 @@ class PressRequest extends Model
     public function recordTitle(): string
     {
         return $this->subject;
-    }
-
-    /**
-     * @return BelongsTo<User, $this>
-     */
-    public function responsible(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'responsible_user_id');
     }
 }

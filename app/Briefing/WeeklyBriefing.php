@@ -43,7 +43,7 @@ class WeeklyBriefing extends Builder
      */
     private function eventsAhead(CarbonImmutable $monday): array
     {
-        $events = CalendarEvent::with('responsible:id,name')
+        $events = CalendarEvent::with('assignees:id,name')
             ->whereBetween('start_at', [$monday, $monday->addWeek()])
             ->where('status', '!=', EventStatus::Cancelled)
             ->orderBy('start_at')
@@ -53,8 +53,8 @@ class WeeklyBriefing extends Builder
             $event->title,
             route('events.show', $event, absolute: false),
             $event->start_at->toIso8601String(),
-            collect([$event->location, $event->responsible?->name])->filter()->implode(' · ') ?: null,
-            flag: $event->responsible_user_id === null,
+            collect([$event->location, $event->assigneeNames()])->filter()->implode(' · ') ?: null,
+            flag: $event->assignees->isEmpty(),
         ))->all());
     }
 
@@ -63,7 +63,7 @@ class WeeklyBriefing extends Builder
      */
     private function pressAhead(CarbonImmutable $monday): array
     {
-        $requests = PressRequest::with('responsible:id,name')
+        $requests = PressRequest::with('assignees:id,name')
             ->whereIn('status', PressRequestStatus::open())
             ->whereNotNull('deadline')
             ->where('deadline', '<', $monday->addWeek())
@@ -74,7 +74,7 @@ class WeeklyBriefing extends Builder
             $request->subject,
             route('press.show', $request, absolute: false),
             $request->deadline?->toIso8601String(),
-            collect([$request->media_outlet, $request->responsible?->name])->filter()->implode(' · ') ?: null,
+            collect([$request->media_outlet, $request->assigneeNames()])->filter()->implode(' · ') ?: null,
             flag: $request->deadline !== null && $request->deadline->isPast(),
         ))->all());
     }
@@ -84,7 +84,7 @@ class WeeklyBriefing extends Builder
      */
     private function contentAhead(CarbonImmutable $monday): array
     {
-        $items = ContentItem::with('owner:id,name')
+        $items = ContentItem::with('assignees:id,name')
             ->whereBetween('publish_at', [$monday, $monday->addWeek()])
             ->whereNotIn('stage', [ContentStage::Published, ContentStage::Archived])
             ->orderBy('publish_at')
@@ -94,7 +94,7 @@ class WeeklyBriefing extends Builder
             $item->title,
             route('content.show', $item, absolute: false),
             $item->publish_at?->toIso8601String(),
-            $item->owner?->name,
+            $item->assigneeNames(),
         ))->all());
     }
 
@@ -120,7 +120,7 @@ class WeeklyBriefing extends Builder
      */
     private function answered(CarbonImmutable $from, CarbonImmutable $to): array
     {
-        $requests = PressRequest::with('responsible:id,name')
+        $requests = PressRequest::with('assignees:id,name')
             ->whereBetween('answered_at', [$from, $to])
             ->orderBy('answered_at')
             ->get();
@@ -129,7 +129,7 @@ class WeeklyBriefing extends Builder
             $request->subject,
             route('press.show', $request, absolute: false),
             $request->answered_at?->toIso8601String(),
-            collect([$request->media_outlet, $request->responsible?->name])->filter()->implode(' · ') ?: null,
+            collect([$request->media_outlet, $request->assigneeNames()])->filter()->implode(' · ') ?: null,
         ))->all());
     }
 

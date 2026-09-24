@@ -39,8 +39,8 @@ class DashboardWidgetsTest extends TestCase
         CalendarEvent::create(['title' => 'Hoje', 'type' => 'institutional', 'start_at' => now()->setTime(15, 0), 'priority' => 'normal', 'status' => 'confirmed']);
         CalendarEvent::create(['title' => 'Daqui a 3 dias', 'type' => 'institutional', 'start_at' => now()->addDays(3), 'priority' => 'normal', 'status' => 'confirmed']);
         CalendarEvent::create(['title' => 'Daqui a um mês', 'type' => 'institutional', 'start_at' => now()->addMonth(), 'priority' => 'normal', 'status' => 'confirmed']);
-        Task::create(['title' => 'Minha', 'assigned_to' => $this->member->id, 'priority' => 'high', 'status' => 'todo', 'deadline' => now()->subDay()]);
-        Task::create(['title' => 'Feita', 'assigned_to' => $this->member->id, 'priority' => 'normal', 'status' => 'done']);
+        Task::create(['title' => 'Minha', 'priority' => 'high', 'status' => 'todo', 'deadline' => now()->subDay()])->syncAssignees([$this->member->id]);
+        Task::create(['title' => 'Feita', 'priority' => 'normal', 'status' => 'done'])->syncAssignees([$this->member->id]);
         PressRequest::create(['subject' => 'Urgente', 'received_at' => now(), 'deadline' => now()->addHours(5), 'status' => 'received']);
         ContentItem::create(['title' => 'Em revisão', 'format' => 'news', 'stage' => 'review']);
         Notice::create(['title' => 'Aviso', 'body' => 'x', 'published_at' => now()->subHour(), 'priority' => 'normal', 'pinned' => true]);

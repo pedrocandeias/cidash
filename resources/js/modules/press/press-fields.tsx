@@ -1,4 +1,5 @@
 import type { FormDataConvertible } from '@inertiajs/core';
+import AssigneesField from '@/components/core/assignees-field';
 import InputError from '@/components/input-error';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,8 +15,6 @@ import type { Member } from '@/modules/tasks/types';
 import type { Known, PressDetails } from './types';
 import { statusLabels } from './types';
 
-const NONE = 'none';
-
 const textareaClass =
     'w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50';
 
@@ -24,8 +23,7 @@ export function pressFormTransform(
 ): Record<string, FormDataConvertible> {
     return {
         ...data,
-        responsible_user_id:
-            data.responsible_user_id === NONE ? null : data.responsible_user_id,
+        assignees: data.assignees ?? [],
     };
 }
 
@@ -133,33 +131,13 @@ export default function PressFields({
                     />
                     <InputError message={errors.deadline} />
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="responsible_user_id">
-                        {t('Responsible')}
-                    </Label>
-                    <Select
-                        name="responsible_user_id"
-                        defaultValue={String(
-                            defaults?.responsible_user_id ?? NONE,
-                        )}
-                    >
-                        <SelectTrigger id="responsible_user_id">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value={NONE}>{t('Nobody')}</SelectItem>
-                            {members.map((member) => (
-                                <SelectItem
-                                    key={member.id}
-                                    value={String(member.id)}
-                                >
-                                    {member.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <InputError message={errors.responsible_user_id} />
-                </div>
+                <AssigneesField
+                    members={members}
+                    defaultValue={defaults?.assignees.map(
+                        (person) => person.id,
+                    )}
+                    error={errors.assignees}
+                />
             </div>
 
             {defaults && (

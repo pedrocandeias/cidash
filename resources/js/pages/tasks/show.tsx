@@ -120,7 +120,7 @@ export default function ShowTask({
                                     defaults={{
                                         title: task.title,
                                         description: task.description,
-                                        assigned_to: task.assignee?.id,
+                                        assignees: task.assignees,
                                         deadline: task.deadline,
                                         priority: task.priority,
                                     }}

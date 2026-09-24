@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\ContentStage;
+use App\Support\Assignments;
 use App\Support\Options;
 use App\Support\WorkspaceContext;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -31,7 +32,7 @@ class ContentItemRequest extends FormRequest
             'channels' => ['sometimes', 'nullable', 'array'],
             'channels.*' => [Rule::in(self::CHANNELS)],
             'stage' => ['sometimes', Rule::enum(ContentStage::class)],
-            'owner_id' => ['sometimes', 'nullable', 'integer', Rule::exists('workspace_user', 'user_id')->where('workspace_id', $workspaceId)],
+            ...Assignments::rules(),
             'due_at' => ['sometimes', 'nullable', 'date'],
             'publish_at' => ['sometimes', 'nullable', 'date'],
             'published_url' => ['sometimes', 'nullable', 'url', 'max:2048'],

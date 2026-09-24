@@ -54,14 +54,14 @@ class RecordPreview
         return match (true) {
             $subject instanceof Task => [$status($subject->status, 'task'), [
                 $field('Deadline', $subject->deadline?->toDateString(), 'date'),
-                $field('Assignee', $subject->assignee?->name),
+                $field('Assignees', $subject->assigneeNames()),
                 $field('Priority', $subject->priority->value, 'priority'),
             ], $subject->description],
             $subject instanceof CalendarEvent => [$status($subject->status, 'event'), [
                 $field('Start', $subject->all_day ? $subject->start_at->toDateString() : $subject->start_at->toIso8601String(), $subject->all_day ? 'date' : 'datetime'),
                 $field('Type', $subject->type, 'event_type'),
                 $field('Location', $subject->location),
-                $field('Responsible', $subject->responsible?->name),
+                $field('People responsible', $subject->assigneeNames()),
             ], $subject->description],
             $subject instanceof Notice => [null, [
                 $field('Publish on', $subject->published_at->toIso8601String(), 'datetime'),
@@ -71,11 +71,11 @@ class RecordPreview
                 $field('Journalist', $subject->journalist),
                 $field('Media outlet', $subject->media_outlet),
                 $field('Deadline', $subject->deadline?->toIso8601String(), 'datetime'),
-                $field('Responsible', $subject->responsible?->name),
+                $field('People responsible', $subject->assigneeNames()),
             ], $subject->request],
             $subject instanceof ContentItem => [$status($subject->stage, 'content'), [
                 $field('Format', $subject->format, 'content_format'),
-                $field('Owner', $subject->owner?->name),
+                $field('People responsible', $subject->assigneeNames()),
                 $field('Publication date', $subject->publish_at?->toIso8601String(), 'datetime'),
             ], $subject->brief],
             $subject instanceof Campaign => [$status($subject->status, 'campaign'), [

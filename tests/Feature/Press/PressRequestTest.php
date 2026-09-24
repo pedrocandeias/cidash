@@ -43,7 +43,7 @@ class PressRequestTest extends TestCase
             'journalist' => 'Maria Costa',
             'media_outlet' => 'Público',
             'deadline' => now()->addHours(5)->format('Y-m-d\TH:i'),
-            'responsible_user_id' => $this->ana->id,
+            'assignees' => [$this->ana->id],
         ])->assertSessionHasNoErrors();
 
         $request = PressRequest::withoutGlobalScopes()->firstOrFail();

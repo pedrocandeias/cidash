@@ -230,6 +230,9 @@ journalist, media_outlet, contact, subject*, request, received_at, deadline, res
 name*, description, objectives, audiences (json), start_date, end_date, channels (json), status (planning, active, finished, cancelled). `campaign_users` (responsible_users).
 *related_events / related_content → relations `part_of`. assets → anexos na Phase 2.*
 
+**Responsáveis — `record_assignees`** (0.36.0)
+Tarefas, conteúdos, eventos e pedidos de imprensa têm várias pessoas responsáveis numa tabela do núcleo (object_id, user_id), com o trait `HasAssignees` (`assignees`, `syncAssignees`, `assignedTo`, `unassigned`). Substitui as colunas `assigned_to`, `owner_id` e `responsible_user_id`. Quem é acrescentado recebe uma notificação (tarefas: "Foi-lhe atribuída uma tarefa"; o resto: "Ficou como responsável"), exceto quem fez a alteração.
+
 **Assets — `assets`** (0.32.0)
 A galeria da equipa: imagens, vídeos e gráficos (logótipos, ilustrações). title*, caption (legenda), credit (fotógrafo/autor), category (lista configurável `asset_category` em Definições → Tipos), kind (image, video, graphic, derivado do ficheiro), taken_on, ficheiro no disco privado (`assets/<workspace>/`), thumbnail JPEG de 640 px quando há GD, original_name, mime_type, size, width, height. Tags do núcleo; pesquisa livre pelo índice FTS (título, legenda, crédito, nome do ficheiro) e filtros por tag, categoria e tipo. Ficheiros servidos com CSP `sandbox` (um SVG aberto sozinho não corre scripts) e com suporte a Range para os vídeos. Limite de 100 MB por ficheiro, que o `upload_max_filesize` do servidor também tem de permitir.
 

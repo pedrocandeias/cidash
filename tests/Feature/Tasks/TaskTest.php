@@ -51,7 +51,7 @@ class TaskTest extends TestCase
         Notification::fake();
 
         $this->actingAs($this->ana)
-            ->post(route('tasks.store'), ['title' => 'Responder ao JN', 'assigned_to' => $this->rui->id, 'deadline' => '2026-10-01'])
+            ->post(route('tasks.store'), ['title' => 'Responder ao JN', 'assignees' => [$this->rui->id], 'deadline' => '2026-10-01'])
             ->assertSessionHasNoErrors();
 
         $task = Task::withoutGlobalScopes()->firstOrFail();
@@ -66,8 +66,8 @@ class TaskTest extends TestCase
         $outsider = User::factory()->inWorkspace()->create();
 
         $this->actingAs($this->ana)
-            ->post(route('tasks.store'), ['title' => 'X', 'assigned_to' => $outsider->id])
-            ->assertSessionHasErrors('assigned_to');
+            ->post(route('tasks.store'), ['title' => 'X', 'assignees' => [$outsider->id]])
+            ->assertSessionHasErrors('assignees.0');
     }
 
     public function test_a_task_can_be_created_from_another_record()
@@ -83,9 +83,9 @@ class TaskTest extends TestCase
 
     public function test_lists_show_my_open_tasks_or_the_team_tasks()
     {
-        $this->task(['title' => 'Minha', 'assigned_to' => $this->ana->id]);
-        $this->task(['title' => 'Do Rui', 'assigned_to' => $this->rui->id]);
-        $this->task(['title' => 'Feita', 'assigned_to' => $this->ana->id, 'status' => 'done']);
+        $this->task(['title' => 'Minha'])->syncAssignees([$this->ana->id]);
+        $this->task(['title' => 'Do Rui'])->syncAssignees([$this->rui->id]);
+        $this->task(['title' => 'Feita', 'status' => 'done'])->syncAssignees([$this->ana->id]);
 
         $this->actingAs($this->ana)->get(route('tasks.index'))
             ->assertInertia(fn (Assert $page) => $page->component('tasks/index')

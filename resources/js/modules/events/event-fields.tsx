@@ -1,6 +1,7 @@
 import type { FormDataConvertible } from '@inertiajs/core';
 import { useState } from 'react';
 import TagInput from '@/components/core/tag-input';
+import AssigneesField from '@/components/core/assignees-field';
 import InputError from '@/components/input-error';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -19,20 +20,17 @@ import { priorityLabels } from '@/modules/tasks/types';
 import type { EventDetails } from './types';
 import { statusLabels } from './types';
 
-const NONE = 'none';
-
 const textareaClass =
     'w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50';
 
-/** Form data from EventFields: "none" responsible as null, checkbox as boolean, tags always sent. */
+/** Form data from EventFields: checkbox as boolean, tags and people always sent. */
 export function eventFormTransform(
     data: Record<string, FormDataConvertible>,
 ): Record<string, FormDataConvertible> {
     return {
         ...data,
         all_day: data.all_day === 'on' || data.all_day === true,
-        responsible_user_id:
-            data.responsible_user_id === NONE ? null : data.responsible_user_id,
+        assignees: data.assignees ?? [],
         tags: data.tags ?? [],
     };
 }
@@ -160,33 +158,13 @@ export default function EventFields({
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
-                <div className="grid gap-2">
-                    <Label htmlFor="responsible_user_id">
-                        {t('Responsible')}
-                    </Label>
-                    <Select
-                        name="responsible_user_id"
-                        defaultValue={String(
-                            defaults.responsible_user_id ?? NONE,
-                        )}
-                    >
-                        <SelectTrigger id="responsible_user_id">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value={NONE}>{t('Nobody')}</SelectItem>
-                            {members.map((member) => (
-                                <SelectItem
-                                    key={member.id}
-                                    value={String(member.id)}
-                                >
-                                    {member.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <InputError message={errors.responsible_user_id} />
-                </div>
+                <AssigneesField
+                    members={members}
+                    defaultValue={defaults.assignees?.map(
+                        (person) => person.id,
+                    )}
+                    error={errors.assignees}
+                />
                 <div className="grid gap-2">
                     <Label htmlFor="priority">{t('Priority')}</Label>
                     <Select

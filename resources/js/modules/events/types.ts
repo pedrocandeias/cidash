@@ -10,7 +10,7 @@ export type EventDetails = {
     all_day: boolean;
     location: string | null;
     organizer: string | null;
-    responsible_user_id: number | null;
+    assignees: { id: number; name: string }[];
     priority: 'low' | 'normal' | 'high' | 'urgent';
     status: EventStatus;
     notes: string | null;
@@ -33,7 +33,7 @@ export const eventFieldLabels: Record<string, string> = {
     all_day: 'All day',
     location: 'Location',
     organizer: 'Organizer',
-    responsible_user_id: 'Responsible',
+    assignees: 'People responsible',
     priority: 'Priority',
     status: 'Status',
     notes: 'Notes',

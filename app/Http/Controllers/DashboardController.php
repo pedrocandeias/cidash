@@ -54,7 +54,7 @@ class DashboardController extends Controller
             ->get();
 
         $myTasks = Task::query()
-            ->where('assigned_to', $user->id)
+            ->assignedTo($user->id)
             ->whereIn('status', TaskStatus::open())
             ->orderByRaw('deadline is null')
             ->orderBy('deadline')
@@ -62,7 +62,7 @@ class DashboardController extends Controller
             ->get();
 
         $press = PressRequest::query()
-            ->with('responsible:id,name')
+            ->with('assignees:id,name')
             ->whereIn('status', PressRequestStatus::open())
             ->orderByRaw('deadline is null')
             ->orderBy('deadline')
@@ -118,7 +118,7 @@ class DashboardController extends Controller
             ],
             'counters' => [
                 'events_today' => $events->filter(fn (CalendarEvent $event) => $event->start_at->isToday() || ($event->start_at->lt($today) && $event->end_at?->gte($today)))->count(),
-                'my_tasks' => Task::where('assigned_to', $user->id)->whereIn('status', TaskStatus::open())->count(),
+                'my_tasks' => Task::assignedTo($user->id)->whereIn('status', TaskStatus::open())->count(),
                 'press_48h' => PressRequest::whereIn('status', PressRequestStatus::open())->whereNotNull('deadline')->where('deadline', '<', now()->addHours(48))->count(),
                 'in_review' => $inReview->count(),
                 'new_mentions' => $newMentions->count(),
@@ -153,7 +153,7 @@ class DashboardController extends Controller
                 'media_outlet' => $request->media_outlet,
                 'deadline' => $request->deadline?->toIso8601String(),
                 'status' => $request->status->value,
-                'responsible' => $request->responsible?->name,
+                'responsible' => $request->assigneeNames(),
             ]),
             'content' => [
                 'stages' => collect(ContentStage::cases())
@@ -175,13 +175,15 @@ class DashboardController extends Controller
                 ? $inReview->map(fn (ContentItem $item) => ['id' => $item->id, 'title' => $item->title])->values()
                 : null,
             'overdue' => $isManager
-                ? Task::with('assignee:id,name')
+                ? Task::with('assignees:id,name')
                     ->whereIn('status', TaskStatus::open())
                     ->whereNotNull('deadline')
                     ->where('deadline', '<', $today)
                     ->get()
-                    ->groupBy(fn (Task $task) => $task->assignee->name ?? __('Unassigned'))
-                    ->map(fn ($tasks, $name) => ['name' => $name, 'count' => $tasks->count()])
+                    // A task shared by two people counts for each of them.
+                    ->flatMap(fn (Task $task) => $task->assignees->isEmpty() ? [__('Unassigned')] : $task->assignees->pluck('name')->all())
+                    ->countBy()
+                    ->map(fn (int $count, string $name) => ['name' => $name, 'count' => $count])
                     ->values()
                 : null,
         ]);

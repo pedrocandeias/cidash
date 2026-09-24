@@ -29,7 +29,7 @@ class CalendarSubscriptionTest extends TestCase
         $other = Workspace::factory()->create();
         $user = User::factory()->inWorkspace($reitoria, WorkspaceRole::Member)->create();
         $feup->members()->attach($user, ['role' => WorkspaceRole::Member]);
-        $this->event($reitoria, ['title' => 'Dia Aberto, Reitoria; manhã', 'location' => 'Salão Nobre', 'responsible_user_id' => $user->id]);
+        $this->event($reitoria, ['title' => 'Dia Aberto, Reitoria; manhã', 'location' => 'Salão Nobre'])->syncAssignees([$user->id]);
         $this->event($feup, ['title' => 'Conferência FEUP']);
         $this->event($other, ['title' => 'De outra equipa']);
         $this->event($reitoria, ['title' => 'Cancelado', 'status' => 'cancelled']);

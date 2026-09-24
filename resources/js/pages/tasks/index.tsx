@@ -180,7 +180,9 @@ export default function Tasks({ tasks, filters, members }: Props) {
                                 </Link>
                                 <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                                     <PriorityBadge priority={task.priority} />
-                                    {task.assignee?.name ?? t('Unassigned')}
+                                    {task.assignees
+                                        .map((person) => person.name)
+                                        .join(', ') || t('Unassigned')}
                                     {task.deadline && (
                                         <span
                                             className={
@@ -240,7 +242,9 @@ export default function Tasks({ tasks, filters, members }: Props) {
                                 )}
                                 {filters.view === 'team' && (
                                     <span className="w-32 truncate text-sm text-muted-foreground">
-                                        {task.assignee?.name ?? t('Unassigned')}
+                                        {task.assignees
+                                            .map((person) => person.name)
+                                            .join(', ') || t('Unassigned')}
                                     </span>
                                 )}
                                 <span

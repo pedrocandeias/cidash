@@ -14,7 +14,7 @@ export type TaskSummary = {
     status: TaskStatus;
     priority: Priority;
     deadline: string | null;
-    assignee: { id: number; name: string } | null;
+    assignees: { id: number; name: string }[];
 };
 
 export type Member = { id: number; name: string };
@@ -38,7 +38,7 @@ export const priorityLabels: Record<Priority, string> = {
 export const taskFieldLabels: Record<string, string> = {
     title: 'Title',
     description: 'Description',
-    assigned_to: 'Assignee',
+    assignees: 'People responsible',
     deadline: 'Deadline',
     priority: 'Priority',
     status: 'Status',

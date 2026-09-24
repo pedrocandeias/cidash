@@ -40,7 +40,7 @@ class EventWithoutOwner implements RuleType
     public function evaluate(AlertRule $rule, Workspace $workspace): iterable
     {
         $events = CalendarEvent::query()
-            ->whereNull('responsible_user_id')
+            ->unassigned()
             ->whereIn('status', [EventStatus::Tentative, EventStatus::Confirmed])
             ->where('start_at', '>=', now()->startOfDay())
             ->where('start_at', '<=', now()->addHours((int) $rule->param('hours')))

@@ -7,6 +7,7 @@ use App\Enums\PressRequestStatus;
 use App\Http\Requests\PressRequestRequest;
 use App\Models\PressRequest;
 use App\Models\User;
+use App\Support\Assignments;
 use App\Support\WorkspaceContext;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class PressRequestController extends Controller
         $status = in_array($request->query('status'), ['closed', 'all'], true) ? $request->query('status') : 'open';
 
         $requests = PressRequest::query()
-            ->with('responsible:id,name')
+            ->with('assignees:id,name')
             ->when($status === 'open', fn ($query) => $query->whereIn('status', PressRequestStatus::open()))
             ->when($status === 'closed', fn ($query) => $query->whereNotIn('status', PressRequestStatus::open()))
             // Nearest deadline first, requests without deadline last.
@@ -43,17 +44,19 @@ class PressRequestController extends Controller
     public function store(PressRequestRequest $request): RedirectResponse
     {
         $pressRequest = PressRequest::create([
-            ...$request->validated(),
+            ...$request->safe()->except('assignees'),
             'received_at' => $request->input('received_at') ?: now(),
             'status' => $request->input('status', PressRequestStatus::Received->value),
         ]);
+
+        Assignments::sync($pressRequest, $request->input('assignees', []), $request->user());
 
         return to_route('press.show', $pressRequest);
     }
 
     public function show(Request $request, PressRequest $press, RecordPage $page): Response
     {
-        $press->load('responsible:id,name');
+        $press->load('assignees:id,name');
 
         return Inertia::render('press/show', [
             'pressRequest' => [
@@ -61,7 +64,6 @@ class PressRequestController extends Controller
                 'request' => $press->request,
                 'contact' => $press->contact,
                 'response_notes' => $press->response_notes,
-                'responsible_user_id' => $press->responsible_user_id,
             ],
             ...$this->formOptions(),
             ...$page->for($press->record, $request->user()),
@@ -72,9 +74,12 @@ class PressRequestController extends Controller
     public function update(PressRequestRequest $request, PressRequest $press): RedirectResponse
     {
         $press->update([
-            ...$request->validated(),
+            ...$request->safe()->except('assignees'),
             ...($request->has('received_at') ? ['received_at' => $request->input('received_at') ?: $press->received_at] : []),
         ]);
+        if ($request->has('assignees')) {
+            Assignments::sync($press, $request->input('assignees', []), $request->user());
+        }
 
         return back();
     }
@@ -104,7 +109,7 @@ class PressRequestController extends Controller
             'deadline' => $pressRequest->deadline?->toIso8601String(),
             'status' => $pressRequest->status->value,
             'answered_at' => $pressRequest->answered_at?->toIso8601String(),
-            'responsible' => $pressRequest->responsible?->name,
+            'assignees' => Assignments::present($pressRequest),
         ];
     }
 

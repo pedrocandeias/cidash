@@ -67,7 +67,7 @@ class AlertsTest extends TestCase
     {
         CalendarEvent::create(['title' => 'Dia Aberto', 'type' => 'institutional', 'start_at' => now()->addDay(), 'priority' => 'normal', 'status' => 'confirmed']);
         CalendarEvent::create(['title' => 'Daqui a um mês', 'type' => 'institutional', 'start_at' => now()->addMonth(), 'priority' => 'normal', 'status' => 'confirmed']);
-        CalendarEvent::create(['title' => 'Com dono', 'type' => 'institutional', 'start_at' => now()->addDay(), 'priority' => 'normal', 'status' => 'confirmed', 'responsible_user_id' => $this->member->id]);
+        CalendarEvent::create(['title' => 'Com dono', 'type' => 'institutional', 'start_at' => now()->addDay(), 'priority' => 'normal', 'status' => 'confirmed'])->syncAssignees([$this->member->id]);
         PressRequest::create(['subject' => 'Público ranking', 'received_at' => now(), 'deadline' => now()->addHours(5), 'status' => 'received']);
         PressRequest::create(['subject' => 'Sem pressa', 'received_at' => now(), 'deadline' => now()->addDays(5), 'status' => 'received']);
         $stuck = ContentItem::create(['title' => 'Prémio Reitoria', 'format' => 'news', 'stage' => 'review']);
@@ -91,7 +91,8 @@ class AlertsTest extends TestCase
     public function test_alerts_resolve_when_fixed_notify_managers_and_owners_and_come_back()
     {
         Notification::fake();
-        $request = PressRequest::create(['subject' => 'RTP entrevista', 'received_at' => now(), 'deadline' => now()->addHours(3), 'status' => 'received', 'responsible_user_id' => $this->member->id]);
+        $request = PressRequest::create(['subject' => 'RTP entrevista', 'received_at' => now(), 'deadline' => now()->addHours(3), 'status' => 'received']);
+        $request->syncAssignees([$this->member->id]);
 
         $this->evaluate();
         Notification::assertSentTo([$this->manager, $this->member], AlertRaised::class);

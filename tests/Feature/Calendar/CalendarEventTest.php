@@ -49,7 +49,7 @@ class CalendarEventTest extends TestCase
             'start_at' => '2026-10-10T09:30',
             'end_at' => '2026-10-10T17:00',
             'location' => 'Reitoria',
-            'responsible_user_id' => $this->ana->id,
+            'assignees' => [$this->ana->id],
             'tags' => ['Estudantes', 'estudantes', 'Candidaturas'],
         ])->assertSessionHasNoErrors();
 
@@ -107,7 +107,7 @@ class CalendarEventTest extends TestCase
         $inCampaign = $this->event(['title' => 'Dia Aberto', 'type' => 'campaign', 'start_at' => '2026-10-05 10:00']);
         $campaign = Campaign::create(['name' => 'Candidaturas', 'status' => 'active']);
         app(Links::class)->link($inCampaign, $campaign, RelationType::PartOf);
-        $this->event(['title' => 'Do Rui', 'start_at' => '2026-10-06 10:00', 'responsible_user_id' => $rui->id]);
+        $this->event(['title' => 'Do Rui', 'start_at' => '2026-10-06 10:00'])->syncAssignees([$rui->id]);
         $this->event(['title' => 'Efeméride', 'type' => 'ephemeris', 'start_at' => '2026-10-07 00:00']);
 
         $feed = fn (array $filters) => $this->actingAs($this->ana)->getJson(route('events.feed', ['start' => '2026-10-01', 'end' => '2026-11-01', ...$filters]))->json('*.title');

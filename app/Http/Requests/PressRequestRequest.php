@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\PressRequestStatus;
+use App\Support\Assignments;
 use App\Support\WorkspaceContext;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +27,7 @@ class PressRequestRequest extends FormRequest
             'contact' => ['sometimes', 'nullable', 'string', 'max:255'],
             'received_at' => ['sometimes', 'nullable', 'date'],
             'deadline' => ['sometimes', 'nullable', 'date'],
-            'responsible_user_id' => ['sometimes', 'nullable', 'integer', Rule::exists('workspace_user', 'user_id')->where('workspace_id', $workspaceId)],
+            ...Assignments::rules(),
             'status' => ['sometimes', Rule::enum(PressRequestStatus::class)],
             'response_notes' => ['sometimes', 'nullable', 'string', 'max:20000'],
         ];

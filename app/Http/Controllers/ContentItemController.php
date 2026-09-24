@@ -9,6 +9,7 @@ use App\Http\Requests\ContentItemRequest;
 use App\Models\ContentItem;
 use App\Models\User;
 use App\Notifications\ContentAwaitingReview;
+use App\Support\Assignments;
 use App\Support\WorkspaceContext;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class ContentItemController extends Controller
         $archived = $request->boolean('archived');
 
         $items = ContentItem::query()
-            ->with('owner:id,name')
+            ->with('assignees:id,name')
             ->when(! $archived, fn ($query) => $query->where('stage', '!=', ContentStage::Archived))
             ->orderByRaw('due_at is null')
             ->orderBy('due_at')
@@ -48,7 +49,8 @@ class ContentItemController extends Controller
         $stage = ContentStage::tryFrom((string) $request->input('stage')) ?? ContentStage::Idea;
         $this->ensureCanMove($request->user(), ContentStage::Idea, $stage);
 
-        $item = ContentItem::create([...$request->validated(), 'stage' => $stage]);
+        $item = ContentItem::create([...$request->safe()->except('assignees'), 'stage' => $stage]);
+        Assignments::sync($item, $request->input('assignees', []), $request->user());
 
         $this->notifyIfInReview($item, $request->user());
 
@@ -57,13 +59,12 @@ class ContentItemController extends Controller
 
     public function show(Request $request, ContentItem $content, RecordPage $page): Response
     {
-        $content->load('owner:id,name');
+        $content->load('assignees:id,name');
 
         return Inertia::render('content/show', [
             'item' => [
                 ...$this->summary($content),
                 'brief' => $content->brief,
-                'owner_id' => $content->owner_id,
                 'published_url' => $content->published_url,
             ],
             'members' => $this->members(),
@@ -81,7 +82,10 @@ class ContentItemController extends Controller
         $to = ContentStage::tryFrom((string) $request->input('stage')) ?? $from;
         $this->ensureCanMove($request->user(), $from, $to);
 
-        $content->update($request->validated());
+        $content->update($request->safe()->except('assignees'));
+        if ($request->has('assignees')) {
+            Assignments::sync($content, $request->input('assignees', []), $request->user());
+        }
 
         if ($from !== $to) {
             $this->notifyIfInReview($content, $request->user());
@@ -138,7 +142,7 @@ class ContentItemController extends Controller
             'stage_changed_at' => $item->stage_changed_at->toIso8601String(),
             'due_at' => $item->due_at?->toDateString(),
             'publish_at' => $item->publish_at?->toIso8601String(),
-            'owner' => $item->owner ? ['id' => $item->owner->id, 'name' => $item->owner->name] : null,
+            'assignees' => Assignments::present($item),
         ];
     }
 

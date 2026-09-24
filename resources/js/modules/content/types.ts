@@ -16,12 +16,11 @@ export type ContentSummary = {
     stage_changed_at: string;
     due_at: string | null;
     publish_at: string | null;
-    owner: { id: number; name: string } | null;
+    assignees: { id: number; name: string }[];
 };
 
 export type ContentDetails = ContentSummary & {
     brief: string | null;
-    owner_id: number | null;
     published_url: string | null;
 };
 
@@ -80,7 +79,7 @@ export const contentFieldLabels: Record<string, string> = {
     format: 'Format',
     channels: 'Channels',
     stage: 'Stage',
-    owner_id: 'Owner',
+    assignees: 'People responsible',
     due_at: 'Deadline',
     publish_at: 'Publication date',
     published_url: 'Published URL',

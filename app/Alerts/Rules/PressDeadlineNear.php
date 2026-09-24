@@ -39,14 +39,14 @@ class PressDeadlineNear implements RuleType
 
     public function evaluate(AlertRule $rule, Workspace $workspace): iterable
     {
-        $requests = PressRequest::query()
+        $requests = PressRequest::with('assignees:id')
             ->whereIn('status', PressRequestStatus::open())
             ->whereNotNull('deadline')
             ->where('deadline', '<=', now()->addHours((int) $rule->param('hours')))
             ->get();
 
         foreach ($requests as $request) {
-            $owners = $request->responsible_user_id !== null ? [$request->responsible_user_id] : [];
+            $owners = $request->assigneeIds();
 
             yield new Finding("press_deadline_near:{$request->id}", $request->subject, $request->id, $request->deadline, $owners);
         }
