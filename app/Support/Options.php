@@ -23,6 +23,16 @@ class Options
             'ephemeris' => ['Ephemeris', '#b45309'],
             'deadline' => ['Deadline', '#dc2626'],
         ],
+        'task_type' => [
+            'translation' => ['Translation', null],
+            'video' => ['Video', null],
+            'article' => ['Article', null],
+            'speech' => ['Speech', null],
+            'photography' => ['Photography', null],
+            'design' => ['Design', null],
+            'review' => ['Review', null],
+            'other' => ['Other', null],
+        ],
         'asset_category' => [
             'photos' => ['Photos', null],
             'videos' => ['Videos', null],

@@ -2,6 +2,12 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.40.0 (2026-09-24)
+
+- feat: tipologias de tarefa (Tradução, Vídeo, Artigo, Discurso, Fotografia, Design, Revisão, Outro), configuráveis por equipa em Definições → Tipos
+- feat: a tipologia escolhe-se ao criar ou editar uma tarefa (também nas tarefas da campanha), aparece na lista, no quadro e na pré-visualização, e as tarefas filtram-se por tipologia
+- feat: canal "Divulgação" nos conteúdos e nas campanhas
+
 ## 0.39.0 (2026-09-24)
 
 - feat: mais fontes nacionais no catálogo inicial: RTP Notícias, CNN Portugal, TSF, ECO, Visão, Notícias ao Minuto e JPN (feeds verificados)

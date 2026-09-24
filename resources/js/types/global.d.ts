@@ -35,7 +35,10 @@ declare module '@inertiajs/core' {
                 }[];
             } | null;
             options: Record<
-                'event_type' | 'content_format' | 'asset_category',
+                | 'event_type'
+                | 'content_format'
+                | 'asset_category'
+                | 'task_type',
                 {
                     key: string;
                     label: string;

@@ -806,5 +806,15 @@
     "Due: ": "Prazo: ",
     "Task: ": "Tarefa: ",
     "University of Porto · Communication and Image Office": "Universidade do Porto · Serviço de Comunicação e Imagem",
-    "version :version": "versão :version"
+    "version :version": "versão :version",
+    "Translation": "Tradução",
+    "Speech": "Discurso",
+    "Photography": "Fotografia",
+    "Design": "Design",
+    "Task types": "Tipologias de tarefa",
+    "What kind of work a task is: translation, video, speech…": "Que tipo de trabalho é cada tarefa: tradução, vídeo, discurso…",
+    "No type": "Sem tipologia",
+    "Any type": "Qualquer tipologia",
+    "Task type": "Tipologia",
+    "Outreach": "Divulgação"
 }

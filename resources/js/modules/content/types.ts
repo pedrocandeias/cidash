@@ -55,6 +55,7 @@ export const channelLabels: Record<string, string> = {
     youtube: 'YouTube',
     tiktok: 'TikTok',
     press: 'Press',
+    outreach: 'Outreach',
     print: 'Print',
     screens: 'Screens',
 };

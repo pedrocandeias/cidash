@@ -110,6 +110,7 @@ export function ObjectDrawer() {
     const { t, locale } = useTranslation();
     const eventTypes = useOptions('event_type');
     const formats = useOptions('content_format');
+    const taskTypes = useOptions('task_type');
     const [recordId, setRecordId] = useState<string | null>(null);
     const [data, setData] = useState<Preview | null>(null);
 
@@ -155,6 +156,8 @@ export function ObjectDrawer() {
                 return t(eventTypes.label(field.value));
             case 'content_format':
                 return t(formats.label(field.value));
+            case 'task_type':
+                return t(taskTypes.label(field.value));
             default:
                 return field.value;
         }

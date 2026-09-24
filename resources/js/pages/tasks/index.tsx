@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Kanban from '@/components/core/kanban';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
     Dialog,
@@ -10,7 +11,15 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { formatDate, useTranslation } from '@/lib/i18n';
+import { useOptions } from '@/lib/options';
 import { cn } from '@/lib/utils';
 import PriorityBadge from '@/modules/tasks/priority-badge';
 import TaskFields, { taskFormTransform } from '@/modules/tasks/task-fields';
@@ -23,6 +32,7 @@ type Filters = {
     view: 'mine' | 'team';
     status: 'open' | 'done' | 'all';
     layout: 'list' | 'board';
+    type: string;
 };
 
 type Props = {
@@ -56,8 +66,23 @@ function FilterLink({
     );
 }
 
+const ANY = 'any';
+
+/** The task's type as a small label, when it has one. */
+function TypeBadge({ type }: { type: string | null }) {
+    const { t } = useTranslation();
+    const types = useOptions('task_type');
+
+    return type ? (
+        <Badge variant="outline" className="font-normal">
+            {t(types.label(type))}
+        </Badge>
+    ) : null;
+}
+
 export default function Tasks({ tasks, filters, members }: Props) {
     const { t, locale } = useTranslation();
+    const types = useOptions('task_type');
     const [creating, setCreating] = useState(false);
 
     return (
@@ -131,20 +156,54 @@ export default function Tasks({ tasks, filters, members }: Props) {
                     </nav>
                 </div>
 
-                <nav className="flex gap-1" aria-label={t('Layout')}>
-                    <FilterLink
-                        active={filters.layout === 'list'}
-                        filters={{ ...filters, layout: 'list' }}
+                <div className="flex flex-wrap items-center gap-3">
+                    <nav className="flex gap-1" aria-label={t('Layout')}>
+                        <FilterLink
+                            active={filters.layout === 'list'}
+                            filters={{ ...filters, layout: 'list' }}
+                        >
+                            {t('List')}
+                        </FilterLink>
+                        <FilterLink
+                            active={filters.layout === 'board'}
+                            filters={{
+                                ...filters,
+                                layout: 'board',
+                                status: 'all',
+                            }}
+                        >
+                            {t('Board')}
+                        </FilterLink>
+                    </nav>
+                    <Select
+                        value={filters.type || ANY}
+                        onValueChange={(type) =>
+                            router.get(
+                                index().url,
+                                {
+                                    ...filters,
+                                    type: type === ANY ? '' : type,
+                                },
+                                { preserveScroll: true },
+                            )
+                        }
                     >
-                        {t('List')}
-                    </FilterLink>
-                    <FilterLink
-                        active={filters.layout === 'board'}
-                        filters={{ ...filters, layout: 'board', status: 'all' }}
-                    >
-                        {t('Board')}
-                    </FilterLink>
-                </nav>
+                        <SelectTrigger
+                            className="h-8 w-48"
+                            aria-label={t('Task type')}
+                        >
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value={ANY}>{t('Any type')}</SelectItem>
+                            {types.items.map((option) => (
+                                <SelectItem key={option.key} value={option.key}>
+                                    {t(option.label)}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
 
                 {filters.layout === 'board' ? (
                     <Kanban
@@ -179,6 +238,7 @@ export default function Tasks({ tasks, filters, members }: Props) {
                                     {task.title}
                                 </Link>
                                 <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                                    <TypeBadge type={task.type} />
                                     <PriorityBadge priority={task.priority} />
                                     {task.assignees
                                         .map((person) => person.name)
@@ -234,6 +294,7 @@ export default function Tasks({ tasks, filters, members }: Props) {
                                 >
                                     {task.title}
                                 </Link>
+                                <TypeBadge type={task.type} />
                                 <PriorityBadge priority={task.priority} />
                                 {!['todo', 'done'].includes(task.status) && (
                                     <span className="text-xs text-muted-foreground">

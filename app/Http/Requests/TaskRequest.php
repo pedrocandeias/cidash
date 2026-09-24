@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Enums\Priority;
 use App\Enums\TaskStatus;
 use App\Support\Assignments;
+use App\Support\Options;
 use App\Support\WorkspaceContext;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -25,6 +26,7 @@ class TaskRequest extends FormRequest
 
         return [
             'title' => [$creating ? 'required' : 'sometimes', 'string', 'max:255'],
+            'type' => ['sometimes', 'nullable', Rule::in(app(Options::class)->keys('task_type'))],
             'description' => ['sometimes', 'nullable', 'string', 'max:10000'],
             'deadline' => ['sometimes', 'nullable', 'date'],
             'priority' => ['sometimes', Rule::enum(Priority::class)],

@@ -1,6 +1,10 @@
 import { usePage } from '@inertiajs/react';
 
-export type OptionList = 'event_type' | 'content_format' | 'asset_category';
+export type OptionList =
+    | 'event_type'
+    | 'content_format'
+    | 'asset_category'
+    | 'task_type';
 
 const fallbackColor = '#6b7280';
 

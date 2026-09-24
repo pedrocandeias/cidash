@@ -28,6 +28,11 @@ const sections: { list: OptionList; title: string; description: string }[] = [
         description: 'The formats of the content pipeline.',
     },
     {
+        list: 'task_type',
+        title: 'Task types',
+        description: 'What kind of work a task is: translation, video, speech…',
+    },
+    {
         list: 'asset_category',
         title: 'Asset categories',
         description: 'How images, videos and graphics are organised.',

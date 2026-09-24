@@ -53,6 +53,7 @@ class RecordPreview
 
         return match (true) {
             $subject instanceof Task => [$status($subject->status, 'task'), [
+                $field('Task type', $subject->type, 'task_type'),
                 $field('Deadline', $subject->deadline?->toDateString(), 'date'),
                 $field('Assignees', $subject->assigneeNames()),
                 $field('Priority', $subject->priority->value, 'priority'),

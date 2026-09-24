@@ -11,14 +11,21 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { useTranslation } from '@/lib/i18n';
+import { useOptions } from '@/lib/options';
 import type { Member, Priority } from './types';
 import { priorityLabels } from './types';
+
+const NO_TYPE = 'none';
 
 /** Form data from TaskFields; no one picked means nobody is responsible. */
 export function taskFormTransform(
     data: Record<string, FormDataConvertible>,
 ): Record<string, FormDataConvertible> {
-    return { ...data, assignees: data.assignees ?? [] };
+    return {
+        ...data,
+        type: data.type === NO_TYPE ? null : data.type,
+        assignees: data.assignees ?? [],
+    };
 }
 
 export default function TaskFields({
@@ -33,6 +40,7 @@ export default function TaskFields({
     idPrefix?: string;
     defaults?: {
         title?: string;
+        type?: string | null;
         description?: string | null;
         assignees?: { id: number; name: string }[];
         deadline?: string | null;
@@ -40,19 +48,45 @@ export default function TaskFields({
     };
 }) {
     const { t } = useTranslation();
+    const types = useOptions('task_type');
+    // Switched-off types stay selectable for tasks that already use them.
+    const typeChoices = types.items.filter(
+        (option) => option.active || option.key === defaults.type,
+    );
 
     return (
         <div className="grid gap-4">
-            <div className="grid gap-2">
-                <Label htmlFor={`${idPrefix}title`}>{t('Title')}</Label>
-                <Input
-                    id={`${idPrefix}title`}
-                    name="title"
-                    defaultValue={defaults.title}
-                    required
-                    autoFocus={!defaults.title}
-                />
-                <InputError message={errors.title} />
+            <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_14rem]">
+                <div className="grid gap-2">
+                    <Label htmlFor={`${idPrefix}title`}>{t('Title')}</Label>
+                    <Input
+                        id={`${idPrefix}title`}
+                        name="title"
+                        defaultValue={defaults.title}
+                        required
+                        autoFocus={!defaults.title}
+                    />
+                    <InputError message={errors.title} />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor={`${idPrefix}type`}>{t('Task type')}</Label>
+                    <Select name="type" defaultValue={defaults.type ?? NO_TYPE}>
+                        <SelectTrigger id={`${idPrefix}type`}>
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value={NO_TYPE}>
+                                {t('No type')}
+                            </SelectItem>
+                            {typeChoices.map((option) => (
+                                <SelectItem key={option.key} value={option.key}>
+                                    {t(option.label)}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <InputError message={errors.type} />
+                </div>
             </div>
 
             <div className="grid gap-2">

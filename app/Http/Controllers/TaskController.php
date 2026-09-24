@@ -29,12 +29,14 @@ class TaskController extends Controller
         $view = $request->query('view') === 'team' ? 'team' : 'mine';
         $status = in_array($request->query('status'), ['done', 'all'], true) ? $request->query('status') : 'open';
         $layout = $request->query('layout') === 'board' ? 'board' : 'list';
+        $type = (string) $request->query('type');
 
         $tasks = Task::query()
             ->with('assignees:id,name')
             ->when($view === 'mine', fn ($query) => $query->assignedTo($request->user()->id))
             ->when($status === 'open', fn ($query) => $query->whereIn('status', TaskStatus::open()))
             ->when($status === 'done', fn ($query) => $query->where('status', TaskStatus::Done))
+            ->when($type !== '', fn ($query) => $query->where('type', $type))
             // Nearest deadline first, tasks without deadline last.
             ->orderByRaw('deadline is null')
             ->orderBy('deadline')
@@ -44,7 +46,7 @@ class TaskController extends Controller
 
         return Inertia::render('tasks/index', [
             'tasks' => $tasks,
-            'filters' => ['view' => $view, 'status' => $status, 'layout' => $layout],
+            'filters' => ['view' => $view, 'status' => $status, 'layout' => $layout, 'type' => $type],
             'members' => $this->members(),
         ]);
     }
@@ -122,6 +124,7 @@ class TaskController extends Controller
         return [
             'id' => $task->id,
             'title' => $task->title,
+            'type' => $task->type,
             'status' => $task->status->value,
             'priority' => $task->priority->value,
             'deadline' => $task->deadline?->toDateString(),

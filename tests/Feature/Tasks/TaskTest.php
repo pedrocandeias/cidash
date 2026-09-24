@@ -164,4 +164,17 @@ class TaskTest extends TestCase
         $this->assertNotNull($notification->refresh()->read_at);
         $this->assertSame($other->id, $this->ana->refresh()->current_workspace_id);
     }
+
+    public function test_tasks_have_a_type_from_the_team_list_and_can_be_filtered_by_it()
+    {
+        $this->actingAs($this->ana)->post(route('tasks.store'), ['title' => 'Traduzir o comunicado', 'type' => 'translation'])->assertSessionHasNoErrors();
+        $this->actingAs($this->ana)->post(route('tasks.store'), ['title' => 'Discurso do Reitor', 'type' => 'speech'])->assertSessionHasNoErrors();
+        $this->actingAs($this->ana)->post(route('tasks.store'), ['title' => 'Sem tipologia']);
+        $this->actingAs($this->ana)->post(route('tasks.store'), ['title' => 'X', 'type' => 'nope'])->assertSessionHasErrors('type');
+
+        $this->actingAs($this->ana)->get(route('tasks.index', ['view' => 'team', 'type' => 'translation']))
+            ->assertInertia(fn (Assert $page) => $page->has('tasks', 1)->where('tasks.0.type', 'translation')->where('filters.type', 'translation'));
+        $this->actingAs($this->ana)->get(route('tasks.index', ['view' => 'team']))
+            ->assertInertia(fn (Assert $page) => $page->has('tasks', 3)->has('options.task_type', 8));
+    }
 }

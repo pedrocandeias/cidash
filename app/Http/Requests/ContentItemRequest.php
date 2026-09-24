@@ -15,7 +15,7 @@ class ContentItemRequest extends FormRequest
     /**
      * Distribution channels offered in the form.
      */
-    public const CHANNELS = ['website', 'newsletter', 'instagram', 'facebook', 'linkedin', 'x', 'youtube', 'tiktok', 'press', 'print', 'screens'];
+    public const CHANNELS = ['website', 'newsletter', 'instagram', 'facebook', 'linkedin', 'x', 'youtube', 'tiktok', 'press', 'outreach', 'print', 'screens'];
 
     /**
      * @return array<string, ValidationRule|array<mixed>|string>

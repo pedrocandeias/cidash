@@ -119,6 +119,7 @@ export default function ShowTask({
                                     errors={errors}
                                     defaults={{
                                         title: task.title,
+                                        type: task.type,
                                         description: task.description,
                                         assignees: task.assignees,
                                         deadline: task.deadline,

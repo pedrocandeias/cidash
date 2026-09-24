@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property string $id
  * @property string $title
+ * @property string|null $type key of the team's task types (App\Support\Options)
  * @property string|null $description
  * @property CarbonImmutable|null $deadline
  * @property Priority $priority
@@ -21,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $source_object_id
  * @property CarbonImmutable|null $completed_at
  */
-#[Fillable(['title', 'description', 'deadline', 'priority', 'status', 'source_object_id'])]
+#[Fillable(['title', 'type', 'description', 'deadline', 'priority', 'status', 'source_object_id'])]
 class Task extends Model
 {
     use HasAssignees, IsRecord;

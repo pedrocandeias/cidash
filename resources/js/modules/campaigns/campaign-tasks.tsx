@@ -32,6 +32,7 @@ import { show, update } from '@/routes/tasks';
 export type CampaignTask = {
     id: string;
     title: string;
+    type: string | null;
     status: TaskStatus;
     deadline: string | null;
     assignees: string | null;
@@ -51,6 +52,7 @@ function NewTaskDialog({
 }) {
     const { t } = useTranslation();
     const formats = useOptions('content_format');
+    const taskTypes = useOptions('task_type');
     const [open, setOpen] = useState(false);
     const [withContent, setWithContent] = useState(false);
 
@@ -75,6 +77,7 @@ function NewTaskDialog({
                     transform={(data) => ({
                         ...data,
                         assignees: data.assignees ?? [],
+                        type: data.type === NONE ? null : data.type,
                         about: data.about === NONE ? null : data.about,
                         create_content: withContent,
                     })}
@@ -99,6 +102,30 @@ function NewTaskDialog({
                                     )}
                                 />
                                 <InputError message={errors.title} />
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label htmlFor="campaign-task-type">
+                                    {t('Task type')}
+                                </Label>
+                                <Select name="type" defaultValue={NONE}>
+                                    <SelectTrigger id="campaign-task-type">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value={NONE}>
+                                            {t('No type')}
+                                        </SelectItem>
+                                        {taskTypes.active.map((option) => (
+                                            <SelectItem
+                                                key={option.key}
+                                                value={option.key}
+                                            >
+                                                {t(option.label)}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             <label className="flex items-center gap-2 text-sm">
@@ -219,6 +246,7 @@ export default function CampaignTasks({
     members: Member[];
 }) {
     const { t, locale } = useTranslation();
+    const taskTypes = useOptions('task_type');
     const counted = tasks.filter((task) => task.status !== 'cancelled');
     const done = counted.filter((task) => task.status === 'done').length;
     const today = localToday();
@@ -304,9 +332,19 @@ export default function CampaignTasks({
                                     >
                                         {task.title}
                                     </Link>
-                                    {task.about && (
+                                    {(task.type || task.about) && (
                                         <span className="block text-xs text-muted-foreground">
-                                            {task.about}
+                                            {[
+                                                task.type &&
+                                                    t(
+                                                        taskTypes.label(
+                                                            task.type,
+                                                        ),
+                                                    ),
+                                                task.about,
+                                            ]
+                                                .filter(Boolean)
+                                                .join(' · ')}
                                         </span>
                                     )}
                                 </div>

@@ -30,6 +30,7 @@ class CampaignTaskController extends Controller
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
+            'type' => ['nullable', Rule::in($options->keys('task_type'))],
             ...Assignments::rules(),
             'deadline' => ['nullable', 'date'],
             'about' => ['nullable', 'uuid'],
@@ -61,6 +62,7 @@ class CampaignTaskController extends Controller
 
             $task = Task::create([
                 'title' => $validated['title'],
+                'type' => $validated['type'] ?? null,
                 'deadline' => $validated['deadline'] ?? null,
                 'priority' => Priority::Normal,
                 'status' => TaskStatus::Todo,
@@ -115,6 +117,7 @@ class CampaignTaskController extends Controller
             ->map(fn (Task $task) => [
                 'id' => $task->id,
                 'title' => $task->title,
+                'type' => $task->type,
                 'status' => $task->status->value,
                 'deadline' => $task->deadline?->toDateString(),
                 'assignees' => $task->assigneeNames(),

@@ -11,6 +11,7 @@ export type Priority = 'low' | 'normal' | 'high' | 'urgent';
 export type TaskSummary = {
     id: string;
     title: string;
+    type: string | null;
     status: TaskStatus;
     priority: Priority;
     deadline: string | null;
@@ -37,6 +38,7 @@ export const priorityLabels: Record<Priority, string> = {
 /** Field names as shown in the history. */
 export const taskFieldLabels: Record<string, string> = {
     title: 'Title',
+    type: 'Task type',
     description: 'Description',
     assignees: 'People responsible',
     deadline: 'Deadline',
