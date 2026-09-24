@@ -2,6 +2,12 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.39.0 (2026-09-24)
+
+- feat: mais fontes nacionais no catálogo inicial: RTP Notícias, CNN Portugal, TSF, ECO, Visão, Notícias ao Minuto e JPN (feeds verificados)
+- feat: as notícias da SAPO Notícias passam a indicar o meio original (SIC Notícias, Expresso, Jornal Económico, DN…), tirado do autor de cada item
+- chore: `cidash:install-default-sources` acrescenta às fontes já instaladas as definições novas, sem mudar o que foi alterado
+
 ## 0.38.0 (2026-09-24)
 
 - feat: rodapé em todas as páginas com os créditos (Universidade do Porto · Serviço de Comunicação e Imagem), o ano e a versão do CIDASH

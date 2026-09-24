@@ -139,4 +139,19 @@ class NewsIngestionTest extends TestCase
         $this->actingAs($manager)->patch(route('subscriptions.update', $source), ['subscribed' => true, 'is_priority' => true]);
         $this->assertTrue((bool) $workspace->sources()->first()->pivot->is_priority);
     }
+
+    public function test_aggregators_name_the_original_outlet_of_each_item()
+    {
+        $xml = '<?xml version="1.0"?><rss version="2.0"><channel><title>SAPO</title>'
+            .'<item><title>Notícia da SIC</title><link>https://sapo.pt/artigo/a</link><author>SIC Notícias/Rita Lopes</author></item>'
+            .'<item><title>Sem autor</title><link>https://sapo.pt/artigo/b</link></item>'
+            .'</channel></rss>';
+        Http::fake(['sapo.test/*' => Http::response($xml)]);
+        Source::create(['name' => 'SAPO Notícias', 'kind' => SourceKind::Rss, 'url' => 'https://sapo.test/rss', 'config' => ['outlet_from_author' => true]]);
+
+        $this->artisan('cidash:fetch-sources');
+
+        $this->assertSame('SIC Notícias', NewsItem::where('headline', 'Notícia da SIC')->value('outlet'));
+        $this->assertSame('SAPO Notícias', NewsItem::where('headline', 'Sem autor')->value('outlet'));
+    }
 }

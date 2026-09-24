@@ -35,6 +35,7 @@ class FeedParser
                 summary: self::summary((string) $item->description),
                 publishedAt: self::date((string) $item->pubDate),
                 outlet: isset($item->source) ? self::text((string) $item->source) : null,
+                author: isset($item->author) ? self::text((string) $item->author) : null,
             );
         }
 

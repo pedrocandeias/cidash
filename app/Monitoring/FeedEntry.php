@@ -15,5 +15,6 @@ final class FeedEntry
         public ?string $summary = null,
         public ?CarbonImmutable $publishedAt = null,
         public ?string $outlet = null,
+        public ?string $author = null,
     ) {}
 }

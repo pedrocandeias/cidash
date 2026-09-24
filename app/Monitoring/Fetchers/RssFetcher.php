@@ -8,7 +8,8 @@ use App\Monitoring\Http;
 use RuntimeException;
 
 /**
- * Feeds published for syndication (RSS/Atom). The outlet is the source name.
+ * Feeds published for syndication (RSS/Atom). The outlet is the source name, or
+ * for aggregators the original outlet named in each item.
  */
 class RssFetcher implements Fetcher
 {
@@ -23,6 +24,10 @@ class RssFetcher implements Fetcher
         }
 
         return array_map(function ($entry) use ($source) {
+            // Aggregators (SAPO Notícias) name the original outlet as "Outlet/Journalist".
+            if (($source->config['outlet_from_author'] ?? false) && filled($entry->author)) {
+                $entry->outlet ??= trim(explode('/', $entry->author)[0]) ?: null;
+            }
             $entry->outlet ??= $source->name;
 
             return $entry;
