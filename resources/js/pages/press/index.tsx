@@ -24,8 +24,8 @@ type Props = {
 };
 
 const lights = {
-    red: 'bg-red-600',
-    amber: 'bg-amber-500',
+    red: 'bg-critical',
+    amber: 'bg-warning',
 };
 
 export default function PressRequests({
@@ -115,7 +115,7 @@ export default function PressRequests({
                                 >
                                     <span
                                         className={cn(
-                                            'size-2.5 shrink-0 rounded-full',
+                                            'size-2.5 shrink-0 rounded-xs',
                                             light
                                                 ? lights[light]
                                                 : 'bg-transparent',
@@ -154,7 +154,7 @@ export default function PressRequests({
                                         className={cn(
                                             'w-28 text-right text-sm',
                                             light === 'red'
-                                                ? 'font-medium text-red-600'
+                                                ? 'font-medium text-critical'
                                                 : 'text-muted-foreground',
                                         )}
                                     >

@@ -208,7 +208,7 @@ export default function Dashboard({
                 </header>
 
                 {onboarding && (
-                    <section className="space-y-3 rounded-xl border border-sky-300 bg-sky-50 p-4 dark:border-sky-900 dark:bg-sky-950/40">
+                    <section className="space-y-3 rounded-xl border border-info/30 bg-info-surface p-4">
                         <div className="flex items-start justify-between gap-4">
                             <div>
                                 <h2 className="font-semibold">
@@ -242,7 +242,7 @@ export default function Dashboard({
                                         className="flex items-start gap-2 rounded-lg p-2 hover:bg-background/60"
                                     >
                                         {step.done ? (
-                                            <CircleCheck className="mt-0.5 size-4 shrink-0 text-emerald-600" />
+                                            <CircleCheck className="mt-0.5 size-4 shrink-0 text-success" />
                                         ) : (
                                             <Circle className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                                         )}
@@ -270,13 +270,13 @@ export default function Dashboard({
                 {alerts.count > 0 && (
                     <section
                         aria-label={t('Alerts')}
-                        className="flex flex-wrap items-start gap-x-4 gap-y-2 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 dark:border-amber-900 dark:bg-amber-950/40"
+                        className="flex flex-wrap items-start gap-x-4 gap-y-2 rounded-xl border border-warning/30 bg-warning-surface px-4 py-3"
                     >
                         <Link
                             href={alertsIndex()}
                             className="flex items-center gap-2 text-sm font-semibold hover:underline"
                         >
-                            <TriangleAlert className="size-4 text-amber-600" />
+                            <TriangleAlert className="size-4 text-warning" />
                             {t('Alerts (:count)', { count: alerts.count })}
                         </Link>
                         <ul className="min-w-0 flex-1 space-y-1">
@@ -299,7 +299,7 @@ export default function Dashboard({
                             <span
                                 className={cn(
                                     'block text-3xl font-semibold',
-                                    item.alert && 'text-red-600',
+                                    item.alert && 'text-critical',
                                 )}
                             >
                                 {item.value}
@@ -329,7 +329,7 @@ export default function Dashboard({
                                             className="flex items-center gap-3 text-sm"
                                         >
                                             <span
-                                                className="size-2 shrink-0 rounded-full"
+                                                className="size-2 shrink-0 rounded-xs"
                                                 style={{
                                                     backgroundColor:
                                                         types.color(event.type),
@@ -384,7 +384,7 @@ export default function Dashboard({
                                                     className={cn(
                                                         'text-xs',
                                                         task.deadline < today
-                                                            ? 'font-medium text-red-600'
+                                                            ? 'font-medium text-critical'
                                                             : 'text-muted-foreground',
                                                     )}
                                                 >
@@ -421,9 +421,9 @@ export default function Dashboard({
                                             >
                                                 <span
                                                     className={cn(
-                                                        'size-2 shrink-0 rounded-full',
+                                                        'size-2 shrink-0 rounded-xs',
                                                         urgent
-                                                            ? 'bg-red-600'
+                                                            ? 'bg-critical'
                                                             : 'bg-transparent',
                                                     )}
                                                 />
@@ -446,7 +446,7 @@ export default function Dashboard({
                                                         className={cn(
                                                             'text-xs',
                                                             urgent
-                                                                ? 'font-medium text-red-600'
+                                                                ? 'font-medium text-critical'
                                                                 : 'text-muted-foreground',
                                                         )}
                                                     >
@@ -480,7 +480,7 @@ export default function Dashboard({
                                     {content.stuck.map((item) => (
                                         <li
                                             key={item.id}
-                                            className="text-amber-700 dark:text-amber-400"
+                                            className="text-warning"
                                         >
                                             <Link
                                                 href={showContent(item.id)}
@@ -544,7 +544,7 @@ export default function Dashboard({
                                             className="flex justify-between"
                                         >
                                             <span>{row.name}</span>
-                                            <span className="font-medium text-red-600">
+                                            <span className="font-medium text-critical">
                                                 {row.count}
                                             </span>
                                         </li>

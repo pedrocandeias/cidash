@@ -20,7 +20,7 @@ export const severityLabels: Record<AlertSeverity, string> = {
 };
 
 export const severityDot: Record<AlertSeverity, string> = {
-    info: 'bg-sky-500',
-    warning: 'bg-amber-500',
-    critical: 'bg-red-600',
+    info: 'bg-info',
+    warning: 'bg-warning',
+    critical: 'bg-critical',
 };

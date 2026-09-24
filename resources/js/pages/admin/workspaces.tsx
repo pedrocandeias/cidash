@@ -133,7 +133,7 @@ export default function Workspaces({ workspaces, ingestion }: Props) {
                                 <p
                                     className={cn(
                                         'text-2xl font-semibold',
-                                        stat.alert && 'text-red-600',
+                                        stat.alert && 'text-critical',
                                     )}
                                 >
                                     {stat.value}
@@ -233,7 +233,7 @@ export default function Workspaces({ workspaces, ingestion }: Props) {
                                     {t('Managers')}:
                                 </span>
                                 {workspace.managers.length === 0 ? (
-                                    <span className="font-medium text-red-600">
+                                    <span className="font-medium text-critical">
                                         {t('none')}
                                     </span>
                                 ) : (

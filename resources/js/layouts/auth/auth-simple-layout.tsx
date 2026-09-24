@@ -20,9 +20,18 @@ export default function AuthSimpleLayout({
                             href={home()}
                             className="flex flex-col items-center gap-2 font-medium"
                         >
-                            <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" />
-                            </div>
+                            {/* The endorsed lockup of the design system. */}
+                            <span className="flex items-center gap-3">
+                                <AppLogoIcon className="size-8 text-foreground" />
+                                <span className="text-[2.35rem] leading-none font-black tracking-[0.04em] text-foreground">
+                                    CIDASH
+                                </span>
+                            </span>
+                            <span className="text-[0.625rem] font-bold tracking-[0.08em] text-muted-foreground uppercase">
+                                {t(
+                                    'University of Porto · Communication and Image',
+                                )}
+                            </span>
                             <span className="sr-only">{t(title ?? '')}</span>
                         </Link>
 

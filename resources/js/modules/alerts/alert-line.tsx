@@ -11,7 +11,7 @@ export default function AlertLine({ alert }: { alert: AlertItem }) {
         <span className="flex min-w-0 items-center gap-2 text-sm">
             <span
                 className={cn(
-                    'size-2 shrink-0 rounded-full',
+                    'size-2 shrink-0 rounded-xs',
                     severityDot[alert.severity],
                 )}
                 title={t(severityLabels[alert.severity])}

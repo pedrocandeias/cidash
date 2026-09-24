@@ -70,7 +70,7 @@ function CardContent({ item }: { item: ContentSummary }) {
                     <span
                         className={
                             overdue
-                                ? 'font-medium text-red-600'
+                                ? 'font-medium text-critical'
                                 : 'text-muted-foreground'
                         }
                     >
@@ -78,7 +78,7 @@ function CardContent({ item }: { item: ContentSummary }) {
                     </span>
                 )}
                 {stuck && (
-                    <span className="font-medium text-amber-600">
+                    <span className="font-medium text-warning">
                         {t(':days days in review', { days: daysInStage(item) })}
                     </span>
                 )}

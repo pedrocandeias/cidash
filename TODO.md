@@ -48,7 +48,7 @@
 - [x] Desligar o registo público e a verificação de email do Fortify; `/` redireciona para o dashboard
 - [x] Comandos de arranque: `cidash:create-workspace`, `cidash:create-user` (link para definir a palavra-passe)
 - [x] Marca provisória: logótipo, favicon e ícone neutros (substituem o Laravel)
-- [ ] Identidade visual definitiva: logótipo e cores (decisão da equipa)
+- [x] Identidade visual definitiva: logótipo e cores (Design System "CIDASH" no Claude Design, aprovado a 2026-09-24)
 - [x] Auth local (Fortify): convites por email ou link copiado (broker `invites`, 7 dias, `/invitation/{token}`), `activated_at`, recuperar password, rate limiting, `uncompromised`, sem registo público
 - [x] 2FA TOTP opcional para todos (ativar/desativar no perfil, códigos de recuperação), vindo do starter kit
 - [x] Reposição do 2FA de um utilizador pelo super admin (com registo no `activity_log`)

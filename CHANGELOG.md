@@ -2,6 +2,17 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.29.0 (2026-09-24)
+
+- feat: identidade visual do CIDASH, da família U.Porto: sinal de quatro mosaicos com um em bronze, logótipo em Lato Black e lockup com endosso "Universidade do Porto · Comunicação e Imagem" no ecrã de entrada
+- feat: tema claro e escuro com a paleta da identidade (neutros quentes, bronze, cores de sinal), com todos os pares de texto a pelo menos 4,5:1
+- feat: Lato servida pela própria aplicação, sem pedidos a serviços externos
+- feat: página ativa assinalada a bronze na barra lateral; pontos de estado quadrados; cantos quase retos
+- feat: favicon e ícone de ecrã inicial com o novo sinal
+- feat: emails com a identidade (Lato, neutros quentes, botão bronze)
+- fix: cores por omissão de "Publicação" e "Efeméride" mais escuras, para o texto branco dos eventos ser legível; as equipas que não as mudaram recebem as novas
+- refactor: cores de sinal fixas (vermelho, âmbar, verde, azul) substituídas por tokens do tema, que também funcionam no tema escuro
+
 ## 0.28.0 (2026-09-23)
 
 - feat: "Primeiros passos da equipa" no Início para os managers de uma equipa nova: convidar a equipa, escolher fontes, criar regras de monitorização e registar pessoas de interesse; desaparece quando está feito ou quando se oculta

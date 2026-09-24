@@ -148,7 +148,7 @@ export default function ShowBriefing({ briefing, previous, next }: Props) {
                                         className="flex flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2 text-sm"
                                     >
                                         {item.flag && (
-                                            <span className="size-2 shrink-0 rounded-full bg-red-600" />
+                                            <span className="size-2 shrink-0 rounded-xs bg-critical" />
                                         )}
                                         {item.label && (
                                             <span className="shrink-0 font-medium">

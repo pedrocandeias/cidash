@@ -185,7 +185,7 @@ export default function Tasks({ tasks, filters, members }: Props) {
                                         <span
                                             className={
                                                 isOverdue(task)
-                                                    ? 'font-medium text-red-600'
+                                                    ? 'font-medium text-critical'
                                                     : ''
                                             }
                                         >
@@ -247,7 +247,7 @@ export default function Tasks({ tasks, filters, members }: Props) {
                                     className={cn(
                                         'w-20 text-right text-sm',
                                         isOverdue(task)
-                                            ? 'font-medium text-red-600'
+                                            ? 'font-medium text-critical'
                                             : 'text-muted-foreground',
                                     )}
                                 >

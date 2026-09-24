@@ -44,7 +44,7 @@ export default function EmailSettings({ settings }: Props) {
                 />
 
                 {!settings && (
-                    <p className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-200/10 dark:bg-amber-700/10 dark:text-amber-100">
+                    <p className="rounded-lg border border-warning/30 bg-warning-surface p-4 text-sm text-foreground">
                         {t(
                             'Email is not configured. Invitation and password links must be copied and sent by hand.',
                         )}

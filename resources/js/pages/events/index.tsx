@@ -155,7 +155,7 @@ export default function Calendar({
                             )}
                         >
                             <span
-                                className="size-2.5 rounded-full"
+                                className="size-2.5 rounded-xs"
                                 style={{ backgroundColor: types.color(type) }}
                             />
                             {t(types.label(type))}

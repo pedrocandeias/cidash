@@ -9,13 +9,15 @@
 
 @theme {
     --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Lato', ui-sans-serif, system-ui, 'Segoe UI', Arial, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
 
+    /* Near-square corners (design system: radius-sm 2px, radius-md 4px, radius-lg 6px). */
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
+    --radius-xl: var(--radius);
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -51,6 +53,17 @@
     --color-chart-4: var(--chart-4);
     --color-chart-5: var(--chart-5);
 
+    /* CIDASH identity: brand bronze and signal colours (design system tokens). */
+    --color-bronze: var(--bronze);
+    --color-critical: var(--critical);
+    --color-critical-surface: var(--critical-surface);
+    --color-on-critical: var(--on-critical);
+    --color-warning: var(--warning);
+    --color-warning-surface: var(--warning-surface);
+    --color-success: var(--success);
+    --color-info: var(--info);
+    --color-info-surface: var(--info-surface);
+
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);
     --color-sidebar-primary: var(--sidebar-primary);
@@ -61,75 +74,97 @@
     --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/*
+ * CIDASH identity (Claude Design system "CIDASH"): U.Porto family, Lato, brand
+ * bronze #a18a4d. Every text pair here passes 4.5:1 in both themes.
+ */
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.87 0 0);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.87 0 0);
+    --background: #ffffff;
+    --foreground: #24211d;
+    --card: #ffffff;
+    --card-foreground: #24211d;
+    --popover: #ffffff;
+    --popover-foreground: #24211d;
+    --primary: #7b6630;
+    --primary-foreground: #ffffff;
+    --secondary: #f0eee9;
+    --secondary-foreground: #24211d;
+    --muted: #f0eee9;
+    --muted-foreground: #655f55;
+    --accent: #f0eee9;
+    --accent-foreground: #24211d;
+    --destructive: #b3261e;
+    --destructive-foreground: #b3261e;
+    --border: #dcd8cf;
+    --input: #8f8778;
+    --ring: #7b6630;
+    --chart-1: #7b6630;
+    --chart-2: #2f5f9e;
+    --chart-3: #1e7348;
+    --chart-4: #9a5b00;
+    --chart-5: #655f55;
+    --radius: 0.375rem;
+    --sidebar: #efede8;
+    --sidebar-foreground: #24211d;
+    --sidebar-primary: #7b6630;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #e4e1d9;
+    --sidebar-accent-foreground: #24211d;
+    --sidebar-border: #dcd8cf;
+    --sidebar-ring: #7b6630;
+    --bronze: #a18a4d;
+    --critical: #b3261e;
+    --critical-surface: #fbeae8;
+    --on-critical: #ffffff;
+    --warning: #9a5b00;
+    --warning-surface: #fdf3e1;
+    --success: #1e7348;
+    --info: #2f5f9e;
+    --info-surface: #e9f0fa;
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.145 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.145 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.985 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.396 0.141 25.723);
-    --destructive-foreground: oklch(0.637 0.237 25.331);
-    --border: oklch(0.269 0 0);
-    --input: oklch(0.269 0 0);
-    --ring: oklch(0.439 0 0);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.985 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(0.269 0 0);
-    --sidebar-ring: oklch(0.439 0 0);
+    --background: #1c1a17;
+    --foreground: #eeeae2;
+    --card: #1c1a17;
+    --card-foreground: #eeeae2;
+    --popover: #1c1a17;
+    --popover-foreground: #eeeae2;
+    --primary: #c2a864;
+    --primary-foreground: #1c1a16;
+    --secondary: #25221e;
+    --secondary-foreground: #eeeae2;
+    --muted: #25221e;
+    --muted-foreground: #a9a294;
+    --accent: #25221e;
+    --accent-foreground: #eeeae2;
+    --destructive: #f0857d;
+    --destructive-foreground: #f0857d;
+    --border: #34312c;
+    --input: #6e675b;
+    --ring: #c2a864;
+    --chart-1: #c2a864;
+    --chart-2: #8fb4e8;
+    --chart-3: #6cc393;
+    --chart-4: #e0a452;
+    --chart-5: #a9a294;
+    --sidebar: #191815;
+    --sidebar-foreground: #eeeae2;
+    --sidebar-primary: #c2a864;
+    --sidebar-primary-foreground: #1c1a16;
+    --sidebar-accent: #2a2723;
+    --sidebar-accent-foreground: #eeeae2;
+    --sidebar-border: #34312c;
+    --sidebar-ring: #c2a864;
+    --bronze: #c2a864;
+    --critical: #f0857d;
+    --critical-surface: #3a1a17;
+    --on-critical: #1c1a16;
+    --warning: #e0a452;
+    --warning-surface: #33250f;
+    --success: #6cc393;
+    --info: #8fb4e8;
+    --info-surface: #16233a;
 }
 
 @layer base {
@@ -140,6 +175,11 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+/* The active page in the sidebar: a bronze edge, the one highlighted tile of the mark. */
+[data-sidebar='menu-button'][data-active='true'] {
+    box-shadow: inset 3px 0 0 var(--bronze);
 }
 
 /* FullCalendar buttons and grid in the app theme (light and dark). */

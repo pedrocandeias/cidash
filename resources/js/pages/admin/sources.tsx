@@ -84,7 +84,7 @@ export default function AdminSources({ sources }: { sources: Source[] }) {
                                         ` · ${t('last collected :date', { date: formatDateTime(source.last_fetched_at, locale) })}`}
                                 </p>
                                 {source.last_error && (
-                                    <p className="text-xs text-red-600">
+                                    <p className="text-xs text-critical">
                                         {t(':count failures in a row', {
                                             count: source.consecutive_failures,
                                         })}

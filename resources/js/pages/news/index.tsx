@@ -133,9 +133,9 @@ export default function News({ lines, status, sort, counts }: Props) {
                                             className={cn(
                                                 'inline-flex h-5 min-w-5 items-center justify-center rounded px-1 font-semibold tabular-nums',
                                                 line.score >= 6
-                                                    ? 'bg-emerald-600 text-white'
+                                                    ? 'bg-primary text-primary-foreground'
                                                     : line.score >= 3
-                                                      ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200'
+                                                      ? 'bg-primary/15 text-foreground'
                                                       : 'bg-muted',
                                             )}
                                             title={

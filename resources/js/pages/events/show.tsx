@@ -65,7 +65,7 @@ export default function ShowEvent({
                     <div className="space-y-2">
                         <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                             <span
-                                className="size-2.5 rounded-full"
+                                className="size-2.5 rounded-xs"
                                 style={{
                                     backgroundColor: types.color(event.type),
                                 }}

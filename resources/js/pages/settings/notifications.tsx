@@ -63,7 +63,7 @@ export default function NotificationPreferences({
                 />
 
                 {!emailConfigured && (
-                    <p className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm dark:border-amber-900 dark:bg-amber-950/40">
+                    <p className="rounded-md border border-warning/30 bg-warning-surface px-3 py-2 text-sm">
                         {t(
                             'Email is not configured yet, so nothing is sent for now. Your choices are kept.',
                         )}

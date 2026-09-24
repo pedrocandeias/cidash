@@ -32,7 +32,7 @@ export function NotificationsMenu() {
                 >
                     <Bell />
                     {notifications.unread > 0 && (
-                        <span className="absolute top-1 right-1 min-w-4 rounded-full bg-red-600 px-1 text-[10px] leading-4 font-medium text-white">
+                        <span className="absolute top-1 right-1 min-w-4 rounded-full bg-critical px-1 text-[10px] leading-4 font-medium text-on-critical">
                             {notifications.unread}
                         </span>
                     )}

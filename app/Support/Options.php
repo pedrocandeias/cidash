@@ -19,8 +19,8 @@ class Options
         'event_type' => [
             'institutional' => ['Institutional', '#2563eb'],
             'campaign' => ['Campaign', '#7c3aed'],
-            'publication' => ['Publication', '#059669'],
-            'ephemeris' => ['Ephemeris', '#d97706'],
+            'publication' => ['Publication', '#047857'],
+            'ephemeris' => ['Ephemeris', '#b45309'],
             'deadline' => ['Deadline', '#dc2626'],
         ],
         'content_format' => [
