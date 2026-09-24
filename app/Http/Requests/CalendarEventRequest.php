@@ -36,6 +36,8 @@ class CalendarEventRequest extends FormRequest
             'notes' => ['sometimes', 'nullable', 'string', 'max:10000'],
             'tags' => ['sometimes', 'array', 'max:20'],
             'tags.*' => ['string', 'max:50'],
+            // Created from a campaign's calendar: the event becomes part of it.
+            'campaign_id' => [$this->isMethod('post') ? 'nullable' : 'prohibited', 'uuid'],
         ];
     }
 }

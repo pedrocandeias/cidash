@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\Links;
 use App\Core\RecordPage;
 use App\Core\Tags;
 use App\Enums\CampaignStatus;
@@ -85,9 +86,9 @@ class CalendarEventController extends Controller
         return response()->json($events);
     }
 
-    public function store(CalendarEventRequest $request): RedirectResponse
+    public function store(CalendarEventRequest $request, Links $links): RedirectResponse
     {
-        $event = DB::transaction(function () use ($request) {
+        $event = DB::transaction(function () use ($request, $links) {
             $event = CalendarEvent::create([
                 ...$this->attributes($request),
                 'priority' => $request->input('priority', Priority::Normal->value),
@@ -96,10 +97,15 @@ class CalendarEventController extends Controller
             $this->tags->sync($event->record, $request->input('tags', []));
             Assignments::sync($event, $request->input('assignees', []), $request->user());
 
+            if ($request->filled('campaign_id')) {
+                $links->link($event, Campaign::findOrFail((string) $request->input('campaign_id')), RelationType::PartOf);
+            }
+
             return $event;
         });
 
-        return to_route('events.show', $event);
+        // From a campaign's calendar, stay on the campaign.
+        return $request->filled('campaign_id') ? back() : to_route('events.show', $event);
     }
 
     public function show(Request $request, CalendarEvent $event, RecordPage $page): Response
@@ -163,7 +169,7 @@ class CalendarEventController extends Controller
      */
     private function attributes(CalendarEventRequest $request): array
     {
-        $attributes = $request->safe()->except(['tags', 'assignees']);
+        $attributes = $request->safe()->except(['tags', 'assignees', 'campaign_id']);
 
         foreach (['start_at', 'end_at'] as $field) {
             if (! empty($attributes[$field])) {

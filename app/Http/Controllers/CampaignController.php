@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Campaigns\CampaignCalendar;
 use App\Core\Links;
 use App\Core\RecordPage;
 use App\Core\RecordTypes;
@@ -90,6 +91,7 @@ class CampaignController extends Controller
             'parts' => $parts,
             // Tasks are shown in their own section, with the campaign's progress.
             'tasks' => CampaignTaskController::tasksOf($campaign),
+            'calendar' => CampaignCalendar::entries($campaign),
             'members' => $this->members(),
             ...$shared,
             'relations' => $relations

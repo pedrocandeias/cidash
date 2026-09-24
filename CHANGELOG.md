@@ -2,6 +2,12 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.37.0 (2026-09-24)
+
+- feat: calendário de cada campanha, com o período da campanha, os seus eventos, as datas de publicação e os prazos dos conteúdos, e os prazos das tarefas, com cores e filtros por tipo de data
+- feat: "Acrescentar data importante" no calendário da campanha, que cria um evento já ligado à campanha
+- feat: clicar numa data do calendário da campanha abre a pré-visualização do registo
+
 ## 0.36.0 (2026-09-24)
 
 - feat: várias pessoas responsáveis por tarefas, conteúdos, eventos e pedidos de imprensa (também nas tarefas da campanha), escolhidas uma a uma no formulário

@@ -88,4 +88,23 @@ class CampaignTasksTest extends TestCase
         $this->actingAs($this->member)->post(route('campaigns.tasks.store', $this->campaign->id), ['title' => 'X', 'create_content' => true])->assertSessionHasErrors('format');
         $this->assertSame(0, Task::count());
     }
+
+    public function test_the_campaign_calendar_shows_its_dates_and_new_important_dates_join_it()
+    {
+        $content = ContentItem::create(['title' => 'Notícia', 'format' => 'news', 'stage' => 'idea', 'publish_at' => '2026-10-15 10:00', 'due_at' => '2026-10-12']);
+        app(Links::class)->link($content, $this->campaign, RelationType::PartOf);
+        $this->actingAs($this->member)->post(route('campaigns.tasks.store', $this->campaign->id), ['title' => 'Fotografias', 'deadline' => '2026-10-10']);
+
+        $this->actingAs($this->member)->post(route('events.store'), [
+            'title' => 'Abertura das candidaturas', 'type' => 'deadline', 'start_at' => '2026-10-20', 'all_day' => true,
+            'priority' => 'normal', 'status' => 'confirmed', 'campaign_id' => $this->campaign->id,
+        ])->assertRedirect()->assertSessionHasNoErrors();
+
+        $this->actingAs($this->member)->get(route('campaigns.show', $this->campaign->id))
+            ->assertInertia(fn (Assert $page) => $page->where('calendar', fn ($entries) => collect($entries)->pluck('kind', 'title')->sortKeys()->all() === [
+                'Abertura das candidaturas' => 'event',
+                'Fotografias' => 'task',
+                'Notícia' => 'content_due',
+            ] && collect($entries)->where('kind', 'publication')->count() === 1));
+    }
 }

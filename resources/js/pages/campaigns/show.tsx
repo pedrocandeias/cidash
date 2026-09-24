@@ -29,6 +29,8 @@ import { useTranslation } from '@/lib/i18n';
 import CampaignFields, {
     campaignFormTransform,
 } from '@/modules/campaigns/campaign-fields';
+import CampaignCalendar from '@/modules/campaigns/campaign-calendar';
+import type { CalendarEntry } from '@/modules/campaigns/campaign-calendar';
 import CampaignTasks from '@/modules/campaigns/campaign-tasks';
 import type { CampaignTask } from '@/modules/campaigns/campaign-tasks';
 import CampaignSummaryView from '@/modules/campaigns/campaign-summary';
@@ -42,6 +44,7 @@ type Props = {
     campaign: CampaignDetails;
     parts: { link_id: number; record: RecordSummary }[];
     tasks: CampaignTask[];
+    calendar: CalendarEntry[];
     members: Member[];
     recordId: string;
     comments: CommentItem[];
@@ -55,6 +58,7 @@ export default function ShowCampaign({
     campaign,
     parts,
     tasks,
+    calendar,
     members,
     recordId,
     comments,
@@ -180,6 +184,13 @@ export default function ShowCampaign({
                             }
                         />
                     </section>
+
+                    <CampaignCalendar
+                        campaignId={campaign.id}
+                        entries={calendar}
+                        startDate={campaign.start_date}
+                        endDate={campaign.end_date}
+                    />
 
                     <CampaignTasks
                         campaignId={campaign.id}
