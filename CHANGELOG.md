@@ -2,6 +2,10 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.29.1 (2026-09-24)
+
+- fix: letra um passo maior em toda a aplicação (texto corrido de 14 para 15 px, metadados de 12 para 13 px, texto base de 16 para 17 px), sem mudar os espaços nem a grelha
+
 ## 0.29.0 (2026-09-24)
 
 - feat: identidade visual do CIDASH, da família U.Porto: sinal de quatro mosaicos com um em bronze, logótipo em Lato Black e lockup com endosso "Universidade do Porto · Comunicação e Imagem" no ecrã de entrada
