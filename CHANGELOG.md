@@ -2,6 +2,11 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.34.0 (2026-09-24)
+
+- feat: nas Menções, com "Redes sociais" escolhido, filtrar por uma ou várias redes (Mastodon, Bluesky, YouTube, Instagram), cada uma com o número de menções
+- fix: tema "Cor" com mais vida: barra lateral azul viva, fundos brancos e cinza-azulados, ações em azul e a página ativa a amarelo, em vez de castanhos e dourados
+
 ## 0.33.0 (2026-09-24)
 
 - feat: terceiro tema, "Cor", além do claro e do escuro: barra lateral em bronze, fundos com um tom quente e ações em azul, com todos os textos a pelo menos 4,5:1

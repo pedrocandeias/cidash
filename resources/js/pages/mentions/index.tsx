@@ -33,15 +33,26 @@ const sources = [
     { value: 'social', label: 'Social networks' },
 ] as const;
 
+const networkOptions = [
+    { value: 'mastodon', label: 'Mastodon' },
+    { value: 'bluesky', label: 'Bluesky' },
+    { value: 'youtube', label: 'YouTube' },
+    { value: 'instagram', label: 'Instagram' },
+] as const;
+
 export default function Mentions({
     mentions,
     status,
     source,
+    networks,
+    networkCounts,
     counts,
 }: {
     mentions: MentionLine[];
     status: string;
     source: 'all' | 'news' | 'social';
+    networks: string[];
+    networkCounts: Record<string, number> | null;
     counts: Record<string, number>;
 }) {
     const { t, locale } = useTranslation();
@@ -52,6 +63,23 @@ export default function Mentions({
             { preserveScroll: true, preserveState: true },
         );
 
+    // Picking networks keeps the status tab; none picked shows every network.
+    const toggleNetwork = (network: string) => {
+        const next = networks.includes(network)
+            ? networks.filter((other) => other !== network)
+            : [...networks, network];
+
+        router.get(
+            index().url,
+            {
+                ...(status === 'new' ? {} : { status }),
+                source: 'social',
+                ...(next.length > 0 ? { networks: next } : {}),
+            },
+            { preserveScroll: true },
+        );
+    };
+
     return (
         <>
             <Head title={t('Media mentions')} />
@@ -60,7 +88,7 @@ export default function Mentions({
                 <Heading
                     title={t('Media mentions')}
                     description={t(
-                        'Articles that match the team monitoring rules.',
+                        'News and social posts that match the team monitoring rules and hashtags.',
                     )}
                 />
 
@@ -74,6 +102,9 @@ export default function Mentions({
                                         ? {}
                                         : { status: tab.value }),
                                     ...(source === 'all' ? {} : { source }),
+                                    ...(networks.length > 0
+                                        ? { networks }
+                                        : {}),
                                 },
                             })}
                             className={cn(
@@ -114,6 +145,58 @@ export default function Mentions({
                         </Link>
                     ))}
                 </nav>
+
+                {source === 'social' && (
+                    <div
+                        className="flex flex-wrap items-center gap-2"
+                        role="group"
+                        aria-label={t('Social networks')}
+                    >
+                        {networkOptions.map((option) => {
+                            const active = networks.includes(option.value);
+
+                            return (
+                                <button
+                                    key={option.value}
+                                    type="button"
+                                    aria-pressed={active}
+                                    onClick={() => toggleNetwork(option.value)}
+                                    className={cn(
+                                        'rounded-md border px-3 py-1 text-sm',
+                                        active
+                                            ? 'border-primary bg-primary text-primary-foreground'
+                                            : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                                    )}
+                                >
+                                    {option.label}
+                                    <span className="ml-1.5 text-xs tabular-nums opacity-80">
+                                        {networkCounts?.[option.value] ?? 0}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                        {networks.length > 0 && (
+                            <button
+                                type="button"
+                                className="text-xs text-muted-foreground underline hover:text-foreground"
+                                onClick={() =>
+                                    router.get(
+                                        index().url,
+                                        {
+                                            ...(status === 'new'
+                                                ? {}
+                                                : { status }),
+                                            source: 'social',
+                                        },
+                                        { preserveScroll: true },
+                                    )
+                                }
+                            >
+                                {t('All networks')}
+                            </button>
+                        )}
+                    </div>
+                )}
 
                 {mentions.length === 0 ? (
                     <p className="text-sm text-muted-foreground">

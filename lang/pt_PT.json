@@ -773,5 +773,7 @@
     "Delete asset": "Eliminar asset",
     "Delete this asset?": "Eliminar este asset?",
     "The file and its comments will be deleted. This cannot be undone.": "O ficheiro e os comentários serão eliminados. Não é possível anular.",
-    "Screen colours": "Cores do ecrã"
+    "Screen colours": "Cores do ecrã",
+    "All networks": "Todas as redes",
+    "News and social posts that match the team monitoring rules and hashtags.": "Notícias e publicações nas redes sociais que correspondem às regras de monitorização e às hashtags da equipa."
 }

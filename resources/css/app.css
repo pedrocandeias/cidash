@@ -179,38 +179,40 @@
 }
 
 .colour {
-    /* Colour: the light theme with a bronze sidebar, warm surfaces and blue actions. */
-    --background: #fffcf5;
-    --foreground: #2a2418;
+    /* Colour: white and cool greys, a vivid blue sidebar and actions, yellow for the active page. */
+    --background: #ffffff;
+    --foreground: #1c2533;
     --card: #ffffff;
-    --card-foreground: #2a2418;
+    --card-foreground: #1c2533;
     --popover: #ffffff;
-    --popover-foreground: #2a2418;
-    --primary: #1f5a8a;
+    --popover-foreground: #1c2533;
+    --primary: #1d4ed8;
     --primary-foreground: #ffffff;
-    --secondary: #f5ecd8;
-    --secondary-foreground: #2a2418;
-    --muted: #f5ecd8;
-    --muted-foreground: #6a5a3a;
-    --accent: #f5ecd8;
-    --accent-foreground: #2a2418;
-    --border: #e6dcc4;
-    --input: #9a8a66;
-    --ring: #1f5a8a;
-    --chart-1: #1f5a8a;
-    --chart-2: #b45309;
-    --chart-3: #047857;
-    --chart-4: #7c3aed;
-    --chart-5: #a18a4d;
-    --sidebar: #6f5a26;
-    --sidebar-foreground: #fff8e6;
-    --sidebar-primary: #f0d58c;
-    --sidebar-primary-foreground: #2a2418;
-    --sidebar-accent: #5c4a1e;
-    --sidebar-accent-foreground: #fff8e6;
-    --sidebar-border: #86703a;
-    --sidebar-ring: #f0d58c;
-    --bronze: #f0d58c;
+    --secondary: #eef3fb;
+    --secondary-foreground: #1c2533;
+    --muted: #eef3fb;
+    --muted-foreground: #4e5a6b;
+    --accent: #eef3fb;
+    --accent-foreground: #1c2533;
+    --border: #dbe3ef;
+    --input: #8391a7;
+    --ring: #1d4ed8;
+    --chart-1: #1d4ed8;
+    --chart-2: #f59e0b;
+    --chart-3: #059669;
+    --chart-4: #db2777;
+    --chart-5: #7c3aed;
+    --sidebar: #1e4fd8;
+    --sidebar-foreground: #ffffff;
+    --sidebar-primary: #fcd34d;
+    --sidebar-primary-foreground: #1c2533;
+    --sidebar-accent: #1a3fae;
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: #3d68e0;
+    --sidebar-ring: #fcd34d;
+    --bronze: #fcd34d;
+    --warning-surface: #fff7db;
+    --info-surface: #e8f0ff;
 }
 
 @layer base {

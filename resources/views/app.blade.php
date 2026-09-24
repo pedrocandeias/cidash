@@ -30,7 +30,7 @@
             }
 
             html.colour {
-                background-color: #6f5a26;
+                background-color: #1e4fd8;
             }
         </style>
 

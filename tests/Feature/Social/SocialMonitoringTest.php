@@ -170,4 +170,21 @@ class SocialMonitoringTest extends TestCase
         $this->assertSame([], app(SocialSettings::class)->get('youtube'));
         $this->actingAs($admin)->put(route('admin.social.update', 'nope'), [])->assertNotFound();
     }
+
+    public function test_social_mentions_can_be_filtered_by_network()
+    {
+        app(WorkspaceContext::class)->set($this->workspace);
+        foreach (['mastodon', 'bluesky', 'bluesky', 'youtube'] as $n => $network) {
+            Mention::create(['workspace_id' => $this->workspace->id, 'url' => "https://x.pt/{$n}", 'url_hash' => sha1((string) $n), 'headline' => "Post {$n}", 'matched_keyword' => '#feup', 'network' => $network, 'review_status' => 'new']);
+        }
+
+        $this->actingAs($this->manager)->get(route('mentions.index', ['source' => 'social', 'networks' => ['bluesky', 'youtube', 'nope']]))
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('mentions', 3)
+                ->where('networks', ['bluesky', 'youtube'])
+                ->where('networkCounts', ['bluesky' => 2, 'mastodon' => 1, 'youtube' => 1]));
+
+        $this->actingAs($this->manager)->get(route('mentions.index', ['source' => 'news', 'networks' => ['bluesky']]))
+            ->assertInertia(fn (Assert $page) => $page->has('mentions', 0)->where('networks', [])->where('networkCounts', null));
+    }
 }

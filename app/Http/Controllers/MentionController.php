@@ -18,18 +18,26 @@ use Inertia\Response;
  */
 class MentionController extends Controller
 {
+    /** Social networks, in the order they are offered in the filter. */
+    private const NETWORKS = ['mastodon', 'bluesky', 'youtube', 'instagram'];
+
     public function __construct(private WorkspaceContext $context) {}
 
     public function index(Request $request): Response
     {
         $status = in_array($request->query('status'), ['relevant', 'irrelevant', 'all'], true) ? $request->query('status') : 'new';
         $source = in_array($request->query('source'), ['news', 'social'], true) ? $request->query('source') : 'all';
+        // With social networks, one or several networks can be picked (none picked: all of them).
+        $networks = $source === 'social'
+            ? array_values(array_intersect((array) $request->query('networks', []), self::NETWORKS))
+            : [];
 
         return Inertia::render('mentions/index', [
             'mentions' => Mention::with('rule:id,name')
                 ->when($status !== 'all', fn ($query) => $query->where('review_status', $status))
                 ->when($source === 'news', fn ($query) => $query->whereNull('network'))
                 ->when($source === 'social', fn ($query) => $query->whereNotNull('network'))
+                ->when($networks !== [], fn ($query) => $query->whereIn('network', $networks))
                 ->orderByRaw('published_at is null')
                 ->orderByDesc('published_at')
                 ->limit(300)
@@ -48,6 +56,14 @@ class MentionController extends Controller
                 ]),
             'status' => $status,
             'source' => $source,
+            'networks' => $networks,
+            'networkCounts' => $source === 'social'
+                ? Mention::whereNotNull('network')
+                    ->when($status !== 'all', fn ($query) => $query->where('review_status', $status))
+                    ->selectRaw('network, count(*) as total')
+                    ->groupBy('network')
+                    ->pluck('total', 'network')
+                : null,
             'counts' => Mention::selectRaw('review_status, count(*) as total')->groupBy('review_status')->pluck('total', 'review_status'),
         ]);
     }
