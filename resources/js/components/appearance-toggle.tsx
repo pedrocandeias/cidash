@@ -1,4 +1,4 @@
-import { Check, Monitor, Moon, Sun } from 'lucide-react';
+import { Check, Monitor, Moon, Palette, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -13,6 +13,7 @@ import { useTranslation } from '@/lib/i18n';
 const options: { value: Appearance; label: string; icon: typeof Sun }[] = [
     { value: 'light', label: 'Light', icon: Sun },
     { value: 'dark', label: 'Dark', icon: Moon },
+    { value: 'colour', label: 'Colour', icon: Palette },
     { value: 'system', label: 'System', icon: Monitor },
 ];
 
@@ -21,7 +22,12 @@ export function AppearanceToggle() {
     const { t } = useTranslation();
     const { appearance, resolvedAppearance, updateAppearance } =
         useAppearance();
-    const Icon = resolvedAppearance === 'dark' ? Moon : Sun;
+    const Icon =
+        appearance === 'colour'
+            ? Palette
+            : resolvedAppearance === 'dark'
+              ? Moon
+              : Sun;
 
     return (
         <DropdownMenu>
@@ -29,8 +35,8 @@ export function AppearanceToggle() {
                 <Button
                     variant="ghost"
                     size="icon"
-                    aria-label={t('Light or dark screen')}
-                    title={t('Light or dark screen')}
+                    aria-label={t('Screen colours')}
+                    title={t('Screen colours')}
                 >
                     <Icon />
                 </Button>

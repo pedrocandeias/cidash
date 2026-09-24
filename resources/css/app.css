@@ -178,6 +178,41 @@
     --info-surface: #16233a;
 }
 
+.colour {
+    /* Colour: the light theme with a bronze sidebar, warm surfaces and blue actions. */
+    --background: #fffcf5;
+    --foreground: #2a2418;
+    --card: #ffffff;
+    --card-foreground: #2a2418;
+    --popover: #ffffff;
+    --popover-foreground: #2a2418;
+    --primary: #1f5a8a;
+    --primary-foreground: #ffffff;
+    --secondary: #f5ecd8;
+    --secondary-foreground: #2a2418;
+    --muted: #f5ecd8;
+    --muted-foreground: #6a5a3a;
+    --accent: #f5ecd8;
+    --accent-foreground: #2a2418;
+    --border: #e6dcc4;
+    --input: #9a8a66;
+    --ring: #1f5a8a;
+    --chart-1: #1f5a8a;
+    --chart-2: #b45309;
+    --chart-3: #047857;
+    --chart-4: #7c3aed;
+    --chart-5: #a18a4d;
+    --sidebar: #6f5a26;
+    --sidebar-foreground: #fff8e6;
+    --sidebar-primary: #f0d58c;
+    --sidebar-primary-foreground: #2a2418;
+    --sidebar-accent: #5c4a1e;
+    --sidebar-accent-foreground: #fff8e6;
+    --sidebar-border: #86703a;
+    --sidebar-ring: #f0d58c;
+    --bronze: #f0d58c;
+}
+
 @layer base {
     * {
         @apply border-border;
@@ -186,6 +221,11 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+/* Colour theme: the sidebar scrollbar in the sidebar's tones, not the browser's white. */
+.colour [data-sidebar='content'] {
+    scrollbar-color: var(--sidebar-border) transparent;
 }
 
 /* The active page in the sidebar: a bronze edge, the one highlighted tile of the mark. */

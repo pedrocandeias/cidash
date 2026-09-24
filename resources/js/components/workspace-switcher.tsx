@@ -37,7 +37,7 @@ export function WorkspaceSwitcher() {
         return (
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton className="pointer-events-none text-muted-foreground">
+                    <SidebarMenuButton className="pointer-events-none text-sidebar-foreground/75">
                         {current}
                     </SidebarMenuButton>
                 </SidebarMenuItem>

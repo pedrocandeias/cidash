@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
 
 export type ResolvedAppearance = 'light' | 'dark';
-export type Appearance = ResolvedAppearance | 'system';
+export type Appearance = ResolvedAppearance | 'system' | 'colour';
 
 export type UseAppearanceReturn = {
     readonly appearance: Appearance;
@@ -49,6 +49,11 @@ const applyTheme = (appearance: Appearance): void => {
     const isDark = isDarkMode(appearance);
 
     document.documentElement.classList.toggle('dark', isDark);
+    // Colour is the light theme with more colour (sidebar, surfaces, actions).
+    document.documentElement.classList.toggle(
+        'colour',
+        appearance === 'colour',
+    );
     document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
 };
 

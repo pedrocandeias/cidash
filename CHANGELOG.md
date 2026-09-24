@@ -2,6 +2,11 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.33.0 (2026-09-24)
+
+- feat: terceiro tema, "Cor", além do claro e do escuro: barra lateral em bronze, fundos com um tom quente e ações em azul, com todos os textos a pelo menos 4,5:1
+- feat: o botão do topo passa a "Cores do ecrã" (claro, escuro, cor ou seguir o sistema); o tema também se escolhe em Definições → Aparência
+
 ## 0.32.0 (2026-09-24)
 
 - feat: Assets, nova secção com a galeria da equipa: imagens, vídeos e gráficos (logótipos, ilustrações, SVG, EPS, AI, PDF)
