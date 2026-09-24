@@ -67,7 +67,7 @@ export default function ShowTask({
                 <div className="space-y-10">
                     <Heading title={task.title} />
 
-                    <div className="-mt-10 flex flex-wrap items-end gap-4">
+                    <div className="-mt-4 flex flex-wrap items-end gap-4">
                         <div className="grid gap-2">
                             <Label htmlFor="status">{t('Status')}</Label>
                             <Select

@@ -2,6 +2,10 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.40.1 (2026-09-24)
+
+- fix: nas páginas de um conteúdo e de uma tarefa, a "Fase" e o "Estado" deixam de ficar por cima do título (margem negativa maior do que o espaço por baixo do título)
+
 ## 0.40.0 (2026-09-24)
 
 - feat: tipologias de tarefa (Tradução, Vídeo, Artigo, Discurso, Fotografia, Design, Revisão, Outro), configuráveis por equipa em Definições → Tipos

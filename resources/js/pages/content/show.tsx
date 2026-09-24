@@ -75,7 +75,7 @@ export default function ShowContent({
                 <div className="space-y-10">
                     <Heading title={item.title} />
 
-                    <div className="-mt-10 grid gap-2">
+                    <div className="-mt-4 grid gap-2">
                         <Label htmlFor="stage">{t('Stage')}</Label>
                         <Select
                             value={item.stage}
