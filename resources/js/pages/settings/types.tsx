@@ -27,6 +27,11 @@ const sections: { list: OptionList; title: string; description: string }[] = [
         title: 'Content formats',
         description: 'The formats of the content pipeline.',
     },
+    {
+        list: 'asset_category',
+        title: 'Asset categories',
+        description: 'How images, videos and graphics are organised.',
+    },
 ];
 
 function OptionRow({

@@ -23,6 +23,13 @@ class Options
             'ephemeris' => ['Ephemeris', '#b45309'],
             'deadline' => ['Deadline', '#dc2626'],
         ],
+        'asset_category' => [
+            'photos' => ['Photos', null],
+            'videos' => ['Videos', null],
+            'logos' => ['Logos', null],
+            'graphics' => ['Graphics', null],
+            'illustrations' => ['Illustrations', null],
+        ],
         'content_format' => [
             'news' => ['News', null],
             'article' => ['Article', null],

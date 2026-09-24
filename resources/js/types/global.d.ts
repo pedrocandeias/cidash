@@ -34,7 +34,7 @@ declare module '@inertiajs/core' {
                 }[];
             } | null;
             options: Record<
-                'event_type' | 'content_format',
+                'event_type' | 'content_format' | 'asset_category',
                 {
                     key: string;
                     label: string;

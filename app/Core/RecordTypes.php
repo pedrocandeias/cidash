@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Models\Asset;
 use App\Models\CalendarEvent;
 use App\Models\Campaign;
 use App\Models\ContentItem;
@@ -33,6 +34,7 @@ class RecordTypes
         'person' => ['model' => Person::class, 'route' => 'people.show', 'label' => 'Person of interest'],
         'news' => ['model' => NewsItemState::class, 'route' => 'news.show', 'label' => 'News'],
         'mention' => ['model' => Mention::class, 'route' => 'mentions.show', 'label' => 'Mention'],
+        'asset' => ['model' => Asset::class, 'route' => 'assets.show', 'label' => 'Asset'],
     ];
 
     public static function register(): void

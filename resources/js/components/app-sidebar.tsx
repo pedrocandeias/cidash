@@ -13,6 +13,7 @@ import {
     UserCog,
     Users,
     AtSign,
+    Images,
     Hash,
     BookOpen,
     Building2,
@@ -42,6 +43,7 @@ import { index as campaigns } from '@/routes/campaigns';
 import { index as content } from '@/routes/content';
 import { index as events } from '@/routes/events';
 import { index as alerts } from '@/routes/alerts';
+import { index as assets } from '@/routes/assets';
 import { index as briefings } from '@/routes/briefings';
 import { index as mentions } from '@/routes/mentions';
 import { index as news } from '@/routes/news';
@@ -67,6 +69,7 @@ const navGroups: { label?: string; items: NavItem[] }[] = [
             { title: 'Tasks', href: tasks(), icon: ListTodo },
             { title: 'Content', href: content(), icon: Columns3 },
             { title: 'Campaigns', href: campaigns(), icon: Flag },
+            { title: 'Assets', href: assets(), icon: Images },
             { title: 'Press requests', href: press(), icon: Newspaper },
             { title: 'People', href: people(), icon: Users },
             { title: 'Notices', href: notices(), icon: Megaphone },

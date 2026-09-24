@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AlertController;
+use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\BriefingController;
@@ -65,6 +66,10 @@ Route::middleware(['auth', 'workspace'])->group(function () {
     Route::resource('content', ContentItemController::class)->except(['create', 'edit']);
 
     Route::resource('campaigns', CampaignController::class)->except(['create', 'edit']);
+
+    Route::get('assets/{asset}/file', [AssetController::class, 'file'])->name('assets.file');
+    Route::get('assets/{asset}/thumbnail', [AssetController::class, 'thumbnail'])->name('assets.thumbnail');
+    Route::resource('assets', AssetController::class)->except(['create', 'edit']);
 
     Route::get('people/areas/suggest', [PersonController::class, 'suggestAreas'])->name('people.areas.suggest');
     Route::get('people/{person}/photo', [PersonController::class, 'photo'])->name('people.photo');

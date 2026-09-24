@@ -2,6 +2,16 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.32.0 (2026-09-24)
+
+- feat: Assets, nova secção com a galeria da equipa: imagens, vídeos e gráficos (logótipos, ilustrações, SVG, EPS, AI, PDF)
+- feat: carregar vários ficheiros de uma vez ou largá-los na página; um ficheiro abre logo a sua página para lhe pôr legenda
+- feat: título, legenda, crédito, data, categoria e tags em cada asset; pré-visualização de imagens e vídeos, e descarga com o nome original
+- feat: pesquisa por texto livre (sem acentos nem palavras completas), por tag, por categoria e por tipo
+- feat: categorias de assets por equipa em Definições → Tipos (Fotografias, Vídeos, Logótipos, Gráficos, Ilustrações)
+- feat: miniaturas das fotografias para a galeria carregar depressa
+- fix: ficheiros servidos isolados, para um SVG aberto sozinho não correr scripts
+
 ## 0.31.0 (2026-09-24)
 
 - feat: menções em redes sociais por hashtag: cada equipa escolhe as hashtags em Definições → Monitorização (várias de uma vez, com ou sem "#")
