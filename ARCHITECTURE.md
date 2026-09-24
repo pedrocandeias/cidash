@@ -150,7 +150,9 @@ title*, body, author_id, published_at, expires_at (null = sem expiração), prio
 **Pessoas de interesse — `people`**
 Perfis de especialistas introduzidos **manualmente**, para responder rapidamente a pedidos dos media ("precisamos de um astrónomo").
 
-name*, academic_title (ex. "Professor Associado"), affiliation (texto: faculdade, centro…), short_bio (1–2 frases, pronta a enviar), bio, expertise_areas (várias, de uma lista partilhada pela equipa), keywords (livres), languages, email, phone, photo (opcional), media_notes (experiência com media, disponibilidade), consent_at, last_reviewed_at.
+name*, academic_title (ex. "Professor Associado"), affiliation (texto: faculdade, centro…), short_bio (1–2 frases, pronta a enviar), bio, expertise_areas (várias, de uma lista partilhada pela equipa), keywords (temas de interesse, separados por vírgulas), career (percurso), cv (ficheiro privado), languages, email, phone, photo (principal) e `person_photos` (galeria), media_notes (experiência com media, disponibilidade), consent_at, last_reviewed_at.
+
+**Dead or Alive** (secção de Pessoas, só para obituários): obituary (preparado com antecedência; `obituary_updated_at` automático) e deceased_on. Quem tem data de falecimento sai da lista de especialistas e deixa de ser sugerido aos media; a secção lista os obituários preparados e os falecidos.
 
 | Tabela de apoio | Campos |
 |---|---|

@@ -1,9 +1,11 @@
 import { Link } from '@inertiajs/react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { show } from '@/routes/people';
 import CopyProfileButton from './copy-profile-button';
 import type { PersonSummary } from './types';
+import { topics } from './types';
 
 export function PersonPhoto({
     person,
@@ -22,11 +24,11 @@ export function PersonPhoto({
         <img
             src={person.photo_url}
             alt={person.name}
-            className={`${size} shrink-0 rounded-full object-cover`}
+            className={`${size} shrink-0 rounded-md object-cover`}
         />
     ) : (
         <span
-            className={`${size} flex shrink-0 items-center justify-center rounded-full bg-muted text-sm font-medium`}
+            className={`${size} flex shrink-0 items-center justify-center rounded-md bg-muted text-sm font-bold text-muted-foreground`}
             aria-hidden
         >
             {initials}
@@ -44,7 +46,7 @@ export default function PersonCard({ person }: { person: PersonSummary }) {
                 <div className="min-w-0">
                     <Link
                         href={show(person.id)}
-                        className="font-medium hover:underline"
+                        className="text-base font-bold hover:underline"
                     >
                         {person.name}
                     </Link>
@@ -64,12 +66,22 @@ export default function PersonCard({ person }: { person: PersonSummary }) {
                         {area}
                     </Badge>
                 ))}
+                {topics(person)
+                    .slice(0, 4)
+                    .map((topic) => (
+                        <Badge key={topic} variant="outline">
+                            {topic}
+                        </Badge>
+                    ))}
                 {person.needs_review && (
                     <Badge variant="outline">{t('Bio to review')}</Badge>
                 )}
             </div>
-            <div className="mt-auto">
+            <div className="mt-auto flex flex-wrap gap-2">
                 <CopyProfileButton person={person} />
+                <Button asChild variant="ghost" size="sm">
+                    <Link href={show(person.id)}>{t('See profile')}</Link>
+                </Button>
             </div>
         </article>
     );

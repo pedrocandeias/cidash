@@ -10,7 +10,7 @@ export type UseAppearanceReturn = {
 };
 
 const listeners = new Set<() => void>();
-let currentAppearance: Appearance = 'system';
+let currentAppearance: Appearance = 'light';
 
 const prefersDark = (): boolean => {
     if (typeof window === 'undefined') {
@@ -31,10 +31,10 @@ const setCookie = (name: string, value: string, days = 365): void => {
 
 const getStoredAppearance = (): Appearance => {
     if (typeof window === 'undefined') {
-        return 'system';
+        return 'light';
     }
 
-    return (localStorage.getItem('appearance') as Appearance) || 'system';
+    return (localStorage.getItem('appearance') as Appearance) || 'light';
 };
 
 const isDarkMode = (appearance: Appearance): boolean => {
@@ -75,9 +75,15 @@ export function initializeTheme(): void {
         return;
     }
 
-    if (!localStorage.getItem('appearance')) {
-        localStorage.setItem('appearance', 'system');
-        setCookie('appearance', 'system');
+    // Light by default. Earlier versions stored "system" without asking; only a
+    // choice the user made (appearance-chosen) keeps it.
+    if (
+        !localStorage.getItem('appearance') ||
+        (localStorage.getItem('appearance') === 'system' &&
+            !localStorage.getItem('appearance-chosen'))
+    ) {
+        localStorage.setItem('appearance', 'light');
+        setCookie('appearance', 'light');
     }
 
     currentAppearance = getStoredAppearance();
@@ -91,7 +97,7 @@ export function useAppearance(): UseAppearanceReturn {
     const appearance: Appearance = useSyncExternalStore(
         subscribe,
         () => currentAppearance,
-        () => 'system',
+        () => 'light',
     );
 
     const resolvedAppearance: ResolvedAppearance = isDarkMode(appearance)
@@ -103,6 +109,7 @@ export function useAppearance(): UseAppearanceReturn {
 
         // Store in localStorage for client-side persistence...
         localStorage.setItem('appearance', mode);
+        localStorage.setItem('appearance-chosen', '1');
 
         // Store in cookie for SSR...
         setCookie('appearance', mode);

@@ -17,6 +17,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { useTranslation } from '@/lib/i18n';
+import PeopleTabs from '@/modules/people/people-tabs';
 import PersonCard from '@/modules/people/person-card';
 import PersonFields, {
     personFormTransform,
@@ -82,6 +83,8 @@ export default function People({ people, filters, areas }: Props) {
                         </DialogContent>
                     </Dialog>
                 </div>
+
+                <PeopleTabs current="experts" />
 
                 <form
                     className="flex flex-wrap gap-2"

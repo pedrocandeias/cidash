@@ -68,6 +68,12 @@ Route::middleware(['auth', 'workspace'])->group(function () {
 
     Route::get('people/areas/suggest', [PersonController::class, 'suggestAreas'])->name('people.areas.suggest');
     Route::get('people/{person}/photo', [PersonController::class, 'photo'])->name('people.photo');
+    Route::get('people/dead-or-alive', [PersonController::class, 'obituaries'])->name('people.obituaries');
+    Route::get('people/{person}/cv', [PersonController::class, 'cv'])->name('people.cv');
+    Route::post('people/{person}/photos', [PersonController::class, 'storePhotos'])->name('people.photos.store');
+    Route::get('people/photos/{photo}', [PersonController::class, 'showPhoto'])->name('people.photos.show');
+    Route::post('people/photos/{photo}/main', [PersonController::class, 'makeMainPhoto'])->name('people.photos.main');
+    Route::delete('people/photos/{photo}', [PersonController::class, 'destroyPhoto'])->name('people.photos.destroy');
     Route::resource('people', PersonController::class)->except(['create', 'edit']);
 
     Route::resource('news', NewsController::class)->only(['index', 'show', 'update']);

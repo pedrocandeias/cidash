@@ -2,6 +2,15 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.30.0 (2026-09-24)
+
+- feat: botão de ecrã claro ou escuro na barra do topo (claro, escuro ou seguir o sistema); o ecrã claro passa a ser o predefinido
+- feat: página de perfil das pessoas de interesse para ler, com nome, contactos, áreas, temas de interesse, bio, percurso, línguas, experiência com media, CV e galeria de fotografias; a edição passa para "Editar perfil"
+- feat: CV descarregável (PDF ou documento) e várias fotografias por pessoa, com escolha da fotografia principal, guardados fora da pasta pública
+- feat: Dead or Alive, secção de Pessoas só para obituários: obituários preparados com antecedência e pessoas falecidas; quem faleceu deixa de aparecer nos especialistas
+- feat: cartões de pessoas com o nome em destaque, temas de interesse e "Ver perfil"; fotografias com cantos quase retos, como pede a identidade
+- chore: dados de demonstração com nomes de pessoas fictícias (e um obituário de exemplo)
+
 ## 0.29.1 (2026-09-24)
 
 - fix: letra um passo maior em toda a aplicação (texto corrido de 14 para 15 px, metadados de 12 para 13 px, texto base de 16 para 17 px), sem mudar os espaços nem a grelha

@@ -1,3 +1,4 @@
+import { AppearanceToggle } from '@/components/appearance-toggle';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { CommandPalette } from '@/components/core/command-palette';
 import { NotificationsMenu } from '@/components/core/notifications-menu';
@@ -18,6 +19,7 @@ export function AppSidebarHeader({
             </div>
             <div className="ml-auto flex items-center gap-2">
                 <CommandPalette />
+                <AppearanceToggle />
                 <NotificationsMenu />
                 <ObjectDrawer />
             </div>

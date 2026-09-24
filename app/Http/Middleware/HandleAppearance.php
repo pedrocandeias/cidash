@@ -16,7 +16,8 @@ class HandleAppearance
      */
     public function handle(Request $request, Closure $next): Response
     {
-        View::share('appearance', $request->cookie('appearance') ?? 'system');
+        // Light unless the user chose dark (or to follow the system).
+        View::share('appearance', $request->cookie('appearance') ?? 'light');
 
         return $next($request);
     }

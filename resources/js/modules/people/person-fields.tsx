@@ -20,6 +20,7 @@ export function personFormTransform(
         ...data,
         areas: data.areas ?? [],
         remove_photo: data.remove_photo === 'on',
+        remove_cv: data.remove_cv === 'on',
     };
 }
 
@@ -109,7 +110,7 @@ export default function PersonFields({
                 <InputError message={errors.bio} />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="keywords">{t('Keywords')}</Label>
+                <Label htmlFor="keywords">{t('Topics of interest')}</Label>
                 <textarea
                     id="keywords"
                     name="keywords"
@@ -117,9 +118,41 @@ export default function PersonFields({
                     defaultValue={defaults?.keywords ?? ''}
                     className={textareaClass}
                     placeholder={t(
-                        'Topics this person can talk about, to help searching.',
+                        'Topics this person can talk about, separated by commas.',
                     )}
                 />
+            </div>
+            <div className="grid gap-2">
+                <Label htmlFor="career">{t('Career')}</Label>
+                <textarea
+                    id="career"
+                    name="career"
+                    rows={5}
+                    defaultValue={defaults?.career ?? ''}
+                    className={textareaClass}
+                    placeholder={t(
+                        'Positions, projects, awards: one per line, most recent first.',
+                    )}
+                />
+                <InputError message={errors.career} />
+            </div>
+            <div className="grid gap-2">
+                <Label htmlFor="cv">{t('CV')}</Label>
+                <Input
+                    id="cv"
+                    name="cv"
+                    type="file"
+                    accept=".pdf,.doc,.docx,.odt"
+                />
+                <InputError message={errors.cv} />
+                {defaults?.cv && (
+                    <label className="flex items-center gap-2 text-xs">
+                        <Checkbox name="remove_cv" />{' '}
+                        {t('Remove CV (:name)', {
+                            name: defaults.cv.name ?? '',
+                        })}
+                    </label>
+                )}
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
@@ -170,6 +203,36 @@ export default function PersonFields({
                     'Consent: date the person agreed to be suggested to the media. Bios not reviewed for a year are flagged.',
                 )}
             </p>
+
+            <fieldset className="grid gap-4 rounded-lg border p-4">
+                <legend className="px-1 text-sm font-bold">
+                    {t('Dead or Alive')}
+                </legend>
+                <div className="grid gap-2">
+                    <Label htmlFor="obituary">{t('Obituary')}</Label>
+                    <textarea
+                        id="obituary"
+                        name="obituary"
+                        rows={6}
+                        defaultValue={defaults?.obituary ?? ''}
+                        className={textareaClass}
+                        placeholder={t(
+                            'Prepared in advance, ready to publish when needed.',
+                        )}
+                    />
+                    <InputError message={errors.obituary} />
+                </div>
+                <div className="grid max-w-56 gap-2">
+                    <Label htmlFor="deceased_on">{t('Date of death')}</Label>
+                    <Input
+                        id="deceased_on"
+                        name="deceased_on"
+                        type="date"
+                        defaultValue={defaults?.deceased_on ?? ''}
+                    />
+                    <InputError message={errors.deceased_on} />
+                </div>
+            </fieldset>
         </div>
     );
 }

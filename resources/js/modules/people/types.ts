@@ -9,16 +9,30 @@ export type PersonSummary = {
     photo_url: string | null;
     areas: string[];
     needs_review: boolean;
+    keywords: string | null;
+    deceased_on: string | null;
 };
 
 export type PersonDetails = PersonSummary & {
     bio: string | null;
-    keywords: string | null;
+    career: string | null;
+    cv: { name: string | null; url: string } | null;
+    photos: { id: number; url: string }[];
+    obituary: string | null;
+    obituary_updated_at: string | null;
     languages: string | null;
     media_notes: string | null;
     consent_at: string | null;
     last_reviewed_at: string | null;
 };
+
+/** Topics of interest are typed as one comma-separated line. */
+export function topics(person: PersonSummary): string[] {
+    return (person.keywords ?? '')
+        .split(/[,;\n]/)
+        .map((topic) => topic.trim())
+        .filter(Boolean);
+}
 
 /** Text ready to paste into an email to a journalist. */
 export function profileText(person: PersonSummary): string {
@@ -42,7 +56,10 @@ export const personFieldLabels: Record<string, string> = {
     affiliation: 'Affiliation',
     short_bio: 'Short bio',
     bio: 'Bio',
-    keywords: 'Keywords',
+    keywords: 'Topics of interest',
+    career: 'Career',
+    obituary: 'Obituary',
+    deceased_on: 'Date of death',
     languages: 'Languages',
     email: 'Email',
     phone: 'Phone',

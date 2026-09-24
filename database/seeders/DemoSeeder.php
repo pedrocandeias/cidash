@@ -95,13 +95,18 @@ class DemoSeeder extends Seeder
         }
 
         foreach ([
-            ['Especialista em Astronomia (exemplo)', 'Professora Associada', 'Faculdade de Ciências', 'Estuda a formação de galáxias e a evolução do Universo.', ['Astronomia', 'Espaço']],
-            ['Especialista em Saúde Pública (exemplo)', 'Investigador', 'Instituto de Saúde Pública', 'Epidemiologista, fala sobre vacinação e doenças infecciosas.', ['Saúde pública']],
-            ['Especialista em Alterações Climáticas (exemplo)', 'Professor Catedrático', 'Faculdade de Engenharia', 'Modelação climática e transição energética.', ['Clima', 'Energia']],
-        ] as [$name, $title, $affiliation, $bio, $personAreas]) {
-            $person = Person::create(['name' => $name, 'academic_title' => $title, 'affiliation' => $affiliation, 'short_bio' => $bio, 'last_reviewed_at' => now()->subMonths(2)]);
+            // Fictional people, marked as examples.
+            ['Helena Vasconcelos (exemplo)', 'Professora Associada', 'Faculdade de Ciências', 'Estuda a formação de galáxias e a evolução do Universo.', ['Astronomia', 'Espaço'], 'galáxias, telescópios, exoplanetas, eclipses', "2020 – Professora Associada, Faculdade de Ciências\n2014 – Investigadora no Instituto de Astrofísica\n2012 – Doutoramento em Astronomia", null, null],
+            ['Rui Magalhães (exemplo)', 'Investigador', 'Instituto de Saúde Pública', 'Epidemiologista, fala sobre vacinação e doenças infecciosas.', ['Saúde pública'], 'vacinação, gripe, pandemias, saúde global', "2018 – Investigador no Instituto de Saúde Pública\n2015 – Doutoramento em Saúde Pública", null, null],
+            ['Joaquim Sarmento (exemplo)', 'Professor Catedrático', 'Faculdade de Engenharia', 'Modelação climática e transição energética.', ['Clima', 'Energia'], 'clima, energias renováveis, hidrogénio', "2005 – Professor Catedrático, Faculdade de Engenharia\n1995 – Doutoramento em Engenharia Mecânica", 'Joaquim Sarmento (1948–2026), professor catedrático da Faculdade de Engenharia, foi uma referência na modelação climática em Portugal. (exemplo)', now()->subDays(3)->toDateString()],
+        ] as [$name, $title, $affiliation, $bio, $personAreas, $topics, $career, $obituary, $deceasedOn]) {
+            $person = Person::create([
+                'name' => $name, 'academic_title' => $title, 'affiliation' => $affiliation, 'short_bio' => $bio,
+                'keywords' => $topics, 'career' => $career, 'obituary' => $obituary, 'deceased_on' => $deceasedOn,
+                'last_reviewed_at' => now()->subMonths(2),
+            ]);
             $areas->sync($person, $personAreas);
         }
-        $links->link($press, Person::where('name', 'like', '%Astronomia%')->firstOrFail());
+        $links->link($press, Person::where('name', 'like', 'Helena%')->firstOrFail());
     }
 }

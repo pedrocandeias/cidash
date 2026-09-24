@@ -31,6 +31,11 @@ class PersonRequest extends FormRequest
             'areas.*' => ['string', 'max:100'],
             'photo' => ['sometimes', 'nullable', 'image', 'max:4096'],
             'remove_photo' => ['sometimes', 'boolean'],
+            'career' => ['sometimes', 'nullable', 'string', 'max:20000'],
+            'cv' => ['sometimes', 'nullable', 'file', 'max:10240', 'extensions:pdf,doc,docx,odt'],
+            'remove_cv' => ['sometimes', 'boolean'],
+            'obituary' => ['sometimes', 'nullable', 'string', 'max:20000'],
+            'deceased_on' => ['sometimes', 'nullable', 'date', 'before_or_equal:today'],
         ];
     }
 }
