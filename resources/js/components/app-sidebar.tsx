@@ -13,6 +13,7 @@ import {
     UserCog,
     Users,
     AtSign,
+    Hash,
     BookOpen,
     Building2,
     TriangleAlert,
@@ -33,6 +34,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard, guide } from '@/routes';
 import { edit as editEmailSettings } from '@/routes/admin/email';
+import { edit as adminSocial } from '@/routes/admin/social';
 import { index as adminSources } from '@/routes/admin/sources';
 import { index as adminUsers } from '@/routes/admin/users';
 import { index as adminWorkspaces } from '@/routes/admin/workspaces';
@@ -89,6 +91,7 @@ const adminGroup = {
         { title: 'Teams', href: adminWorkspaces(), icon: Building2 },
         { title: 'Users', href: adminUsers(), icon: UserCog },
         { title: 'Sources', href: adminSources(), icon: Rss },
+        { title: 'Social networks', href: adminSocial(), icon: Hash },
         { title: 'Email', href: editEmailSettings(), icon: Mail },
     ],
 };

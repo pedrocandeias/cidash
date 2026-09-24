@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\MailSettingsController;
+use App\Http\Controllers\Admin\SocialNetworkController;
 use App\Http\Controllers\Admin\SourceController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\WorkspaceController;
@@ -12,6 +13,10 @@ Route::middleware(['auth', 'can:super-admin'])->prefix('admin')->name('admin.')-
     Route::post('email/test', [MailSettingsController::class, 'test'])
         ->middleware('throttle:6,1')
         ->name('email.test');
+
+    Route::get('social', [SocialNetworkController::class, 'edit'])->name('social.edit');
+    Route::put('social/{network}', [SocialNetworkController::class, 'update'])->name('social.update');
+    Route::post('social/{network}/test', [SocialNetworkController::class, 'test'])->middleware('throttle:10,1')->name('social.test');
 
     Route::get('sources', [SourceController::class, 'index'])->name('sources.index');
     Route::post('sources', [SourceController::class, 'store'])->name('sources.store');

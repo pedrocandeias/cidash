@@ -500,7 +500,7 @@ Depois da Phase 2 (decidido) e de validado o piloto.
 ### Future
 - Directory institucional (unidades, centros, projetos) com sincronização SIGARRA
 - Sincronização do calendário com Microsoft 365
-- Redes sociais (dependem das APIs e dos custos das plataformas)
+- Redes sociais (dependem das APIs e dos custos das plataformas). Feito a partir da 0.31.0 para hashtags: cada equipa segue hashtags (`social_hashtags`, Definições → Monitorização) e `cidash:fetch-social` recolhe publicações públicas no Mastodon (sem conta), Bluesky (conta + app password), YouTube (chave de API) e Instagram (Graph API, conta Business), que passam a menções com `network` e `author`. Credenciais cifradas em Administração → Redes sociais. Facebook, X, TikTok e LinkedIn não têm pesquisa por hashtag numa API gratuita.
 - Análise de sentimento e relatórios e analytics de cobertura
 - Dashboard personalizável por utilizador
 - PWA/mobile e integração com Teams/Slack

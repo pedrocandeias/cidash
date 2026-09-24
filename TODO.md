@@ -134,7 +134,8 @@
 
 - [ ] Directory institucional (unidades, centros, projetos) com sincronização SIGARRA
 - [ ] Sincronização do calendário com Microsoft 365
-- [ ] Redes sociais
+- [x] Redes sociais: hashtags no Mastodon, Bluesky, YouTube e Instagram (0.31.0)
+- [ ] Facebook: menções das páginas oficiais (publicações que marcam a página), com a mesma app Meta do Instagram — **à espera:** conta e app Meta
 - [ ] Sentimento, relatórios e analytics
 - [ ] Dashboard personalizável
 - [ ] PWA e integração com Teams/Slack

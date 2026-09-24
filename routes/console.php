@@ -18,6 +18,9 @@ Schedule::command('cidash:send-reminders')->everyMinute()->withoutOverlapping();
 
 Schedule::command('cidash:fetch-sources')->everyFiveMinutes()->withoutOverlapping();
 
+// Each network keeps its own pace (YouTube's quota allows a search every three hours).
+Schedule::command('cidash:fetch-social')->everyFifteenMinutes()->withoutOverlapping();
+
 Schedule::command('cidash:evaluate-alerts')->everyFiveMinutes()->withoutOverlapping();
 
 // Alerts were evaluated at 06:55, so the briefing lists the current ones.

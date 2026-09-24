@@ -23,10 +23,13 @@ class MentionController extends Controller
     public function index(Request $request): Response
     {
         $status = in_array($request->query('status'), ['relevant', 'irrelevant', 'all'], true) ? $request->query('status') : 'new';
+        $source = in_array($request->query('source'), ['news', 'social'], true) ? $request->query('source') : 'all';
 
         return Inertia::render('mentions/index', [
             'mentions' => Mention::with('rule:id,name')
                 ->when($status !== 'all', fn ($query) => $query->where('review_status', $status))
+                ->when($source === 'news', fn ($query) => $query->whereNull('network'))
+                ->when($source === 'social', fn ($query) => $query->whereNotNull('network'))
                 ->orderByRaw('published_at is null')
                 ->orderByDesc('published_at')
                 ->limit(300)
@@ -40,8 +43,11 @@ class MentionController extends Controller
                     'matched_keyword' => $mention->matched_keyword,
                     'rule' => $mention->rule?->name,
                     'status' => $mention->review_status->value,
+                    'network' => $mention->network,
+                    'author' => $mention->author,
                 ]),
             'status' => $status,
+            'source' => $source,
             'counts' => Mention::selectRaw('review_status, count(*) as total')->groupBy('review_status')->pluck('total', 'review_status'),
         ]);
     }
@@ -63,6 +69,8 @@ class MentionController extends Controller
                 'category' => $mention->category,
                 'status' => $mention->review_status->value,
                 'relevance' => $mention->relevance,
+                'network' => $mention->network,
+                'author' => $mention->author,
             ],
             'members' => $this->members(),
             ...$page->for($mention->record, $request->user()),

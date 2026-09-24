@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\MonitoringRule;
 use App\Models\Person;
+use App\Models\SocialHashtag;
 use App\Support\WorkspaceContext;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -36,6 +37,7 @@ class MonitoringRuleController extends Controller
                 'active' => $rule->active,
             ]),
             'people' => Person::orderBy('name')->get(['id', 'name']),
+            'hashtags' => SocialHashtag::orderBy('tag')->get(['id', 'tag']),
         ]);
     }
 

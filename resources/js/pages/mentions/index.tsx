@@ -16,6 +16,8 @@ type MentionLine = {
     matched_keyword: string;
     rule: string | null;
     status: 'new' | 'relevant' | 'irrelevant' | 'archived';
+    network: string | null;
+    author: string | null;
 };
 
 const tabs = [
@@ -25,13 +27,21 @@ const tabs = [
     { value: 'all', label: 'All' },
 ] as const;
 
+const sources = [
+    { value: 'all', label: 'News and social networks' },
+    { value: 'news', label: 'News coverage' },
+    { value: 'social', label: 'Social networks' },
+] as const;
+
 export default function Mentions({
     mentions,
     status,
+    source,
     counts,
 }: {
     mentions: MentionLine[];
     status: string;
+    source: 'all' | 'news' | 'social';
     counts: Record<string, number>;
 }) {
     const { t, locale } = useTranslation();
@@ -59,10 +69,12 @@ export default function Mentions({
                         <Link
                             key={tab.value}
                             href={index({
-                                query:
-                                    tab.value === 'new'
+                                query: {
+                                    ...(tab.value === 'new'
                                         ? {}
-                                        : { status: tab.value },
+                                        : { status: tab.value }),
+                                    ...(source === 'all' ? {} : { source }),
+                                },
                             })}
                             className={cn(
                                 'rounded-md px-3 py-1.5 text-sm',
@@ -77,6 +89,28 @@ export default function Mentions({
                                     {counts[tab.value]}
                                 </span>
                             ) : null}
+                        </Link>
+                    ))}
+                    <span className="mx-2 w-px self-stretch bg-border" />
+                    {sources.map((option) => (
+                        <Link
+                            key={option.value}
+                            href={index({
+                                query: {
+                                    ...(status === 'new' ? {} : { status }),
+                                    ...(option.value === 'all'
+                                        ? {}
+                                        : { source: option.value }),
+                                },
+                            })}
+                            className={cn(
+                                'rounded-md px-3 py-1.5 text-sm',
+                                source === option.value
+                                    ? 'bg-muted font-medium'
+                                    : 'text-muted-foreground hover:text-foreground',
+                            )}
+                        >
+                            {t(option.label)}
                         </Link>
                     ))}
                 </nav>
@@ -101,6 +135,9 @@ export default function Mentions({
                                         <span className="font-medium text-foreground">
                                             {mention.outlet}
                                         </span>
+                                        {mention.author && (
+                                            <span>{mention.author}</span>
+                                        )}
                                         {mention.published_at && (
                                             <span>
                                                 {formatDateTime(
@@ -128,7 +165,11 @@ export default function Mentions({
                                         asChild
                                         variant="ghost"
                                         size="icon"
-                                        aria-label={t('Open original article')}
+                                        aria-label={t(
+                                            mention.network
+                                                ? 'Open original post'
+                                                : 'Open original article',
+                                        )}
                                     >
                                         <a
                                             href={mention.url}

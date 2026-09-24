@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Settings\AlertRuleController;
+use App\Http\Controllers\Settings\HashtagController;
 use App\Http\Controllers\Settings\MonitoringRuleController;
 use App\Http\Controllers\Settings\NotificationPreferencesController;
 use App\Http\Controllers\Settings\OptionController;
@@ -56,6 +57,8 @@ Route::middleware(['auth', 'workspace'])->group(function () {
     Route::patch('settings/types/{option}', [OptionController::class, 'update'])->name('options.update');
 
     Route::get('settings/monitoring', [MonitoringRuleController::class, 'index'])->name('rules.index');
+    Route::post('settings/monitoring/hashtags', [HashtagController::class, 'store'])->name('hashtags.store');
+    Route::delete('settings/monitoring/hashtags/{hashtag}', [HashtagController::class, 'destroy'])->name('hashtags.destroy');
     Route::post('settings/monitoring', [MonitoringRuleController::class, 'store'])->name('rules.store');
     Route::patch('settings/monitoring/{rule}', [MonitoringRuleController::class, 'update'])->name('rules.update');
     Route::delete('settings/monitoring/{rule}', [MonitoringRuleController::class, 'destroy'])->name('rules.destroy');

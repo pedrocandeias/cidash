@@ -26,8 +26,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $category
  * @property string|null $relevance
  * @property TriageStatus $review_status
+ * @property string|null $network social network key, null for news
+ * @property string|null $author
  */
-#[Fillable(['workspace_id', 'news_item_id', 'rule_id', 'url', 'url_hash', 'headline', 'excerpt', 'outlet', 'published_at', 'matched_keyword', 'category', 'relevance', 'review_status'])]
+#[Fillable(['workspace_id', 'news_item_id', 'rule_id', 'url', 'url_hash', 'headline', 'excerpt', 'outlet', 'published_at', 'matched_keyword', 'category', 'relevance', 'review_status', 'network', 'author'])]
 class Mention extends Model
 {
     use IsRecord;

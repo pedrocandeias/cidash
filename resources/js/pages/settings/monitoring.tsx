@@ -14,6 +14,10 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { useTranslation } from '@/lib/i18n';
+import {
+    destroy as destroyHashtag,
+    store as storeHashtags,
+} from '@/routes/hashtags';
 import { destroy, index, store, update } from '@/routes/rules';
 
 type Rule = {
@@ -33,9 +37,11 @@ const NONE = 'none';
 export default function Monitoring({
     rules,
     people,
+    hashtags,
 }: {
     rules: Rule[];
     people: { id: string; name: string }[];
+    hashtags: { id: number; tag: string }[];
 }) {
     const { t } = useTranslation();
 
@@ -224,6 +230,77 @@ export default function Monitoring({
                                 className="justify-self-start"
                             >
                                 {t('Add rule')}
+                            </Button>
+                        </>
+                    )}
+                </Form>
+
+                <Heading
+                    variant="small"
+                    title={t('Hashtags on social networks')}
+                    description={t(
+                        'Public posts with these hashtags on Mastodon, Bluesky, YouTube and Instagram become mentions, on the networks the administrator has set up.',
+                    )}
+                />
+                {hashtags.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">
+                        {t('No hashtags yet.')}
+                    </p>
+                ) : (
+                    <div className="flex flex-wrap gap-2">
+                        {hashtags.map((hashtag) => (
+                            <Badge
+                                key={hashtag.id}
+                                variant="secondary"
+                                className="gap-1 pr-1 text-sm"
+                            >
+                                #{hashtag.tag}
+                                <button
+                                    type="button"
+                                    className="rounded-xs px-1 text-muted-foreground hover:text-foreground"
+                                    aria-label={t('Remove #:tag', {
+                                        tag: hashtag.tag,
+                                    })}
+                                    onClick={() =>
+                                        router.delete(
+                                            destroyHashtag(hashtag.id).url,
+                                            { preserveScroll: true },
+                                        )
+                                    }
+                                >
+                                    ×
+                                </button>
+                            </Badge>
+                        ))}
+                    </div>
+                )}
+                <Form
+                    {...storeHashtags.form()}
+                    resetOnSuccess
+                    options={{ preserveScroll: true }}
+                    className="flex flex-wrap items-start gap-2"
+                >
+                    {({ processing, errors }) => (
+                        <>
+                            <div className="grid gap-1">
+                                <Input
+                                    name="tags"
+                                    required
+                                    aria-label={t('Hashtags')}
+                                    placeholder="#universidadedoporto #uporto #feup"
+                                    className="w-96 max-w-full"
+                                />
+                                <InputError
+                                    message={
+                                        errors.tags ??
+                                        Object.entries(errors).find(([key]) =>
+                                            key.startsWith('tags.'),
+                                        )?.[1]
+                                    }
+                                />
+                            </div>
+                            <Button variant="outline" disabled={processing}>
+                                {t('Add hashtags')}
                             </Button>
                         </>
                     )}

@@ -30,6 +30,8 @@ type Props = {
         headline: string;
         excerpt: string | null;
         outlet: string | null;
+        network: string | null;
+        author: string | null;
         url: string;
         published_at: string | null;
         matched_keyword: string;
@@ -81,6 +83,7 @@ export default function ShowMention({
                     <div className="space-y-2">
                         <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                             <span>{mention.outlet}</span>
+                            {mention.author && <span>· {mention.author}</span>}
                             {mention.published_at && (
                                 <span>
                                     ·{' '}
@@ -110,7 +113,11 @@ export default function ShowMention({
                                 rel="noopener noreferrer"
                             >
                                 <ExternalLink />
-                                {t('Open original article')}
+                                {t(
+                                    mention.network
+                                        ? 'Open original post'
+                                        : 'Open original article',
+                                )}
                             </a>
                         </Button>
                     </div>

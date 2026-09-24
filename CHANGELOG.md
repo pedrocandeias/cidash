@@ -2,6 +2,14 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.31.0 (2026-09-24)
+
+- feat: menções em redes sociais por hashtag: cada equipa escolhe as hashtags em Definições → Monitorização (várias de uma vez, com ou sem "#")
+- feat: recolha no Mastodon (sem conta), Bluesky (conta e app password), YouTube (chave de API gratuita, de 3 em 3 horas por causa da quota) e Instagram (Graph API com conta Business), com `cidash:fetch-social` a cada 15 minutos
+- feat: Administração → Redes sociais: credenciais cifradas, estado e último erro de cada rede, e "Testar" com uma hashtag
+- feat: Menções com filtro Notícias / Redes sociais, rede e autor de cada publicação; a mesma publicação em várias hashtags conta uma vez
+- fix: os erros das redes são guardados sem os parâmetros dos endereços, onde vão chaves e tokens
+
 ## 0.30.0 (2026-09-24)
 
 - feat: botão de ecrã claro ou escuro na barra do topo (claro, escuro ou seguir o sistema); o ecrã claro passa a ser o predefinido
