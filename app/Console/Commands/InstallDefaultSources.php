@@ -22,6 +22,7 @@ class InstallDefaultSources extends Command
         ['Observador', SourceKind::Rss, 'https://observador.pt/feed/'],
         ['Público', SourceKind::Rss, 'https://feeds.feedburner.com/PublicoRSS'],
         ['SAPO Notícias', SourceKind::Rss, 'https://noticias.sapo.pt/rss'],
+        ['Renascença', SourceKind::Rss, 'https://rr.pt/rssfeed-ultimas'],
         ['Google News: Universidade do Porto', SourceKind::GoogleNews, 'https://news.google.com/rss/search?q=%22Universidade+do+Porto%22+OR+%22U.Porto%22&hl=pt-PT&gl=PT&ceid=PT:pt-150'],
     ];
 

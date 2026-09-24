@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Workspace;
+use App\Support\AppVersion;
 use App\Support\Options;
 use App\Support\WorkspaceContext;
 use Illuminate\Http\Request;
@@ -41,6 +42,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            'version' => AppVersion::current(),
             'auth' => [
                 'user' => $request->user(),
             ],

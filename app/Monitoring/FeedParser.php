@@ -61,7 +61,10 @@ class FeedParser
 
     public static function text(string $value): string
     {
-        return trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags($value), ENT_QUOTES | ENT_HTML5)) ?? '');
+        // Zero-width characters (some feeds start titles with one) would defeat story grouping.
+        $text = preg_replace('/[\x{200B}-\x{200D}\x{2060}\x{FEFF}]/u', '', html_entity_decode(strip_tags($value), ENT_QUOTES | ENT_HTML5)) ?? '';
+
+        return trim(preg_replace('/\s+/u', ' ', $text) ?? '');
     }
 
     public static function summary(string $value): ?string

@@ -31,6 +31,8 @@ git archive HEAD app bootstrap config database lang public resources routes stor
     artisan composer.json composer.lock .env.example | tar -x -C "$DIST"
 cp -a public/build "$DIST/public/"
 git rev-parse HEAD > "$DIST/REVISION"
+# The version shown in the footer: the latest release in the changelog.
+grep -m1 -oE '^## [0-9]+\.[0-9]+\.[0-9]+' CHANGELOG.md | cut -c4- > "$DIST/VERSION"
 
 # Sources only needed for development.
 rm -rf "$DIST/resources/js" "$DIST/resources/css" \

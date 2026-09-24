@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { AppFooter } from '@/components/app-footer';
 import AppLogoIcon from '@/components/app-logo-icon';
 import { useTranslation } from '@/lib/i18n';
 import { home } from '@/routes';
@@ -47,6 +48,7 @@ export default function AuthSimpleLayout({
                     {children}
                 </div>
             </div>
+            <AppFooter className="justify-center" />
         </div>
     );
 }

@@ -2,6 +2,13 @@
 
 Versões em [SemVer](https://semver.org/lang/pt-PT/): enquanto o projeto estiver em 0.x, `feat` sobe a versão *minor* e `fix` sobe a *patch*. As entradas seguem o estilo Conventional Commits.
 
+## 0.38.0 (2026-09-24)
+
+- feat: rodapé em todas as páginas com os créditos (Universidade do Porto · Serviço de Comunicação e Imagem), o ano e a versão do CIDASH
+- feat: Renascença no catálogo inicial de fontes (`rr.pt/rssfeed-ultimas`)
+- fix: os títulos das notícias perdem os caracteres invisíveis com que alguns feeds os começam, para as histórias repetidas continuarem a ser agrupadas
+- build: o pacote `dist/` leva um ficheiro `VERSION` com a versão da última entrada do changelog
+
 ## 0.37.1 (2026-09-24)
 
 - docs: guia de utilização reescrito com instruções passo a passo para cada secção (Início, Briefing, Calendário, Tarefas, Conteúdos, Campanhas, Imprensa, Pessoas e Dead or Alive, Avisos, Assets, Notícias, Menções, Alertas, notificações, managers e super admin), índice com ligações e capturas de ecrã com dados de demonstração
